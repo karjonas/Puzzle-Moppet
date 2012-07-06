@@ -1,0 +1,97 @@
+Authors, Licenses and URLs for images and textures
+==================================================
+
+Replacement textures and images and their respective licenses were researched by qubodup <qubodup@gmail.com>.
+
+All files in puzzlemoppet/projects/Puzzle/media.
+
+./arrow_right.png
+./arrow_left.png
+./cloudshadow.png
+./brush_icons/*
+./fan/brass_spheremap.png
+./flower/flower.png
+./monster/flame.png
+./particles/*
+./player/texture_map.png
+  author: Daniel Frith <dan@xzist.org>
+  license: WTFPL
+  source: http://garnetgames.com/puzzlemoppet/
+
+./font/fontlarge20.png
+./font/font20.png
+  author: wmk69 <wmk69@o2.pl>
+  license: SILOFLv1.1
+  edited by Daniel Frith <dan@xzist.org>
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is available with a FAQ at: http://scripts.sil.org/OFL
+
+./finalscene/rock_color.jpg
+  author: p0ss
+  license: GPLv2+
+  source: http://opengameart.org/node/9746
+  note: edited by qubodup <qubodup@gmail.com>
+
+./finalscene/sand1.png
+  author: Sindwiller
+  license: CCBYSA3, GPLv3+
+  source:http://opengameart.org/content/generic-tileable-sand-texture
+  note: edited by qubodup <qubodup@gmail.com>
+
+./finalscene/water.png
+  author: Jattenalle
+  license: CCBY3
+  source: http://opengameart.org/content/texture-water
+  note: edited by qubodup <qubodup@gmail.com>
+
+./finalscene/watersand.png
+./finalscene/watersand_add.png
+  author: qubodup <qubodup@gmail.com>
+  license: CCBYSA3
+  note: based on http://opengameart.org/content/texture-water (CCBY3) by Jattenalle and http://opengameart.org/content/generic-tileable-sand-texture by Sindwiller (CCBYSA3)
+
+./fan/magicfan_grid.png
+  author: Uruktos
+  license: CCBYSA3
+  source: http://opengameart.org/node/10927
+  note: edited by qubodup <qubodup@gmail.com>
+
+./skies/Set 41/*
+  author: Jockum Skoglund (hipshot)
+  license: CCBY3
+  source: http://opengameart.org/content/stormy-days-skybox
+
+./skies/Set 26/*
+  author: Jockum Skoglund (hipshot)
+  license: CCBY3
+  source: http://opengameart.org/content/generated-skiesr
+  note: edited by qubodup <qubodup@gmail.com>
+
+
+./lift/lift.png
+  author: qubodup <qubodup@gmail.com>
+  license: CC0
+  source: http://opengameart.org/content/mayan-stone-ornament
+  note: based on http://commons.wikimedia.org/w/index.php?title=File:Detail_from_cast_of_wall_panel_from_Temple_of_the_Cross_-_NARA_-_523585.tif&page=1 and http://opengameart.org/node/10165
+
+./box.jpg
+  author: Luke.RUSTLTD
+  license: CC0
+  source: http://opengameart.org/node/8768
+
+./mud*
+  author: qubodup <qubodup@gmail.com>
+  license: CCBY3
+  source: http://opengameart.org/content/mud-dirt
+  note: based on http://opengameart.org/node/7805 by Lamoot <http://opengameart.org/users/lamoot>
+
+./ground6_color.jpg
+  author: West
+  license: CC0
+  source: http://opengameart.org/node/8017
+
+./grass1_lighter.jpg
+  author: Lamoot
+  license: CCBY3
+  source: http://opengameart.org/node/7787

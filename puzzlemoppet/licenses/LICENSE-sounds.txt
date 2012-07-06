@@ -1,0 +1,125 @@
+Authors, Licenses and URLs for sounds effects and general audio
+===============================================================
+
+Replacement sound files and their respective licenses were researched by qubodup <qubodup@gmail.com>.
+
+Processed files are in puzzlemoppet/projects/Puzzle/media/sfx, original FLAC versions in assets/sounds.
+This file is also in assets/sounds.
+
+appear.flac
+  author: Brandon Morris <http://opengameart.org/users/haeldb>
+  license: CCBY3
+  source: http://opengameart.org/content/completion-sound
+  notes: completetask_0.mp3 edited by qubodup <qubodup@gmail.com>
+
+baloonpush.flac
+  author: hyo <http://www.freesound.org/people/hyo/>
+  license: CCBY3
+  source: http://www.freesound.org/people/hyo/sounds/301/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+beep.flac
+  author: Bart K <http://opengameart.org/users/bart>
+  license: CC0
+  source: http://opengameart.org/content/interface-beeps
+  notes: beep-01.wav cut by qubodup <qubodup@gmail.com>
+
+bell.flac
+  author: HerbertBoland <http://www.freesound.org/people/HerbertBoland/>
+  license: CCBY3
+  source: http://www.freesound.org/people/HerbertBoland/sounds/30161/
+
+buttonflutter_micro.flac
+  author: timgormly <http://www.freesound.org/people/timgormly/>
+  license: CC0
+  source: http://www.freesound.org/people/timgormly/sounds/148047/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+excellent.flac
+  author: juskiddink <http://www.freesound.org/people/juskiddink/>
+  license: CCBY3
+  source: http://www.freesound.org/people/juskiddink/sounds/86773/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+extraordinary.flac
+  author: NoiseCollector <http://www.freesound.org/people/NoiseCollector/>
+  license: CCBY3
+  source: http://www.freesound.org/people/NoiseCollector/sounds/3649/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+fair.flac
+  author: sarana <http://www.freesound.org/people/sarana/>
+  license: CCBY3
+  source: http://www.freesound.org/people/sarana/sounds/83182/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+fallblock.flac
+  author: SoundCollectah <http://www.freesound.org/people/SoundCollectah/>
+  license: CC0
+  source: http://www.freesound.org/people/SoundCollectah/sounds/109360/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+good.flac
+  author: SaftJesus <http://www.freesound.org/people/SaftJesus/>
+  license: CC0
+  source: http://www.freesound.org/people/SaftJesus/sounds/151532/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+hithard.flac
+  author: timgormly <http://www.freesound.org/people/timgormly/>
+  license: CC0
+  source: http://www.freesound.org/people/timgormly/sounds/151271/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+laugh.flac
+  author: qubodup <qubodup@gmail.com>
+  license: CCBY3
+  source: http://www.freesound.org/people/qubodup/sounds/160512/
+  notes: based on <http://www.freesound.org/people/Ch0cchi/sounds/15294/> by Ch0cchi <http://www.freesound.org/people/Ch0cchi/> and http://www.freesound.org/people/lonemonk/sounds/72839/ by lonemonk <http://www.freesound.org/people/lonemonk/>
+
+liftrun.flac
+  author: Ishpike <http://www.freesound.org/people/Ishpike/>
+  license: CC0
+  source: http://www.freesound.org/people/Ishpike/sounds/74411/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+perfect.flac
+  author: qubodup <qubodup@gmail.com>
+  license: CCBY3
+  source: http://www.freesound.org/people/qubodup/sounds/160513/
+  notes: based on <http://www.freesound.org/people/Benboncan/sounds/62588/> and <http://www.freesound.org/people/Benboncan/sounds/62587/> by Benboncan <http://www.freesound.org/people/Benboncan/>
+
+sea.flac
+  author: Bram <http://www.freesound.org/people/Bram/>
+  license: CCBY3
+  source: http://www.freesound.org/people/Bram/sounds/18802/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+slide.flac
+  author: UATaudio <http://www.freesound.org/people/UATaudio/>
+  license: CCBY3
+  source: http://www.freesound.org/people/UATaudio/sounds/31153/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+speedcore.flac
+  author:
+  license:
+  source: 
+
+stepballoon.flac
+  author:hyo <http://www.freesound.org/people/hyo/>
+  license: CCBY3
+  source: http://www.freesound.org/people/hyo/sounds/301/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+step.ogg
+  author: Slave2theLight <http://www.freesound.org/people/Slave2theLight/>
+  license: CCBY3
+  source: http://www.freesound.org/people/Slave2theLight/sounds/157024/
+  notes: edited by qubodup <qubodup@gmail.com>
+
+windy.ogg
+  author: Glaneur de sons <http://www.freesound.org/people/Glaneur%20de%20sons/>
+  license: CCBY3
+  source: http://www.freesound.org/people/Glaneur%20de%20sons/sounds/104952/
+  notes: edited by qubodup <qubodup@gmail.com>
