@@ -102,9 +102,9 @@ slide.flac
   notes: edited by qubodup <qubodup@gmail.com>
 
 speedcore.flac
-  author:
-  license:
-  source: 
+  author: Daniel Frith <dan@xzist.org>
+  license: WTFPLv2
+  note: created using "HammerHead rhythm station" <http://www.threechords.com/hammerhead/>
 
 stepballoon.flac
   author:hyo <http://www.freesound.org/people/hyo/>

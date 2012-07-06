@@ -32,7 +32,6 @@ Requirements
 . Irrlicht 1.6.1, http://downloads.sourceforge.net/irrlicht/irrlicht-1.6.1.zip
 . ODE, http://www.ode.org/
 . OpenAL, http://connect.creativelabs.com/openal/default.aspx
-. libvorbis-dev
 
 Building the Game
 ~~~~~~~~~~~~~~~~~
