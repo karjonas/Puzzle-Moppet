@@ -782,7 +782,7 @@ bool Engine::OnEvent(const SEvent &irrEvent)
 	// in case the pointer gets invalidated.
 	// Also the pointer will probably not be valid on 64 bit systems.
 	Event event("IrrlichtEvent");
-	event["SEvent"] = (u32)&irrEvent;
+	event["SEvent"] = &irrEvent;
 	newEvents.push_back(event);
 	
 	// Send 'em all!

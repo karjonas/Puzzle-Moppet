@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
+# find-pkg is used to select -DdSINGLE or -DdDOUBLE for ODE
+INCLUDE(FindPkgConfig)
+
 #set(CMAKE_CXX_FLAGS "-Wall")
 #set(CMAKE_CXX_FLAGS_DEBUG "-g") # for line numbers
 #set(CMAKE_CXX_FLAGS_RELEASE "")
@@ -21,6 +24,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	# (Slackware at least was not searching the exe directory)
 	set(CMAKE_INSTALL_RPATH "$ORIGIN")
 	set(CMAKE_BUILD_WITH_INSTALL_RPATH true)
+	pkg_check_modules(ODE REQUIRED ode)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 
@@ -42,6 +46,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(lithaTargetName "Linux")
 	set(irrlichtLibDir "Linux")
 	set(exeExtension "")
+	set(CMAKE_CXX_FLAGS "${ODE_CFLAGS}")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -101,7 +106,7 @@ endif (WIN32)
 
 # Linux needs GL for some reason.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	set(projectLibs ${projectLibs} GL Xxf86vm Xrandr)
+	set(projectLibs ${projectLibs} GL Xxf86vm Xrandr X11)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 

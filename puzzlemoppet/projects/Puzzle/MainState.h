@@ -63,9 +63,6 @@ class MainState : public IUpdatable, public IWantEvents
 	// -1.0 if not yet been set.
 	f32 startLevelTime;
 	
-#ifdef TRIAL
-	bool shownBetweenLevelTrialScreen;
-#endif
 	
 	enum E_PAUSE_MENU_IDS
 	{
@@ -75,12 +72,6 @@ class MainState : public IUpdatable, public IWantEvents
 		EPM_RESTART_LEVEL,
 		EPM_CONTINUE,
 		EPM_SKIP_LEVEL,
-		
-		// Trial hidden sub menu
-		// (appears between levels etc)
-#ifdef TRIAL
-		EPM_TRIAL_BUY,
-#endif
 		
 		// New Game sub menu
 		EPM_NEW_GAME_YES,

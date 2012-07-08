@@ -4,10 +4,6 @@
 #include "StartScreen.h"
 #include "volume.h"
 
-#ifdef TRIAL
-// omg a global!
-bool trialFinished = false;
-#endif
 
 // oh no another global
 ISound *bgAmbientSound = NULL;
@@ -109,9 +105,6 @@ int main(int argc, const char **argv)
 	IEngine *engine = CreateEngine(argc, argv, &settings);
 	
 	
-#ifdef TRIAL
-	NOTE << "*** THIS IS THE TRIAL VERSION ***";
-#endif
 	
 	
 	engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive("../projects/Puzzle/media/");
@@ -442,22 +435,7 @@ int main(int argc, const char **argv)
 	bool engineWillRestart = engine->WillRestart();
 	
 	engine->drop();
-	
-#ifdef TRIAL
-	if (!globalLogLastLevel.size())
-		globalLogLastLevel = "unknown";
-	
-	if (!globalLogFurthestLevel.size())
-		globalLogFurthestLevel = "unknown";
-	
-	if (!engineWillRestart)
-	{
-		// use maybe function in case user already clicked "buy" button and the buy page is going to open.
-		os::maybeopenwebpage( core::stringc("http://www.garnetgames.com/puzzlemoppet/getfullversion/")
-				+ "?last=" + globalLogLastLevel + "&furthest=" + globalLogFurthestLevel );
-	}
-#endif
-	
+		
 	return 0;
 }
 

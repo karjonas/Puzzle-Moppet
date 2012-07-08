@@ -212,11 +212,8 @@ void StartScreen::CreateFirstMenu()
 		NOTE << "No game save exists, showing only Start Game option.";
 		menu->AddItem("Start Game", EMI_PLAY);
 	}
-#ifdef TRIAL
-	menu->AddItem("** Buy the Full Game **", EMI_BUY);
-#else
+
 	menu->AddItem("Website", EMI_VISIT_WEBSITE);
-#endif
 	menu->AddItem("Options", EMI_OPTIONS);
 	menu->AddItem("Exit", EMI_EXIT);
 	menu->SetMouseOverSound("../projects/Puzzle/media/sfx/beep.ogg");
@@ -418,15 +415,7 @@ void StartScreen::CreateLevelSelectButtons()
 				str += i+1;
 				str += L" of ";
 				
-#ifdef TRIAL
-				// If trial, we attempt to read total level count from file.
-				// (so trial uses the full version level count, and user can see
-				// how far through the full version they are)
-				core::stringc count = file::get("../projects/Puzzle/levelcount.ini");
-				
-				if (!count.size())
-					count += s32(levelFileNames.size());
-#else
+
 				// If full version, we use the level file count from the level list.
 				// We also save it to disk.
 				// This keeps the count up to date for the trial version.
@@ -434,7 +423,7 @@ void StartScreen::CreateLevelSelectButtons()
 				count += s32(levelFileNames.size());
 				
 				file::put("../projects/Puzzle/levelcount.ini", count);
-#endif
+
 				str += count;
 				
 				
