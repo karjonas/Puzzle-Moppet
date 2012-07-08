@@ -127,6 +127,13 @@ io::path getappdata()
 		}
 	}
 	
+	char *xdgPath = getenv("XDG_DATA_HOME");
+	if (xdgPath) {
+	  homePath = xdgPath;
+	}
+	else {
+	  return os::path::rtrim( os::path::concat(homePath,".local/share") );
+	}
 #endif
 	
 	return os::path::rtrim( io::path(homePath) );
