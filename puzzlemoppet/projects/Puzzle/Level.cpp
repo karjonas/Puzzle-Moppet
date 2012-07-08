@@ -1521,14 +1521,17 @@ void Level::CreatePlayer(core::vector3di mapCoord)
 	
 	IMesh *mesh = world->AddMesh("player.b3d");
 	
-	// some of the params changed here since we upgraded to Irrlicht 1.7.2
-	/*
-	mesh->Scale(0.18);//0.075);
-	mesh->Translate(core::vector3df(0.23,0.19,-0.02));//core::vector3df(0.1,0.19,-0.15));
-	*/
-	// Oh but then I downgraded to Irrlicht 1.6.1 again... :S
-	mesh->Scale(0.075);
-	mesh->Translate(core::vector3df(0.1,0.19,-0.15));
+	if( strcmp(GetEngine()->GetIrrlichtDevice()->getVersion(),"1.6.1")==0 ) {
+	  // Oh but then I downgraded to Irrlicht 1.6.1 again... :S
+	  mesh->Scale(0.075);
+	  mesh->Translate(core::vector3df(0.1,0.19,-0.15));
+	}
+	else {
+	  // some of the params changed here since we upgraded to Irrlicht 1.7.2	
+	  mesh->Scale(0.18);//0.075);
+	  mesh->Translate(core::vector3df(0.23,0.19,-0.02));//core::vector3df(0.1,0.19,-0.15));
+	}
+
 	
 	mesh->Rotate(core::vector3df(0,180,0));
 	

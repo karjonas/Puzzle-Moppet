@@ -62,12 +62,13 @@ void PostProcessingChain::AddEffect(video::SMaterial &material, IShader *shader,
 	
 	// Create RTT
 	material.TextureLayer[0].Texture = rt;
-	material.TextureLayer[0].TextureWrap = video::ETC_CLAMP_TO_EDGE;
 	
-	/*
+#if IRRLICHT_VERSION == 161
+	material.TextureLayer[0].TextureWrap = video::ETC_CLAMP_TO_EDGE;
+#else
 	material.TextureLayer[0].TextureWrapU = video::ETC_CLAMP_TO_EDGE;
 	material.TextureLayer[0].TextureWrapV = video::ETC_CLAMP_TO_EDGE;
-	*/
+#endif
 	
 	Effect effect =
 	{
