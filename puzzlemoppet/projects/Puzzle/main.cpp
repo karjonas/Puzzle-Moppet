@@ -104,7 +104,7 @@ int main(int argc, const char **argv)
 	settings["appName"] = "Puzzle Moppet";
 	settings["screenWidth"] = 1024;
 	settings["screenHeight"] = 768;
-	settings["fullScreen"] = true;
+	settings["fullScreen"] = false;
 	
 	IEngine *engine = CreateEngine(argc, argv, &settings);
 	

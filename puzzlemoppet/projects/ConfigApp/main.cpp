@@ -13,7 +13,7 @@ VariantMap PROJECT_DEFAULT_SETTINGS()
 	settings["appName"] = "Puzzle Moppet";
 	settings["screenWidth"] = 1024;
 	settings["screenHeight"] = 768;
-	settings["fullScreen"] = true;
+	settings["fullScreen"] = false;
 	return settings;
 }
 
