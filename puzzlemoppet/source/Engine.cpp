@@ -777,13 +777,6 @@ bool Engine::OnEvent(const SEvent &irrEvent)
 		}
 	}
 	
-	// WARNING: This is a hack, until I have implemented all Irrlicht events in
-	// this engine. Obviously this event cannot be stored or transmitted over a network
-	// in case the pointer gets invalidated.
-	// Also the pointer will probably not be valid on 64 bit systems.
-	Event event("IrrlichtEvent");
-	event["SEvent"] = (u32)&irrEvent;
-	newEvents.push_back(event);
 	
 	// Send 'em all!
 	for (u32 i = 0; i < newEvents.size(); i ++)
