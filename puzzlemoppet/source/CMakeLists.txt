@@ -30,7 +30,7 @@ include_all_subdirs("${rootDir}/source")
 
 add_library(Litha STATIC ${lithaSources} ${lithaSourcesC})
 
-target_link_libraries(Litha Irrlicht)
+target_link_libraries(Litha ${IRRLICHT_LIBRARIES})
 
 if (WIN32)
 	target_link_libraries(Litha ode_single OpenAL32)
@@ -38,9 +38,9 @@ endif (WIN32)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	target_link_libraries(Litha ode openal)
-endif (UNIX)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	target_link_libraries(Litha ode /System/Library/Frameworks/OpenAL.framework/OpenAL /System/Library/Frameworks/OpenGL.framework/OpenGL /System/Library/Frameworks/Cocoa.framework/Cocoa /System/Library/Frameworks/Carbon.framework/Carbon /System/Library/Frameworks/IOKit.framework/IOKit)
-endif (UNIX)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
