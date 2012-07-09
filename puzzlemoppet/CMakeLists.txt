@@ -1,23 +1,14 @@
+project(LithaEngine)
+
 cmake_minimum_required(VERSION 2.6)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
 # find-pkg is used to select -DdSINGLE or -DdDOUBLE for ODE
 INCLUDE(FindPkgConfig)
 
-#set(CMAKE_CXX_FLAGS "-Wall")
-#set(CMAKE_CXX_FLAGS_DEBUG "-g") # for line numbers
-#set(CMAKE_CXX_FLAGS_RELEASE "")
-
-#set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_BUILD_TYPE Release)
-
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set(CMAKE_CXX_FLAGS "-arch i386")
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
-
-project(LithaEngine)
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	# On Linux, force it to search the exe directory for .so files.
@@ -46,13 +37,18 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(lithaTargetName "Linux")
 	set(irrlichtLibDir "Linux")
 	set(exeExtension "")
-	set(CMAKE_CXX_FLAGS "${ODE_CFLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ODE_CFLAGS}")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${ODE_CFLAGS}")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${ODE_CFLAGS}")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(lithaTargetName "MacOSX")
 	set(irrlichtLibDir "MacOSX")
 	set(exeExtension "")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch i386")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -arch i386")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -arch i386")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 
@@ -62,10 +58,15 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # (things required by both litha engine and individual projects)
 # (actually some of these probably aren't required by both...)
 
-include_directories(${rootDir} ${rootDir}/include ${rootDir}/thirdparty/irrlicht-1.6.1/include)
+# Irrlicht
+find_package(Irrlicht REQUIRED)
+if (${IRRLICHT_VERSION} MATCHES "1.6.1")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DIRRLICHT_VERSION=161")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DIRRLICHT_VERSION=161")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DIRRLICHT_VERSION=161")
+endif (${IRRLICHT_VERSION} MATCHES "1.6.1")
 
-link_directories(${rootDir}/thirdparty/irrlicht-1.6.1/lib/${irrlichtLibDir})
-
+include_directories(${rootDir} ${rootDir}/include ${IRRLICHT_INCLUDE_DIRS})
 
 
 ########## LITHA ENGINE CONFIG ########
@@ -88,7 +89,7 @@ set(EXECUTABLE_OUTPUT_PATH ${rootDir}/bin)
 link_directories(${rootDir}/lib/${lithaTargetName})
 
 # Project libraries
-set(projectLibs Litha Irrlicht)
+set(projectLibs Litha ${IRRLICHT_LIBRARIES})
 
 # Project properties
 if (exeExtension)
@@ -106,7 +107,7 @@ endif (WIN32)
 
 # Linux needs GL for some reason.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	set(projectLibs ${projectLibs} GL Xxf86vm Xrandr X11)
+	set(projectLibs ${projectLibs} GL Xrandr X11)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 

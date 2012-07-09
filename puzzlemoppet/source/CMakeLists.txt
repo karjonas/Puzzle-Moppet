@@ -30,7 +30,7 @@ include_all_subdirs("${rootDir}/source")
 
 add_library(Litha STATIC ${lithaSources} ${lithaSourcesC})
 
-target_link_libraries(Litha Irrlicht)
+target_link_libraries(Litha ${IRRLICHT_LIBRARIES})
 
 if (WIN32)
 	target_link_libraries(Litha ode_single OpenAL32)
