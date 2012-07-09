@@ -1,9 +1,6 @@
-
-
-
 # Only things that need changing here.
 
-set(projectName PuzzleGame)
+set(projectName puzzlemoppet)
 
 set(sourceFiles
 main.cpp
@@ -26,10 +23,8 @@ options.cpp
 
 
 # No need to modify these lines.
-add_executable(${projectName}_FullVersion ${sourceFiles})
+add_executable(${projectName} ${sourceFiles})
 if (projectProperties)
-	set_target_properties(${projectName}_FullVersion ${projectProperties})
+	set_target_properties(${projectName} ${projectProperties})
 endif (projectProperties)
-target_link_libraries(${projectName}_FullVersion ${projectLibs})
-
-
+target_link_libraries(${projectName} ${projectLibs})

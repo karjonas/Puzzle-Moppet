@@ -39,6 +39,11 @@ Building the Game
 Download the Irrlicht files, version 1.6.1, unzip and place in /puzzlemoppet/thirdparty.
 If in GNU Linux search for the required libraries using your package manager.
 
+If your package manager does not provide version 1.6.1 you need to compile it yourself:
+
+> cd <project dir>/puzzlemoppet/thirdparty/irrlicht-1.6.1/source/Irrlicht/
+> make
+
 TODO: add missing steps/libs
 
 Open a terminal/console window, navigate to the project folder and change into the 

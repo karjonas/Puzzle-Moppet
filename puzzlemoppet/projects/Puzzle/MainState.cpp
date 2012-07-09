@@ -8,11 +8,6 @@
 #include "StartScreen.h"
 #include "level_stats.h"
 
-#ifdef TRIAL
-// set when trial has finished...
-// so a different web page is shown when exiting.
-extern bool trialFinished;
-#endif
 
 extern ISound *bgAmbientSound;
 extern ISound *bgMusic;
@@ -22,13 +17,9 @@ extern core::vector3df sunDirection;
 // this only used for final scene
 #include "Map.h"
 
-#ifdef TRIAL
-#define LEVEL_LIST_FILE "../projects/Puzzle/trial_levels/levels.list"
-#define LEVEL_BASE_PATH "../projects/Puzzle/trial_levels/levels/"
-#else
 #define LEVEL_LIST_FILE "../projects/Puzzle/levels/levels.list"
 #define LEVEL_BASE_PATH "../projects/Puzzle/levels/levels/"
-#endif
+
 
 #define GAME_SAVE_FILENAME "puzzlegame.save"
 
@@ -381,33 +372,6 @@ void MainState::ShowEndTexts()
 	s32 screenHeight = driver->getScreenSize().Height;
 	s32 screenWidth = driver->getScreenSize().Width;
 	
-#ifdef TRIAL
-	{
-		gui::IGUIStaticText *text = add_static_text(L"Sorry,");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( screenWidth/2 - rect.getWidth()/2, screenHeight/2 - 80 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
-	{
-		gui::IGUIStaticText *text = add_static_text2(L"End of Trial Version");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( screenWidth/2 - rect.getWidth()/2, screenHeight/2 - 20 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
-	{
-		gui::IGUIStaticText *text = add_static_text(L"Go to www.GarnetGames.com to get the full game!");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( screenWidth/2 - rect.getWidth()/2, screenHeight/2 + 40 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
-	
-	// so main.cpp knows and will show a different web page.
-	trialFinished = true;
-	
-#else
 	{
 		gui::IGUIStaticText *text = add_static_text2(L"The End");
 		core::rect<s32> rect = text->getRelativePosition();
@@ -415,7 +379,7 @@ void MainState::ShowEndTexts()
 		text->setRelativePosition(rect);
 		introTexts.push_back(text);
 	}
-#endif
+
 }
 
 core::stringc MainState::GetCurrentLevelName()
@@ -460,11 +424,7 @@ void MainState::RemoveLevelAndEditor()
 void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::deque<UndoState> *undoHistory)
 {
 	startLevelTime = engine->GetEngineTime();
-	
-#ifdef TRIAL
-	shownBetweenLevelTrialScreen = false;
-#endif
-	
+
 	RemoveLevelAndEditor();
 	
 	NOTE << "Loading level... (" << levelFileName << ")";
@@ -1123,78 +1083,7 @@ void MainState::Update(f32 dt)
 			startLevelTexts[i]->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
 		}
 	}
-	
-	
-#ifdef TRIAL
-	// Show trial message a certain time after level was started.
-	
-	if (startLevelTime != -1.0 && (engine->GetEngineTime() > startLevelTime + 5.0) )
-	{
-		if (level && !inFinalScene && !isPaused && !gameEnded
-				&& !level->IsEnding()
-				&& GetCurrentLevelName() != "intro.lev" )
-		{
-			
-			// count actual level number...
-			// hacked in
-			// we only want to show this trial message after the player has reached
-			// a certain point. (i.e. don't show on the really quick easy levels, let
-			// the player relax and get into the game...)
-			
-			// current level file name
-			core::stringc currentLevelFileName = GetCurrentLevelName();
-			
-			// find it in the level list
-			u32 levelNum = 0;
-			for (; levelNum < levelFileNames.size(); levelNum ++)
-			{
-				if (levelFileNames[levelNum] == currentLevelFileName)
-					break;
-			}
-			
-			
-			/*
-			// DISABLED NAG PROMPTS!
-			// Maybe I'll enable them again later?
-			// But possibly with less frequency. (e.g. only on initial start
-			// of a level, not on restarts)
-			if (!shownBetweenLevelTrialScreen && levelNum >= 4)
-			{
-				// WE USE THE PAUSE MENU FOR THIS.
-				// THIS STUFF FROM OnEvent BELOW!
-				
-				
-				isPaused = true;
-				
-				// Pause
-				renderSystem->ScreenFade(0.2);
-				world->Pause();
-				device->getCursorControl()->setVisible(true);
-				
-				ShowPauseMenu();
-				
-				
-				
-				// THEN SHOW A SUB MENU OF PAUSE MENU
-				
-				pauseMenuPositioner->Reset();
-				pauseMenuPositioner->SetTitle( add_static_text(
-						L"You're playing the trial version of Puzzle Moppet!") );
-				pauseMenuPositioner->Add( add_static_text(L"Continue trial..."), EPM_CONTINUE );
-				pauseMenuPositioner->Add( add_static_text(L"Get the full game!"), EPM_TRIAL_BUY );
-				pauseMenuPositioner->Apply();
-				
-				
-				
-				shownBetweenLevelTrialScreen = true;
-			}
-			*/
-		}
-	}
-	
-#endif
-	
-	
+		
 	// Special logic for when in final scene
 	if (level)
 	{
@@ -1234,11 +1123,7 @@ void MainState::OnEvent(const Event &event)
 		// Exit on any button press.
 		if (event.IsType("ButtonDown"))
 		{
-#ifdef TRIAL
-			engine->Exit("http://www.garnetgames.com/puzzlemoppet/trialover/");
-#else
 			engine->Exit();
-#endif
 		}
 		
 		return;
@@ -1411,14 +1296,7 @@ void MainState::OnEvent(const Event &event)
 					event.Send(this);
 				}
 				break;
-
-#ifdef TRIAL
-			// TRIAL thing
-			case EPM_TRIAL_BUY:
-				engine->Exit("http://www.garnetgames.com/puzzlemoppet/buy/");
-				break;
-#endif
-			
+		
 			// New Game sub menu
 			case EPM_NEW_GAME_YES:
 				NOTE << "NEW GAME STARTED!";

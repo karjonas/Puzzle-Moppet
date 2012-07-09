@@ -777,7 +777,6 @@ bool Engine::OnEvent(const SEvent &irrEvent)
 		}
 	}
 	
-	
 	// Send 'em all!
 	for (u32 i = 0; i < newEvents.size(); i ++)
 		PostEvent(newEvents[i]);
