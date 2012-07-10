@@ -261,7 +261,7 @@ public:
 int main(int argc, const char **argv)
 {
 	VariantMap settings;
-	settings["appName"] = "Puzzle Moppet Configuration Utility";
+	settings["appName"] = "Puzzle Moppet";
 	settings["windowTitle"] = "Puzzle Moppet Configuration";
 	settings["screenWidth"] = 250;
 	settings["screenHeight"] = 330;
