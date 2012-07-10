@@ -191,7 +191,7 @@ std::vector<io::path> listdir(const io::path &path)
 
 	dirent *dirEntry;
 
-	while (dirEntry = readdir(dp))
+	while ((dirEntry = readdir(dp)))
 	{
 		io::path itemName = dirEntry->d_name;
 

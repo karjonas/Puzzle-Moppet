@@ -15,7 +15,7 @@ PostProcessingChain::PostProcessingChain(video::IVideoDriver *driver, bool rende
 {
 	this->driver = driver;
 	this->renderScreen = renderScreen;
-	
+
 	quadIndices[0] = 0;
 	quadIndices[1] = 1;
 	quadIndices[2] = 2;
@@ -38,7 +38,7 @@ PostProcessingChain::~PostProcessingChain()
 	for (u32 i = 0; i < effects.size(); i ++)
 	{
 		driver->removeTexture( effects[i].material.TextureLayer[0].Texture );
-		
+
 		if (effects[i].shader)
 			effects[i].shader->drop();
 	}
@@ -51,31 +51,31 @@ void PostProcessingChain::AddEffect(video::SMaterial &material, IShader *shader,
 		WARN << "AddEffect failed.";
 		return;
 	}
-	
+
 	NOTE << "Actual effect RTT size is {" << rt->getSize().Width << "," << rt->getSize().Height << "}.";
-	
+
 	if (shader)
 	{
 		shader->grab();
 		shader->ApplyToIrrMaterial(material);
 	}
-	
+
 	// Create RTT
 	material.TextureLayer[0].Texture = rt;
-	
+
 #if IRRLICHT_VERSION == 161
 	material.TextureLayer[0].TextureWrap = video::ETC_CLAMP_TO_EDGE;
 #else
 	material.TextureLayer[0].TextureWrapU = video::ETC_CLAMP_TO_EDGE;
 	material.TextureLayer[0].TextureWrapV = video::ETC_CLAMP_TO_EDGE;
 #endif
-	
+
 	Effect effect =
 	{
 		material,
 		shader
 	};
-	
+
 	effects.push_back(effect);
 }
 
@@ -88,45 +88,45 @@ void PostProcessingChain::AddEffect(video::SMaterial &material, IShader *shader,
 void PostProcessingChain::AddEffect(video::SMaterial material, IShader *shader, core::dimension2du size)
 {
 	const u32 MINIMUM_POT = 8;
-	
+
 	// This kind of hacked in here.
 	// Temporary fix for PP chain bug.
 	// (when PP chains are created but not used and are deleted, dropping of RTTs causes other textures
 	// to be dropped? An Irrlicht bug?).
 	if (!GetEngine()->GetRenderSystem()->PostProcessingEnabled())
 		return;
-	
+
 	NOTE << "AddEffect " << "{" << size.Width << "," << size.Height << "}.";
-	
+
 	if (size.Width < MINIMUM_POT || size.Height < MINIMUM_POT)
 	{
 		WARN << "AddEffect aborted, screen fraction too small.";
 		return;
 	}
-	
+
 	video::ITexture *rt = driver->addRenderTargetTexture(size, "rt", video::ECF_A8R8G8B8);
-	
+
 	if (!rt)
 	{
 		// if not POT
 		if ( (!is_POT(size.Width)) || (!is_POT(size.Height)) )
 		{
 			NOTE << "Not POT, falling back...";
-			
+
 			// find greatest POT dimensions that are just smaller
 			// I guess this could be optimised??
-			
+
 			while (!is_POT(size.Width) && size.Width > MINIMUM_POT)
 				size.Width --;
-			
+
 			while (!is_POT(size.Height) && size.Height > MINIMUM_POT)
 				size.Height --;
 		}
-		
+
 		// Attempt creation again with POT sizes
 		NOTE << "Trying again: {" << size.Width << "," << size.Height << "}.";
 		rt = driver->addRenderTargetTexture(size, "rt", video::ECF_A8R8G8B8);
-		
+
 		// Still not created?
 		if (!rt)
 		{
@@ -134,19 +134,19 @@ void PostProcessingChain::AddEffect(video::SMaterial material, IShader *shader, 
 			while (true)
 			{
 				size /= 2;
-				
+
 				// end if a dimension reaches a minimum size
 				if (size.Width < MINIMUM_POT || size.Height < MINIMUM_POT)
 					break;
-				
+
 				NOTE << "Trying yet again: {" << size.Width << "," << size.Height << "}.";
-				
-				if (rt = driver->addRenderTargetTexture(size, "rt", video::ECF_A8R8G8B8))
+
+				if ((rt = driver->addRenderTargetTexture(size, "rt", video::ECF_A8R8G8B8)))
 					break;
 			}
 		}
 	}
-	
+
 	if (rt)
 	{
 		NOTE << "Success!";
@@ -181,7 +181,7 @@ void PostProcessingChain::Process()
 {
 	// Render each effect's texture into the next.
 	// Last effect is excluded as it renders to screen (and must be called at a different time)
-	
+
 	for (u32 i = 0; i < effects.size()-1; i ++)
 	{
 		// Render to the input texture of the next effect.
@@ -197,7 +197,7 @@ void PostProcessingChain::ApplyToScreen()
 	// If screen hasn't been rendered to, we must also clear the frame buffer.
 	// (as it may have stuff left over from rendering to textures in it)
 	driver->setRenderTarget(video::ERT_FRAME_BUFFER, !renderScreen, false, video::SColor(0,0,0,0));
-	
+
 	driver->setMaterial( effects[effects.size()-1].material );
 	driver->drawIndexedTriangleList(quadVertices,4,quadIndices,2);
 }

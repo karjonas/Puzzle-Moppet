@@ -11,10 +11,10 @@ EndLevelScreen::EndLevelScreen(MainState *mainState, Level *level)
 {
 	engine = GetEngine();
 	renderSystem = engine->GetRenderSystem();
-	
+
 	stats = level->GetLevelStats();
 	scoreResult = input_score(level->GetShortName(), stats);
-	
+
 	engine->RegisterEventInterest(this, "ButtonDown");
 	engine->RegisterEventInterest(this, "EndLevelText");
 	engine->RegisterEventInterest(this, "ScreenFadeFinished");
@@ -22,14 +22,14 @@ EndLevelScreen::EndLevelScreen(MainState *mainState, Level *level)
 	engine->RegisterEventInterest(this, "EndLevelScreenClose");
 	engine->RegisterEventInterest(this, "EndLevelScreenListItem");
 	engine->RegisterEventInterest(this, "EndLevelScreenListItemFinalScore");
-	
+
 	sound = engine->GetSoundSystem()->CreateSound2D();
 	sound->SetVolume(0.5);
-	
+
 	eventQueue = engine->CreateEventQueue();
 	GetUpdater().AddUpdatable(eventQueue);
 	eventQueue->drop();
-	
+
 	// Wait a brief period before showing.
 	Event event("EndLevelScreenShow");
 	eventQueue->AddTimeWait(timeBeforeShowing);
@@ -40,9 +40,9 @@ EndLevelScreen::~EndLevelScreen()
 {
 	if (sound)
 		sound->drop();
-	
+
 	engine->UnregisterAllEventInterest(this);
-	
+
 	for (u32 i = 0; i < guiElements.size(); i ++)
 		guiElements[i]->remove();
 }
@@ -60,18 +60,18 @@ void EndLevelScreen::OnEvent(const Event &event)
 	video::IVideoDriver *driver = engine->GetIrrlichtDevice()->getVideoDriver();
 	s32 screenWidth = driver->getScreenSize().Width;
 	s32 screenHeight = driver->getScreenSize().Height;
-	
+
 	const f32 betweenItemWait = 1.f;
 	const f32 itemFadeOnTime = 0.5f;
-	
+
 	//f32 bgMinY = 0.3;//0.15;
-	
+
 	//bgMinY = (screenHeight - bgHeight) / 2 ;
-	
+
 	if (event.IsType("EndLevelScreenShow"))
 	{
 		gui::IGUIElement *bg;
-		
+
 		{
 			bg = new GUIPane(engine->GetIrrlichtDevice()->getGUIEnvironment()->getRootGUIElement(),
 					core::recti(-10,0,screenWidth+10,screenHeight),
@@ -79,14 +79,14 @@ void EndLevelScreen::OnEvent(const Event &event)
 			bg->drop();
 			guiElements.push_back(bg);
 		}
-		
+
 		{
 			core::stringw text = L"Level Complete!";
-			
+
 			/*
 			std::vector<core::stringc> levels = find_levels();
 			core::stringc levelShortName = level->GetShortName();
-			
+
 			for (u32 i = 0; i < levels.size(); i ++)
 			{
 				if (levels[i] == levelShortName)
@@ -100,7 +100,7 @@ void EndLevelScreen::OnEvent(const Event &event)
 				}
 			}
 			*/
-			
+
 			s32 yPos = s32(screenHeight * 0.05);
 			gui::IGUIElement *element = add_static_text2( text.c_str() );
 			core::recti rect = element->getRelativePosition();
@@ -108,10 +108,10 @@ void EndLevelScreen::OnEvent(const Event &event)
 			element->setRelativePosition(rect);
 			guiElements.push_back( element );
 		}
-		
+
 		// apply fades to all stuff created so far
 		// (fade on)
-		
+
 		for (u32 i = 0; i < guiElements.size(); i ++)
 		{
 			GUIElementFade *fade = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
@@ -119,12 +119,12 @@ void EndLevelScreen::OnEvent(const Event &event)
 			fade->drop();
 			fade->OnPostRender(0);
 		}
-		
+
 		// Now queue the rest of the stuff.
-		
+
 		f32 yPos = 0.15;
 		const f32 yInc = 0.05f;
-		
+
 		{
 			eventQueue->AddTimeWait(betweenItemWait);
 			Event event("EndLevelScreenListItem");
@@ -132,36 +132,36 @@ void EndLevelScreen::OnEvent(const Event &event)
 			event["y_pos"] = yPos;
 			eventQueue->AddEvent(event);
 		}
-		
+
 		// presumably if there are elevators present, we will use them at least once.
 		// so this if should fail only if there are no elevators.
 		if (stats.elevatorMoves > 0)
 		{
 			yPos += yInc;
-			
+
 			eventQueue->AddTimeWait(betweenItemWait);
 			Event event("EndLevelScreenListItem");
 			event["text"] << "Elevator journeys: " << stats.elevatorMoves;
 			event["y_pos"] = yPos;
 			eventQueue->AddEvent(event);
 		}
-		
+
 		// ugly hack.
 		// we don't want to show undo stats on first level.
 		// (since tutorial doesn't introduce undo until second level)
 		if (level->GetShortName() != "first.lev")
 		{
 			yPos += yInc;
-			
+
 			eventQueue->AddTimeWait(betweenItemWait);
 			Event event("EndLevelScreenListItem");
 			event["text"] << "Undos used: " << stats.undos;
 			event["y_pos"] = yPos;
 			eventQueue->AddEvent(event);
 		}
-		
+
 		yPos += yInc;
-		
+
 		{
 			eventQueue->AddTimeWait(betweenItemWait);
 			Event event("EndLevelScreenListItem");
@@ -169,9 +169,9 @@ void EndLevelScreen::OnEvent(const Event &event)
 			event["y_pos"] = yPos;
 			eventQueue->AddEvent(event);
 		}
-		
+
 		yPos += 0.1f;
-		
+
 		{
 			eventQueue->AddTimeWait(betweenItemWait);
 			Event event("EndLevelScreenListItemFinalScore");
@@ -180,36 +180,36 @@ void EndLevelScreen::OnEvent(const Event &event)
 			event["y_pos"] = yPos;
 			eventQueue->AddEvent(event);
 		}
-		
+
 		f32 bgHeight = yPos + 0.05f;
-		
+
 		// set bg correct height
 		core::recti rect = bg->getRelativePosition();
 		rect.LowerRightCorner.Y = s32(screenHeight * bgHeight);
 		bg->setRelativePosition(rect);
-		
+
 		// now find downwards Y offset required to centre everything vertically.
 		s32 yOffset = (screenHeight - s32(screenHeight*bgHeight)) / 2;
 		f32 yOffsetFloat = (1.f - bgHeight) / 2.f;
-		
-		
+
+
 		// apply to all gui elements created so far
 		for (u32 i = 0; i < guiElements.size(); i ++)
 			offset_y(guiElements[i], yOffset);
-		
+
 		// and all those waiting in events...
 		// (hack alert!)
-		
+
 		std::vector<Event *> allEvents = eventQueue->GetAllEvents();
-		
+
 		for (u32 i = 0; i < allEvents.size(); i ++)
 		{
 			Event &event = *(allEvents[i]);
-			
+
 			if (event.HasKey("y_pos"))
 				event["y_pos"] = event["y_pos"] + yOffsetFloat;
 		}
-		
+
 		// Stop player teleport effects.
 		// Not sure whether to do this or not.
 		//level->ClearEndLevelTeleportEffects();
@@ -223,12 +223,12 @@ void EndLevelScreen::OnEvent(const Event &event)
 					s32(screenHeight*event["y_pos"].To<f32>())-rect.getHeight()/2 );
 			element->setRelativePosition(rect);
 			guiElements.push_back( element );
-			
+
 			GUIElementFade *fade = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
 					element, this, itemFadeOnTime, itemFadeOnTime, false);
 			fade->drop();
 			fade->OnPostRender(0);
-			
+
 			sound->Play("../projects/Puzzle/media/sfx/appear.ogg");
 		}
 	}
@@ -241,41 +241,41 @@ void EndLevelScreen::OnEvent(const Event &event)
 					s32(screenHeight*event["y_pos"].To<f32>())-rect.getHeight() );
 			element->setRelativePosition(rect);
 			guiElements.push_back( element );
-			
+
 			GUIElementFade *fade = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
 					element, this, itemFadeOnTime, itemFadeOnTime, false);
 			fade->drop();
 			fade->OnPostRender(0);
-			
-			
+
+
 			// rating is separate
-			
+
 			gui::IGUIStaticText *textElement = add_static_text2( core::stringw(event["text2"].To<core::stringc>()).c_str() );
 			core::recti rect2 = textElement->getRelativePosition();
 			rect2 += core::vector2di( screenWidth/2-rect2.getWidth()/2,
 					s32(screenHeight*event["y_pos"].To<f32>())-rect2.getHeight() );
 			textElement->setRelativePosition(rect2);
 			guiElements.push_back( textElement );
-			
+
 			textElement->setOverrideColor( get_rating_col(scoreResult)
 					// and make a bit brighter since we are on a black background
 					+ video::SColor(50,0,0,0) );
-			
+
 			GUIElementFade *fade2 = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
 					textElement, this, itemFadeOnTime, itemFadeOnTime, false);
 			fade2->drop();
 			fade2->OnPostRender(0);
-			
-			
+
+
 			// now reposition both
-			
+
 			element->setRelativePosition( rect.UpperLeftCorner
 					- core::vector2di(rect2.getWidth()/2, 0) );
-			
+
 			textElement->setRelativePosition( rect2.UpperLeftCorner
 					+ core::vector2di(rect.getWidth()/2 , 0) );
-			
-			
+
+
 			switch (scoreResult)
 			{
 			case ESR_AWFUL:
@@ -301,6 +301,9 @@ void EndLevelScreen::OnEvent(const Event &event)
 				sound->SetVolume(0.25);
 				sound->Play("../projects/Puzzle/media/sfx/extraordinary.ogg");
 				break;
+			default:
+				WARN << "Unknown score result.";
+				break;
 			}
 		}
 	}
@@ -308,7 +311,7 @@ void EndLevelScreen::OnEvent(const Event &event)
 	{
 		// Fade off
 		renderSystem->ScreenFade(0.f, 2, true);
-		
+
 		// And close this.
 		Event event("EndLevelScreenClose");
 		TimedEvent(event, 2.f);
@@ -328,7 +331,7 @@ void EndLevelScreen::OnEvent(const Event &event)
 	}
 	else if (event.IsType("EndLevelText"))
 	{
-		
+
 	}
 }
 

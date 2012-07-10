@@ -9,7 +9,7 @@ OpenALSoundSystem::OpenALSoundSystem()
 {
 	device = alcOpenDevice(NULL);
 	context = NULL;
-	
+
 	if (!device)
 	{
 		WARN << "Failed to create OpenAL device.";
@@ -17,7 +17,7 @@ OpenALSoundSystem::OpenALSoundSystem()
 	else
 	{
 		context = alcCreateContext(device, NULL);
-		
+
 		if (!context)
 		{
 			alcCloseDevice(device);
@@ -36,10 +36,10 @@ OpenALSoundSystem::OpenALSoundSystem()
 			}
 		}
 	}
-	
+
 	globalVolume2D = 1.f;
 	globalVolume3D = 1.f;
-	
+
 	SetGlobalVolume(1.0);
 	SetListenerPosition(core::vector3df(0,0,0));
 	SetListenerOrientation( core::vector3df(0,0,1), core::vector3df(0,1,0) );
@@ -54,18 +54,18 @@ OpenALSoundSystem::~OpenALSoundSystem()
 		alDeleteBuffers(1, &i->second);
 		check_openal_error();
 	}
-	
+
 	if (device && context)
 	{
 		check_openal_error();
-		
+
 		if (!alcMakeContextCurrent(NULL))
 			WARN << "Failed to clear current OpenAL context.";
 		else
 		{
 			alcDestroyContext(context);
 			check_openal_error();
-			
+
 			if (!alcCloseDevice(device))
 				WARN << "Could not close OpenAL device.";
 		}
@@ -80,21 +80,21 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *b
 		*buffer = buffers[fileName];
 		return true;
 	}
-	
+
 	// Otherwise we create buffer.
-	
+
 	// determine file type by extension
 	io::path fileExt = os::path::getext(fileName);
-	
+
 	if (fileExt == "wav")
 	{
 		// Load WAV files with ALUT.
-		
+
 		return false;
-		
+
 		/*
 		ALuint newbuffer = alutCreateBufferFromFile(fileName.c_str());
-		
+
 		if (newbuffer == AL_NONE)
 		{
 			WARN << "Could not create buffer from file (" << fileName << ")";
@@ -112,61 +112,61 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *b
 	{
 		// Try the Ogg loader.
 		// In future, ogg files should probably be streamed rather than entirely buffered in memory.
-		
+
 		ALuint newbuffer = 0;
 		alGenBuffers(1, &newbuffer);
-		
+
 		if (check_openal_error())
 			return false;
 		else
 		{
 			// First query to find frequency. (since the other function doesn't give it)
-			
+
 			ALsizei frequency;
 			bool gotFrequency = false;
-			
-			int n, error;
+
+			int error;
 			stb_vorbis *v = stb_vorbis_open_filename((char *)fileName.c_str(), &error, NULL);
-			
+
 			if (v)
 			{
 				stb_vorbis_info info = stb_vorbis_get_info(v);
-				
+
 				frequency = info.sample_rate;
-				
+
 				stb_vorbis_close(v);
-				
+
 				gotFrequency = true;
 			}
-			
-			
+
+
 			// Load the ogg
-			
+
 			short *data = NULL;
 			int channels, len;
-			
+
 			len = stb_vorbis_decode_filename((char *)fileName.c_str(), &channels, &data);
-			
+
 			if (len && gotFrequency)
 			{
 				// Fill buffer with loaded ogg file.
-				
+
 				if (channels == 1 || channels == 2)
 				{
 					ALenum format;
-					
+
 					if (channels == 1)
 						format = AL_FORMAT_MONO16;
 					else
 						format = AL_FORMAT_STEREO16;
-					
+
 					alBufferData(newbuffer, format, data, sizeof(short)*len*channels, frequency);
-					
+
 					if (!check_openal_error())
 					{
 						if (data)
 							free(data);
-						
+
 						buffers[fileName] = newbuffer;
 						*buffer = newbuffer;
 						return true;
@@ -185,24 +185,24 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *b
 			{
 				WARN << "Ogg loading failed: " << fileName;
 			}
-			
+
 			if (data)
 				free(data);
-			
+
 			alDeleteBuffers(1, &newbuffer);
 			check_openal_error(); // may not be an openal error if it was ogg loader that failed
-			
+
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
 void OpenALSoundSystem::PreloadSound(const c8 *soundFile)
 {
 	ALuint buffer;
-	
+
 	if (!GetOpenALBuffer(soundFile, &buffer))
 		WARN << "Could not get buffer (" << soundFile << ")";
 }
@@ -222,7 +222,7 @@ void OpenALSoundSystem::SetListenerOrientation(core::vector3df lookVec, core::ve
 	orientation[3] = upVec.X;
 	orientation[4] = upVec.Y;
 	orientation[5] = -upVec.Z;
-	
+
 	alListenerfv(AL_ORIENTATION, orientation);
 	check_openal_error();
 }
@@ -256,7 +256,7 @@ void OpenALSoundSystem::SetGlobalVolume(f32 volume)
 void OpenALSoundSystem::SetGlobalVolume2D(f32 volume)
 {
 	globalVolume2D = volume;
-	
+
 	for (u32 i = 0; i < allSounds2D.size(); i ++)
 		allSounds2D[i]->SetSeparateVolume(volume);
 }
@@ -264,7 +264,7 @@ void OpenALSoundSystem::SetGlobalVolume2D(f32 volume)
 void OpenALSoundSystem::SetGlobalVolume3D(f32 volume)
 {
 	globalVolume3D = volume;
-	
+
 	for (u32 i = 0; i < allSounds3D.size(); i ++)
 		allSounds3D[i]->SetSeparateVolume(volume);
 }
