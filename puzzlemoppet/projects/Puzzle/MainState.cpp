@@ -210,12 +210,18 @@ core::stringc find_next_level(bool fromFurthest)
 gui::IGUIStaticText *add_static_text(const wchar_t *str)
 {
 	gui::IGUIEnvironment *guienv = GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
-
+	u32 screenWidth = GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize().Width;
+	
 	gui::IGUIFont *font = guienv->getFont("font2.xml");
 
 	core::dimension2du dim = font->getDimension(str);
+	
+	u32 nbLines = 1 + dim.Width/screenWidth;
+	if (dim.Width > screenWidth) {
+		dim.Width = screenWidth;
+	}
 
-	gui::IGUIStaticText *textElement = guienv->addStaticText(str, core::recti(0,0,dim.Width,dim.Height), false,false);
+	gui::IGUIStaticText *textElement = guienv->addStaticText(str, core::recti((nbLines>1?10:0),0,dim.Width,dim.Height*nbLines), false,true);
 	textElement->setOverrideFont( guienv->getFont("font2.xml") );
 	textElement->setOverrideColor( TEXT_COL );
 	return textElement;
