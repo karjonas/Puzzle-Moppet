@@ -143,11 +143,6 @@ io::path getcustomappdata(const io::path &dirName)
 {
 	io::path path = getappdata() + os::path::sepstr();
 
-#if !defined(_IRR_WINDOWS_API_) && !defined(__APPLE__)
-	// If Linux, we prepend '.' so it is a hidden directory.
-	path += '.';
-#endif
-
 	path += dirName;
 
 	os::path::ensure_dir(path);

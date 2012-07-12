@@ -22,3 +22,6 @@ cmake_install.cmake
 # Binary files
 #
 *.a
+
+# IDE related files
+*.kdev4
