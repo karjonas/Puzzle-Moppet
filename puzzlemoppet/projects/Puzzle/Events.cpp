@@ -313,7 +313,7 @@ void DefaultEvent::OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoo
 
 			core::vector3df fallblockPos3d = level->GetPosFromCoord(below);
 			fallblockSounds[fallblockSoundSlot]->SetPosition( fallblockPos3d );
-			fallblockSounds[fallblockSoundSlot]->Play("../projects/Puzzle/media/sfx/fallblock.ogg");
+			fallblockSounds[fallblockSoundSlot]->Play(PROJECT_DIR"/Puzzle/media/sfx/fallblock.ogg");
 
 			// circular slots
 			// since we may want several fallblock sounds at once

@@ -93,7 +93,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
 		}
 	}
 	
-	levelTitles = file::loadsettings("../projects/Puzzle/level_names.ini");
+	levelTitles = file::loadsettings(PROJECT_DIR"/Puzzle/level_names.ini");
 	
 	
 	// ensure a furthest level file exists (e.g. from old version that didn't have one)
@@ -142,7 +142,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
 	
 	
 	//bgAmbientSound->SetVolume(0.05);
-	//bgAmbientSound->Play("../projects/Puzzle/media/music.ogg");
+	//bgAmbientSound->Play(PROJECT_DIR"/Puzzle/media/music.ogg");
 }
 
 void StartScreen::CreatePreviewLevel(core::stringc previewLevelName)
@@ -216,7 +216,7 @@ void StartScreen::CreateFirstMenu()
 	menu->AddItem("Website", EMI_VISIT_WEBSITE);
 	menu->AddItem("Options", EMI_OPTIONS);
 	menu->AddItem("Exit", EMI_EXIT);
-	menu->SetMouseOverSound("../projects/Puzzle/media/sfx/beep.ogg");
+	menu->SetMouseOverSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
 	menu->Finalise();
 	
 	// level selector
@@ -267,7 +267,7 @@ void StartScreen::CreateLevelSelectButtons()
 		}
 		
 		//menuLevelSelect->SetHeading(levelTitle);
-		menuLevelSelect->SetMouseOverSound("../projects/Puzzle/media/sfx/beep.ogg");
+		menuLevelSelect->SetMouseOverSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
 		menuLevelSelect->Finalise();
 		
 		
@@ -422,7 +422,7 @@ void StartScreen::CreateLevelSelectButtons()
 				core::stringc count;
 				count += s32(levelFileNames.size());
 				
-				file::put("../projects/Puzzle/levelcount.ini", count);
+				file::put(PROJECT_DIR"/Puzzle/levelcount.ini", count);
 
 				str += count;
 				
@@ -474,7 +474,7 @@ StartScreen::~StartScreen()
 void StartScreen::AndSoItBegins()
 {
 	//bgAmbientSound->SetVolume(0.035);
-	//bgAmbientSound->Play("../projects/Puzzle/media/sfx/windy.ogg");
+	//bgAmbientSound->Play(PROJECT_DIR"/Puzzle/media/sfx/windy.ogg");
 	
 	device->getCursorControl()->setVisible(false);
 	
@@ -625,7 +625,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 			+ (settings["musicVolume"] == 0 ? "Off" : "On"),
 			EMI_OPTIONS_MUSIC_VOLUME);
 	
-	vertMenu->SetMouseOverSound("../projects/Puzzle/media/sfx/beep.ogg");
+	vertMenu->SetMouseOverSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
 	vertMenu->Finalise();
 	optionsMenus.push_back(vertMenu);
 	
@@ -666,7 +666,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 			s32(screenHeight - screenHeight*marginBottom) + 20, 25, false);
 	horizMenu->AddItem("Cancel", EMI_OPTIONS_CANCEL);
 	horizMenu->AddItem("Apply", EMI_OPTIONS_OK);
-	horizMenu->SetMouseOverSound("../projects/Puzzle/media/sfx/beep.ogg");
+	horizMenu->SetMouseOverSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
 	horizMenu->Finalise();
 	optionsMenus.push_back(horizMenu);
 	
@@ -804,7 +804,7 @@ void StartScreen::OnEvent(const Event &event)
 				menu = horizMenu;
 				menu->AddItem("Cancel", EMI_NEW_GAME_NO);
 				menu->AddItem("Start New Game", EMI_NEW_GAME_YES);
-				menu->SetMouseOverSound("../projects/Puzzle/media/sfx/beep.ogg");
+				menu->SetMouseOverSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
 				menu->Finalise();
 			}
 		}
@@ -946,7 +946,7 @@ void StartScreen::OnEvent(const Event &event)
 				mat.rotateVect(offset,dist);
 				
 				sound->SetPosition( world->GetCamera()->GetPosition() + offset );
-				sound->Play("../projects/Puzzle/media/sfx/balloonpush.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/balloonpush.ogg");
 			}
 			else if (event["button"] == EMI_OPTIONS_MOVEMENT)
 			{
