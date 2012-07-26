@@ -17,8 +17,8 @@ extern core::vector3df sunDirection;
 // this only used for final scene
 #include "Map.h"
 
-#define LEVEL_LIST_FILE "../projects/Puzzle/levels/levels.list"
-#define LEVEL_BASE_PATH "../projects/Puzzle/levels/levels/"
+#define LEVEL_LIST_FILE PROJECT_DIR"/Puzzle/levels/levels.list"
+#define LEVEL_BASE_PATH PROJECT_DIR"/Puzzle/levels/levels/"
 
 
 #define GAME_SAVE_FILENAME "puzzlegame.save"
@@ -268,7 +268,7 @@ MainState::MainState(MainState **mainStatePtrLoc)
 	levelFileNames = find_levels();
 
 	// New: read some descriptive level titles.
-	levelTitles = file::loadsettings("../projects/Puzzle/level_names.ini");
+	levelTitles = file::loadsettings(PROJECT_DIR"/Puzzle/level_names.ini");
 
 	// general events
 	engine->RegisterEventInterest(this, "ButtonDown");
@@ -534,7 +534,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::d
 			finalSceneSea->SetIsLooped(true);
 			finalSceneSea->SetVolume(15.0);
 			finalSceneSea->SetPosition(core::vector3df(-50,0,0));
-			finalSceneSea->Play("../projects/Puzzle/media/sfx/sea.ogg");
+			finalSceneSea->Play(PROJECT_DIR"/Puzzle/media/sfx/sea.ogg");
 		}
 
 		// Different sky box
@@ -1355,7 +1355,7 @@ void MainState::OnEvent(const Event &event)
 				if (elements[i] == mouseOverElement)
 				{
 					if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
-						menuSound->Play("../projects/Puzzle/media/sfx/beep.ogg");
+						menuSound->Play(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
 
 					textElement->setOverrideColor( TEXT_COL_MOUSEOVER );
 				}

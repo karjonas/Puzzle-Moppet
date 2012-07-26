@@ -28,3 +28,5 @@ if (projectProperties)
 	set_target_properties(${projectName} ${projectProperties})
 endif (projectProperties)
 target_link_libraries(${projectName} ${projectLibs})
+
+install(TARGETS ${projectName} RUNTIME DESTINATION bin)

@@ -80,7 +80,7 @@ VariantMap stats_to_map(const LevelStats &stats)
 E_SCORE_RESULT get_saved_score(const core::stringc &levelName)
 {
 	core::stringc shortScoreFile = os::path::splitext(levelName)[0] + ".ini";
-	core::stringc perfectScoreFile = io::path("../projects/Puzzle/perfectscores/") + shortScoreFile;
+	core::stringc perfectScoreFile = io::path(PROJECT_DIR"/Puzzle/perfectscores/") + shortScoreFile;
 	core::stringc saveScoreFile = os::path::concat( getsavescoredir(), shortScoreFile );
 	
 	// Get perfect stats
@@ -126,7 +126,7 @@ E_SCORE_RESULT input_score(const core::stringc &levelName, const LevelStats &sta
 		WARN << "Unable to create level score folder.";
 	
 	core::stringc shortScoreFile = os::path::splitext(levelName)[0] + ".ini";
-	core::stringc perfectScoreFile = io::path("../projects/Puzzle/perfectscores/") + shortScoreFile;
+	core::stringc perfectScoreFile = io::path(PROJECT_DIR"/Puzzle/perfectscores/") + shortScoreFile;
 	core::stringc saveScoreFile = os::path::concat( saveScoreDir, shortScoreFile );
 	
 	NOTE << "Loading perfect score: " << perfectScoreFile;

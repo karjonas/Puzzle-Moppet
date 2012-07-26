@@ -1,4 +1,3 @@
-
 #include "Litha.h"
 #include "MainState.h"
 #include "StartScreen.h"
@@ -107,7 +106,7 @@ int main(int argc, const char **argv)
 	
 	
 	
-	engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive("../projects/Puzzle/media/");
+	engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(PROJECT_DIR"/Puzzle/media/");
 	
 	
 	IWorld *world = engine->GetWorld();
@@ -304,30 +303,30 @@ int main(int argc, const char **argv)
 	// Sounds
 	{
 		ISoundSystem *soundSystem = engine->GetSoundSystem();
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/sea.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/beep.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/fallblock.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/buttonflutter_micro.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/hithard.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/liftrun.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/balloonpush.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/slide.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/windy.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/speedcore.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/bell.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/stepballoon.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/step.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/sea.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/fallblock.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/buttonflutter_micro.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/hithard.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/liftrun.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/balloonpush.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/slide.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/windy.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/speedcore.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/bell.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/stepballoon.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/step.ogg");
 		
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/appear.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/appear.ogg");
 		
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/laugh.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/fair.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/good.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/excellent.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/perfect.ogg");
-		soundSystem->PreloadSound("../projects/Puzzle/media/sfx/extraordinary.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/laugh.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/fair.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/good.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/excellent.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/perfect.ogg");
+		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/extraordinary.ogg");
 		
-		//soundSystem->PreloadSound("../projects/Puzzle/media/music.ogg");
+		//soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/music.ogg");
 	}
 	
 	// Shaders!?
@@ -371,8 +370,8 @@ int main(int argc, const char **argv)
 	// Load sfx volume
 	set_volumes_from_settings(engine->GetCreationSettings());
 	
-	bgAmbientSound->Play("../projects/Puzzle/media/sfx/windy.ogg");
-	bgMusic->Play("../projects/Puzzle/media/sfx/speedcore.ogg");
+	bgAmbientSound->Play(PROJECT_DIR"/Puzzle/media/sfx/windy.ogg");
+	bgMusic->Play(PROJECT_DIR"/Puzzle/media/sfx/speedcore.ogg");
 	
 	// load default movement type
 	{

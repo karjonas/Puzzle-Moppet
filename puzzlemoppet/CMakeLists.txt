@@ -7,8 +7,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 INCLUDE(FindPkgConfig)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
+
+set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in install path")
+
+if (BUILD_FOR_INSTALL)
+	add_definitions(-DPROJECT_DIR="${CMAKE_INSTALL_PREFIX}/share/puzzlemoppet")
+endif (BUILD_FOR_INSTALL)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	# On Linux, force it to search the exe directory for .so files.
@@ -115,7 +121,18 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 ########### BUILD ALL PROJECTS ############
 add_subdirectory(projects)
 
-
+########### INSTALLATION DESTINATION ############
+install(DIRECTORY 
+  ${PROJECT_SOURCE_DIR}/projects/Puzzle/media 
+  ${PROJECT_SOURCE_DIR}/projects/Puzzle/levels 
+  ${PROJECT_SOURCE_DIR}/projects/Puzzle/tutorialtexts
+  ${PROJECT_SOURCE_DIR}/projects/Puzzle/perfectscores
+  DESTINATION share/puzzlemoppet/Puzzle)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  install(DIRECTORY ${PROJECT_SOURCE_DIR}/projects/Puzzle/tutorialtexts_mac DESTINATION share/puzzlemoppet/Puzzle/)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/licenses/ DESTINATION share/licences/puzzlemoppet)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/icons DESTINATION share/puzzlemoppet)
 
 
 

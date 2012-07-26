@@ -229,7 +229,7 @@ void EndLevelScreen::OnEvent(const Event &event)
 			fade->drop();
 			fade->OnPostRender(0);
 
-			sound->Play("../projects/Puzzle/media/sfx/appear.ogg");
+			sound->Play(PROJECT_DIR"/Puzzle/media/sfx/appear.ogg");
 		}
 	}
 	else if (event.IsType("EndLevelScreenListItemFinalScore"))
@@ -279,27 +279,27 @@ void EndLevelScreen::OnEvent(const Event &event)
 			switch (scoreResult)
 			{
 			case ESR_AWFUL:
-				sound->Play("../projects/Puzzle/media/sfx/laugh.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/laugh.ogg");
 				break;
 			case ESR_FAIR:
 				sound->SetVolume(0.15);
-				sound->Play("../projects/Puzzle/media/sfx/fair.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/fair.ogg");
 				break;
 			case ESR_GOOD:
 				sound->SetVolume(0.15);
-				sound->Play("../projects/Puzzle/media/sfx/good.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/good.ogg");
 				break;
 			case ESR_EXCELLENT:
 				sound->SetVolume(0.15);
-				sound->Play("../projects/Puzzle/media/sfx/excellent.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/excellent.ogg");
 				break;
 			case ESR_PERFECT:
 				sound->SetVolume(0.25);
-				sound->Play("../projects/Puzzle/media/sfx/perfect.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/perfect.ogg");
 				break;
 			case ESR_EXTRAORDINARY:
 				sound->SetVolume(0.25);
-				sound->Play("../projects/Puzzle/media/sfx/extraordinary.ogg");
+				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/extraordinary.ogg");
 				break;
 			default:
 				WARN << "Unknown score result.";
