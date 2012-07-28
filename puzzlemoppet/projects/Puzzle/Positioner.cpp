@@ -24,13 +24,16 @@ void Positioner::SetTopRight(gui::IGUIElement *element, u16 x, u16 y)
 }
 
 Positioner::Positioner(video::IVideoDriver *driver, s32 spacing)
-{
-	this->driver = driver;
-	this->spacing = spacing;
+{	
+    this->driver = driver;
+    this->spacing = spacing;
 }
 
 void Positioner::Add(gui::IGUIElement *element, s32 id)
 {
+
+    element->setAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER,
+                          irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 	elements.push_back(element);
 	ids.push_back(id);
 }
@@ -310,7 +313,9 @@ void EitherSidePositioner::Apply()
 			SetTopLeft(elements[i],
 					screenWidth/2 - screenCentreOffset, // snug against screen edge
 					yPos - rect.getHeight()/2 // Vertically centred
-					);
+					);                        
+                        elements[i]->setAlignment(gui::EGUIA_UPPERLEFT, gui::EGUIA_UPPERLEFT,
+                                                  gui::EGUIA_CENTER, gui::EGUIA_CENTER);
 		}
 		else if ((i == 1 && enabledRight) || (i == 0 && !enabledLeft && enabledRight))
 		{
@@ -318,6 +323,8 @@ void EitherSidePositioner::Apply()
 					screenWidth/2 + screenCentreOffset - rect.getWidth(), // snug against screen edge
 					yPos - rect.getHeight()/2 // Vertically centred
 					);
+                        elements[i]->setAlignment(gui::EGUIA_LOWERRIGHT, gui::EGUIA_LOWERRIGHT,
+                                                  gui::EGUIA_CENTER, gui::EGUIA_CENTER);
 		}
 	}
 }
