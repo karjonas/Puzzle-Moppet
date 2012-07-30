@@ -240,7 +240,7 @@ void StartScreen::CreateLevelSelectButtons()
 			levelTitle = "";
 		
 		menuLevelSelect = new SimpleEitherSideToggleMenu(LEVEL_SELECT_MENU_ID);
-		menuLevelSelect->AddImageItem("arrow_left.png", EMI_LEVEL_PREV);
+                menuLevelSelect->AddImageItem("arrow_left.png", EMI_LEVEL_PREV);
 		menuLevelSelect->AddImageItem("arrow_right.png", EMI_LEVEL_NEXT);
 		
 		// show level select only if more than one level
@@ -316,7 +316,9 @@ void StartScreen::CreateLevelSelectButtons()
 				));
 		
 		levelTitleText->setOverrideColor( video::SColor(115, 255,255,255) );
-		
+
+                levelTitleText->setAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER,
+                                             irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 		
 		// level rating text?
 		
@@ -358,7 +360,9 @@ void StartScreen::CreateLevelSelectButtons()
 					levelRatingText->setOverrideColor( video::SColor(100, 255,255,255) );
 			}
 		}
-		
+
+
+
 		
 		// hmm, let's position rating after
 		if (levelRatingText)
@@ -379,6 +383,9 @@ void StartScreen::CreateLevelSelectButtons()
 							- levelRatingText->getRelativePosition().getHeight()/2
 							)
 					);
+                        // Set the alignment relative to the window
+                        levelRatingText->setAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER,
+                                                      irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 		}
 		
 		
@@ -443,6 +450,8 @@ void StartScreen::CreateLevelSelectButtons()
 						));
 				
 				levelFractionText->setOverrideColor( video::SColor(75, 255,255,255) );
+                                levelFractionText->setAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER,
+                                                                irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 			}
 		}
 	}

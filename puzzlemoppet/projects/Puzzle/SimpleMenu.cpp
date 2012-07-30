@@ -60,10 +60,10 @@ void SimpleMenu::AddImageItem(io::path imageName, s32 uniqueItemId, bool removeM
 	video::ITexture *texture = driver->getTexture(imageName);
 	//core::dimension2du size = texture->getOriginalSize();
 	
-	positioner->Add(
-			guienv->addImage(texture, core::position2di(0,0)),
-			uniqueItemId
-			);
+        gui::IGUIImage *guiimg = guienv->addImage(texture, core::position2di(0,0));
+	positioner->Add(guiimg, uniqueItemId);
+        
+
 }
 
 void SimpleMenu::SetItemGap(u32 gap)
