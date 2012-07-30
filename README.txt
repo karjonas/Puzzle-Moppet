@@ -53,11 +53,27 @@ Open a terminal/console window, navigate to the project folder and change into t
 > cmake .
 > make
 
+To "install" the game (i.e. use make install):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_FOR_INSTALL=ON . && make && sudo make install
+or
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/somewhere -DBUILD_FOR_INSTALL=ON . && make && make install
+
 Other cmake options
 ~~~~~~~~~~~~~~~~~~~
 "cmake ." for normal build
 "cmake -DCMAKE_BUILD_TYPE=Debug ." if you need lines number in gdb
 "cmake -DCMAKE_BUILD_TYPE=Release ." will give you -O2 optimisation for release builds
+
+CMAKE_INSTALL_PREFIX :
+	Install directory used by install.
+
+	If "make install" is invoked or INSTALL is built, this directory is
+	pre-pended onto all install directories.  This variable defaults to
+	/usr/local on UNIX and c:/Program Files on Windows.
+
+BUILD_FOR_INSTALL :
+	Should the game search for its datas in install path
 
 Running the game
 ----------------

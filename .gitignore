@@ -25,3 +25,6 @@ cmake_install.cmake
 
 # IDE related files
 *.kdev4
+
+# files generated during build+install
+puzzlemoppet/install_manifest.txt
