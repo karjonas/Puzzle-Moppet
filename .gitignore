@@ -3,7 +3,6 @@
 .DS_Store
 ._.DS_Store
 Thumbs.db
-~*
 
 # CMake generated files
 #
@@ -24,7 +23,11 @@ cmake_install.cmake
 *.a
 
 # IDE related files
+#
 *.kdev4
 
 # files generated during build+install
 puzzlemoppet/install_manifest.txt
+
+# Other IDE related files
+nbproject
