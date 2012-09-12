@@ -13,6 +13,8 @@ class Kernel : public IReferenceCounted
 	std::vector<Task *> tasks;
 	
 	bool readyToExit;
+
+    u32 screenWidth, screenHeight;
 	
 public:
 	Kernel();
