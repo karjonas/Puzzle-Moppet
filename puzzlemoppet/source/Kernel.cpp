@@ -9,6 +9,8 @@ Kernel::Kernel()
 	device = engine->GetIrrlichtDevice();
 	
 	readyToExit = false;
+    screenWidth = device->getVideoDriver()->getScreenSize().Width;
+    screenHeight = device->getVideoDriver()->getScreenSize().Height;
 }
 
 Kernel::~Kernel()
@@ -65,6 +67,30 @@ void Kernel::Run()
 				// to perform an actual update).
 				tasks[i]->PotentialUpdate();
 			}
+
+            // If the window size has changed a "ScreenResize" event is sent
+            u32 newScreenWidth = 
+                device->getVideoDriver()->getScreenSize().Width;
+            u32 newScreenHeight = 
+                device->getVideoDriver()->getScreenSize().Height;
+            if (newScreenWidth != screenWidth || 
+                newScreenHeight != screenHeight
+               )
+            {
+                screenHeight = newScreenHeight;
+                screenWidth = newScreenWidth;
+                const Event resizeEvent("ScreenResize");
+                engine->QueueEvent(resizeEvent, 0);
+                
+                // Update the active camera's aspect ratio or
+                // a window resize will stretch the image
+                core::dimension2du d =
+                    core::dimension2du(screenWidth, screenHeight);
+                device->getVideoDriver()->OnResize(d);
+                irr::scene::ICameraSceneNode* camera = 
+                    device->getSceneManager()->getActiveCamera();
+                camera->setAspectRatio((float)d.Width/d.Height);
+            }
 			
 			// Also process queued events
 			engine->ProcessEventQueue();
