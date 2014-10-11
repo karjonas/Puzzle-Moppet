@@ -304,6 +304,7 @@ bool Variant::operator==(const Variant &value) const
 		return moredata._vec == value.moredata._vec;
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return false;
 	}
 }
 
