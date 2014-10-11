@@ -218,6 +218,36 @@ public:
 		baseEmitter->setMinStartColor(color);
 	}
 
+	void setMinLifeTime( u32 lifeTimeMin )
+	{
+		baseEmitter->setMinLifeTime(lifeTimeMin);
+	}
+
+	void setMaxLifeTime( u32 lifeTimeMax )
+	{
+		baseEmitter->setMaxLifeTime(lifeTimeMax);
+	}
+
+	void setMaxAngleDegrees( s32 maxAngleDegrees )
+	{
+		baseEmitter->setMaxAngleDegrees(maxAngleDegrees);
+	}
+
+	u32 getMinLifeTime() const
+	{
+		return baseEmitter->getMinLifeTime();
+	}
+
+	u32 getMaxLifeTime() const
+	{
+		return baseEmitter->getMaxLifeTime();
+	}
+
+	s32 getMaxAngleDegrees() const
+	{
+		return baseEmitter->getMaxAngleDegrees();
+	}
+
 	void setMaxStartColor( const video::SColor& color )
 	{
 		baseEmitter->setMaxStartColor(color);
