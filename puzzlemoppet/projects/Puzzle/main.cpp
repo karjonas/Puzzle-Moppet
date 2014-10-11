@@ -430,9 +430,7 @@ int main(int argc, const char **argv)
 	
 	if (bgMusic)
 		bgMusic->drop();
-	
-	bool engineWillRestart = engine->WillRestart();
-	
+
 	engine->drop();
 		
 	return 0;

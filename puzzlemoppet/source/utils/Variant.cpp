@@ -90,6 +90,7 @@ Variant::operator bool() const
 		return str::from_bool(moredata._str);
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return false;
 	}
 }
 
@@ -111,6 +112,7 @@ Variant::operator u32() const
 		return str::from_u32(moredata._str);
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return 0;
 	}
 }
 
@@ -132,6 +134,7 @@ Variant::operator s32() const
 		return str::from_s32(moredata._str);
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return 0;
 	}
 }
 
@@ -153,6 +156,7 @@ Variant::operator f32() const
 		return str::from_f32(moredata._str);
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return 0;
 	}
 }
 
@@ -174,6 +178,7 @@ Variant::operator f64() const
 		return str::from_f64(moredata._str);
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return 0;
 	}
 }
 
@@ -195,6 +200,7 @@ Variant::operator core::stringc() const
 		return moredata._str;
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return "";
 	}
 }
 
@@ -206,6 +212,7 @@ Variant::operator std::vector<Variant>() const
 		return moredata._vec;
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return std::vector<Variant>();
 	}
 }
 
@@ -297,6 +304,7 @@ bool Variant::operator==(const Variant &value) const
 		return moredata._vec == value.moredata._vec;
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return false;
 	}
 }
 
@@ -360,6 +368,7 @@ bool Variant::operator<(const Variant &value) const
 		return To<core::stringc>().size() < value.To<core::stringc>().size();
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return false;
 	}
 }
 
@@ -416,6 +425,7 @@ bool Variant::operator>(const Variant &value) const
 		return To<core::stringc>().size() > value.To<core::stringc>().size();
 	default:
 		FAIL << "invalid variant type (" << variantType << ")";
+		return false;
 	}
 }
 

@@ -261,7 +261,7 @@ void Mesh::Render(u16 pass)
 	*/
 }
 
-void Mesh::DefineAnimation(s32 id, u32 start, u32 end, f32 fps, bool looped, bool interruptible, f32 transitionTime)
+void Mesh::DefineAnimation(s32 id, s32 start, s32 end, f32 fps, bool looped, bool interruptible, f32 transitionTime)
 {
 	Animation anim =
 	{

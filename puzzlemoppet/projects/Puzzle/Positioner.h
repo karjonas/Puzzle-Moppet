@@ -20,6 +20,7 @@ protected:
 	
 public:
 	Positioner(video::IVideoDriver *driver, s32 spacing);
+	virtual ~Positioner() {}
 	
 	void Add(gui::IGUIElement *element, s32 id);
 	void SetSpacing(s32 spacing) { this->spacing = spacing; }
@@ -50,6 +51,7 @@ class RowPositioner : public Positioner
 public:
 	// if not vertCentred, yPos is the top
 	RowPositioner(video::IVideoDriver *driver, s32 yPos, s32 spacing, bool vertCentred = true);
+	virtual ~RowPositioner(){}
 	
 	// a "title" element that appears above the row...
 	void SetTitle(gui::IGUIElement *element);

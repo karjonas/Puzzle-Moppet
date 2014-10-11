@@ -5,7 +5,6 @@
 
 class AlphaOnAnimator : public IMotionAnimator
 {
-	IUpdater *localUpdater;
 	IMesh *mesh;
 	u8 onAlpha;
 	f32 alpha;
@@ -23,7 +22,7 @@ class AlphaOnAnimator : public IMotionAnimator
 public:
 	// onAlpha is the maximum alpha value, when reached AlphaOn has finished.
 	AlphaOnAnimator(IUpdater *localUpdater, u8 onAlpha)
-		: localUpdater(localUpdater), onAlpha(onAlpha)
+		: onAlpha(onAlpha)
 	{
 		mesh = NULL;
 		fadingOn = false;
@@ -146,10 +145,6 @@ public:
 			core::vector2df moveVec = maths::get_horizontal_vec(relativeToRot);
 			
 			// Find if move direction is within a certain angle difference from any compass direction.
-			
-			const f32 maxVecDiff = 0.3f;
-			
-			core::vector2df rotVec = maths::get_horizontal_vec(relativeToRot);
 			
 			atMoveAngle = true;/*
 					rotVec.getDistanceFrom(core::vector2df(1,0)) < maxVecDiff

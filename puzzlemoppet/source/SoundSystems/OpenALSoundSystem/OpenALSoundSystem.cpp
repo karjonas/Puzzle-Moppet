@@ -143,9 +143,9 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *b
 			// Load the ogg
 
 			short *data = NULL;
-			int channels, len;
+			int channels, len, sample_rate;
 
-			len = stb_vorbis_decode_filename((char *)fileName.c_str(), &channels, &data);
+			len = stb_vorbis_decode_filename((char *)fileName.c_str(), &channels, &sample_rate, &data);
 
 			if (len && gotFrequency)
 			{

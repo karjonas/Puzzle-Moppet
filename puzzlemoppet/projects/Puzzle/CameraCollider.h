@@ -136,7 +136,6 @@ public:
 		// Amoving is the new position for the camera. (starts at A and then moves towards B).
 		core::vector3df A = cameraRay.end;
 		core::vector3df B = cameraRay.start;
-		core::vector3df Afar = infiniteRay.end;
 		core::vector3df Bfar = infiniteRay.start;
 		core::vector3df Amoving = A;
 		

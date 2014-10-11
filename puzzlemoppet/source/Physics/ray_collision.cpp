@@ -127,7 +127,9 @@ const std::vector<RayCollision> &ray_cast(const core::line3df &ray, dSpaceID spa
 	dir.normalize();
 	dGeomRaySet(rayGeom, ray.start.X,ray.start.Y,ray.start.Z, dir.X,dir.Y,dir.Z);
 	// Don't use the first contact, use the closest, and also do backface culling (ignore backface)
-	dGeomRaySetParams(rayGeom, false, true);
+	dGeomRaySetFirstContact(rayGeom, false);
+	dGeomRaySetBackfaceCull(rayGeom, true);
+
 	// Want closest point on a trimesh
 	dGeomRaySetClosestHit(rayGeom, true);
 	

@@ -28,7 +28,6 @@ public:
 		if (IsVisible)
 		{
 			gui::IGUISkin *skin = Environment->getSkin();
-			core::rect<s32> rect = AbsoluteRect;
 			skin->draw2DRectangle(this, col, AbsoluteRect, &AbsoluteClippingRect);
 		}
 		

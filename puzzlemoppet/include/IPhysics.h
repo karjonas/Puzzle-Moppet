@@ -14,7 +14,7 @@ class IMesh;
 class IStaticBody;
 class IDynamicBody;
 class ICollisionMaterial;
-class CollisionMaterialInteraction;
+struct CollisionMaterialInteraction;
 
 // Stuff that is commented out will (*may*) be implemented later...
 class IPhysics : public virtual IReferenceCounted

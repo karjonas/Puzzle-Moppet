@@ -9,7 +9,7 @@ class IWorld;
 class IRenderSystem;
 class ISoundSystem;
 class IUpdater;
-class ButtonStates;
+struct ButtonStates;
 class IWantEvents;
 class IEventQueue;
 class Event;

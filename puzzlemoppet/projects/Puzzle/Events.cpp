@@ -558,6 +558,7 @@ bool FanEvent::RequestActionPermission(core::vector3di coord, E_ACTION_TYPE acti
 		return map->GetEvent(coord + core::vector3di(0,1,0)) != this;
 	};
 	FAIL << "shouldn't have reached here";
+	return false;
 }
 
 // ****************** Lift Event ************************
@@ -861,6 +862,7 @@ bool LiftEvent::RequestActionPermission(core::vector3di coord, E_ACTION_TYPE act
 		return true;
 	};
 	FAIL << "shouldn't have reached here";
+	return false;
 }
 
 
