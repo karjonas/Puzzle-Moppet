@@ -24,7 +24,7 @@ Requirements
 ------------
 
 . CMake
-. Irrlicht 1.6.1, http://downloads.sourceforge.net/irrlicht/irrlicht-1.6.1.zip
+. Irrlicht, http://irrlicht.sourceforge.net/downloads/
 . ODE, http://www.ode.org/
 . OpenAL, http://connect.creativelabs.com/openal/default.aspx
 
@@ -34,15 +34,6 @@ Distribution specific instructions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 . Ubuntu:
 sudo apt-get install build-essential cmake libode-dev libopenal-dev libxxf86vm-dev libirrlicht-dev
-
-. General:
-If your package manager does not provide version 1.6.1 you need to compile it yourself:
-
-Download the Irrlicht files, version 1.6.1, unzip and place in /puzzlemoppet/thirdparty.                                                                                                                   
-If in GNU Linux search for the required libraries using your package manager.
-
-> cd <project dir>/puzzlemoppet/thirdparty/irrlicht-1.6.1/source/Irrlicht/
-> make
 
 Building the Game
 -----------------
