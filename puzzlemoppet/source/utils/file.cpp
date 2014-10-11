@@ -18,7 +18,7 @@ core::stringc get(const io::path &fileName)
 		{
 			char *buf = new char[len+1];
 			
-			int read = fread(buf, sizeof(char), len, fp);
+			u32 read = fread(buf, sizeof(char), len, fp);
 			
 			ASSERT( read <= len );
 			buf[read] = 0;

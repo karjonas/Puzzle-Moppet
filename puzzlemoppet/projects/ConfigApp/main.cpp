@@ -187,7 +187,7 @@ void SaveSettings()
 	{
 		s32 selected = comboboxScreenRes->getSelected();
 		
-		ASSERT( selected < videoModes.size() );
+		ASSERT( (u32)selected < videoModes.size() );
 		
 		projectSettings["screenWidth"] = videoModes[selected].Width;
 		projectSettings["screenHeight"] = videoModes[selected].Height;
