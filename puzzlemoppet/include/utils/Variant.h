@@ -95,6 +95,7 @@ public:
 			}
 		default:
 			FAIL << "invalid variant type (" << variantType << ")";
+			return std::vector<Type>();
 		}
 	}
 	

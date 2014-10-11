@@ -76,7 +76,7 @@ public:
 	
 	E_EVENT_TYPE GetType() { return EET_DEFAULT_EVENT; }
 	
-	core::stringc GetIconMeshName() { FAIL << "This should not be called."; }
+	core::stringc GetIconMeshName() { FAIL << "This should not be called."; return ""; }
 };
 
 class FanEvent : public IMapEventOwner
