@@ -5,7 +5,6 @@
 
 class AlphaOnAnimator : public IMotionAnimator
 {
-	IUpdater *localUpdater;
 	IMesh *mesh;
 	u8 onAlpha;
 	f32 alpha;
@@ -23,7 +22,7 @@ class AlphaOnAnimator : public IMotionAnimator
 public:
 	// onAlpha is the maximum alpha value, when reached AlphaOn has finished.
 	AlphaOnAnimator(IUpdater *localUpdater, u8 onAlpha)
-		: localUpdater(localUpdater), onAlpha(onAlpha)
+		: onAlpha(onAlpha)
 	{
 		mesh = NULL;
 		fadingOn = false;
