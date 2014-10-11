@@ -315,15 +315,12 @@ MainState::~MainState()
 
 void MainState::ShowInitTexts()
 {
-	video::IVideoDriver *driver = device->getVideoDriver();
-
 	// not set until StartLevel
 	initFirstLevelTime = -1.0;
 
 	// Game name and company name splash text
 	// This is shown every time the game starts.
 
-	s32 screenHeight = driver->getScreenSize().Height;
 
 	// DISABLED THIS SINCE WE ADDED THE START SCREEN.
 	// Start screen gives any info like this.
@@ -499,7 +496,6 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::d
 		video::IVideoDriver *driver = device->getVideoDriver();
 
 		s32 screenWidth = driver->getScreenSize().Width;
-		s32 screenHeight = driver->getScreenSize().Height;
 
 		core::stringc levelTitle = levelTitles[levelFileName].To<core::stringc>();
 		core::stringw levelTitleW = levelTitle.c_str();

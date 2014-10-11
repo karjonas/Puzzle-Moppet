@@ -328,7 +328,7 @@ void Editor::OnButtonDown(int id)
 		level->RemoveObject(targetCoord);
 		
 		// Remove event
-		if (IMapEventOwner *event = map->GetEvent(targetCoord))
+		if (map->GetEvent(targetCoord))
 		{
 			map->SetEvent(targetCoord, NULL);
 			HideEvent(targetCoord);

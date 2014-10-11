@@ -147,10 +147,6 @@ public:
 			
 			// Find if move direction is within a certain angle difference from any compass direction.
 			
-			const f32 maxVecDiff = 0.3f;
-			
-			core::vector2df rotVec = maths::get_horizontal_vec(relativeToRot);
-			
 			atMoveAngle = true;/*
 					rotVec.getDistanceFrom(core::vector2df(1,0)) < maxVecDiff
 					|| rotVec.getDistanceFrom(core::vector2df(-1,0)) < maxVecDiff

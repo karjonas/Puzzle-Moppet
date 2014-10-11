@@ -202,9 +202,6 @@ void SimpleHorizontalMenu::SetHeading(core::stringw text)
 SimpleVerticalMenu::SimpleVerticalMenu(s32 uniqueId, f32 marginBottom)
 	: SimpleMenu(uniqueId)
 {
-	video::IVideoDriver *driver = device->getVideoDriver();
-	u32 halfScreenHeight = driver->getScreenSize().Height / 2;
-	
 	//positioner = new ColumnPositioner(device->getVideoDriver(), 20);
 	positioner = new ColumnPositionerCentred(device->getVideoDriver(), 10, marginBottom);
 }
@@ -218,8 +215,6 @@ SimpleVerticalMenu::SimpleVerticalMenu(s32 uniqueId, f32 marginBottom)
 SimpleEitherSideToggleMenu::SimpleEitherSideToggleMenu(s32 uniqueId)
 	: SimpleMenu(uniqueId)
 {
-	video::IVideoDriver *driver = device->getVideoDriver();
-	
 	positioner = new EitherSidePositioner(device->getVideoDriver());
 }
 

@@ -3599,7 +3599,6 @@ void Level::Update(f32 dt)
 				if (wasOnSolidGround)
 				{
 					core::vector3di below = actorMapPos + core::vector3di(0,-1,0);
-					core::vector3di belowLast = c.centreLocation + core::vector3di(0,-1,0);
 					
 					// Save for Undo if just fallen!
 					// But only once, when first fall is detected.
