@@ -30,6 +30,7 @@ public:
 	// Provide custom interaction settings depending on the state of the Collision.
 	// Changes to the interaction are only temporary.
 	virtual void Prepare(CollisionMaterialInteraction &interaction, const Collision &collision) = 0;
+	virtual ~IInteractionPreparator() {}
 };
 
 #endif
