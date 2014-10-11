@@ -105,7 +105,7 @@ public:
 	void Render(u16 pass);
 	
 	// an animation is: {start,end,FPS,looped?,interruptible?}
-	void DefineAnimation(s32 id, u32 start, u32 end, f32 fps, bool looped, bool interruptible, f32 transitionTime);
+	void DefineAnimation(s32 id, s32 start, s32 end, f32 fps, bool looped, bool interruptible, f32 transitionTime);
 	
 	void SetAnimation(s32 id);
 	

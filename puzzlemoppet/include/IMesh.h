@@ -25,7 +25,7 @@ public:
 	// id is chosen by you. Sensible to use an enum, e.g. enum { IDLE,WALK,etc...}
 	// NOTE: Some artists may assume animation starts at 1, but Irrlicht assumes it starts at 0.
 	// (so you may need to subtract 1 from animation ranges)
-	virtual void DefineAnimation(s32 id, u32 start, u32 end, f32 fps, bool looped, bool interruptible,
+	virtual void DefineAnimation(s32 id, s32 start, s32 end, f32 fps, bool looped, bool interruptible,
 			f32 transitionTime = 0.1) = 0;
 	
 	// Set an animation defined with DefineAnimation.
