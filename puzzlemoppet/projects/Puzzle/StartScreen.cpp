@@ -102,7 +102,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
 		NOTE << "furthest file did not exist...";
 		NOTE << "Will attempt to create.";
 		
-		if (!file::put(get_full_save_path_furthest(), file::get(get_full_save_path())));
+		if (!file::put(get_full_save_path_furthest(), file::get(get_full_save_path())))
 			WARN << "(failed)";
 	}
 	
