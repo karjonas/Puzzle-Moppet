@@ -27,13 +27,13 @@ public:
 	// Used by DynamicBody (and possibly derived classes too)
 	dGeomID GetODEGeom();
 	
-	void SetMaterial(ICollisionMaterial *material);
-	ICollisionMaterial *GetMaterial();
+	void SetMaterial(ICollisionMaterial *material) override;
+	ICollisionMaterial *GetMaterial() override;
 	
-	void SetCollisionLayer(u32 layer);
-	u32 GetCollisionLayer();
+	void SetCollisionLayer(u32 layer) override;
+	u32 GetCollisionLayer() override;
 	
-	core::aabbox3df GetAABB();
+	core::aabbox3df GetAABB() override;
 };
 
 #endif

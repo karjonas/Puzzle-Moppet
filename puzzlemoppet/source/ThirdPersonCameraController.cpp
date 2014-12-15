@@ -25,27 +25,27 @@ public:
 		correctionDistance = 0.5;
 	}
 	
-	void SetCorrectionDistance(f32 distance)
+	void SetCorrectionDistance(f32 distance) override
 	{
 		correctionDistance = distance;
 	}
 	
-	void SetCollisionLayer(u32 layer)
+	void SetCollisionLayer(u32 layer) override
 	{
 		collisionLayer = layer;
 	}
 	
-	void ExcludeGeometry(const Set<ICollisionGeometry *> &excluding)
+	void ExcludeGeometry(const Set<ICollisionGeometry *> &excluding) override
 	{
 		excludedGeometries.Union(excluding);
 	}
 	
-	void ClearExcludedGeometry()
+	void ClearExcludedGeometry() override
 	{
 		excludedGeometries.clear();
 	}
 	
-	bool ProcessCollision(const core::line3df &cameraRay, core::vector3df &resultPos)
+	bool ProcessCollision(const core::line3df &cameraRay, core::vector3df &resultPos) override
 	{
 		RayCollision collisionResult;
 		

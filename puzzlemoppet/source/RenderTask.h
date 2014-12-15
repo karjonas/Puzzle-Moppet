@@ -47,27 +47,27 @@ public:
 	
 	// Render system methods
 	
-	IPostProcessingChain *CreatePostProcessingChain(bool renderScreen);
-	void SetActivePostProcessingChain(IPostProcessingChain *chain);
+	IPostProcessingChain *CreatePostProcessingChain(bool renderScreen) override;
+	void SetActivePostProcessingChain(IPostProcessingChain *chain) override;
 	
-	void SetShaderLevel(E_SHADER_LEVEL level);
+	void SetShaderLevel(E_SHADER_LEVEL level) override;
 	
-	IShader *CreateShader(const c8 *vertexShaderFileName, const c8 *pixelShaderFileName, video::E_MATERIAL_TYPE baseMaterial);
+	IShader *CreateShader(const c8 *vertexShaderFileName, const c8 *pixelShaderFileName, video::E_MATERIAL_TYPE baseMaterial) override;
 	
-	bool ShadersAreAvailable();
-	bool PostProcessingEnabled();
-	void ForceNoShaders(bool noShaders);
-	void ForceNoPostProcessing(bool noPostProcessing);
+	bool ShadersAreAvailable() override;
+	bool PostProcessingEnabled() override;
+	void ForceNoShaders(bool noShaders) override;
+	void ForceNoPostProcessing(bool noPostProcessing) override;
 	
-	void ScreenFade(f32 fadeAmount, f32 time, bool fadeGUI);
-	void ScreenFadeFromCurrent(f32 fadeAmount, f32 time, bool fadeGUI);
-	bool IsFading();
-	f32 GetCurrentFade() { return currentScreenFade; }
+	void ScreenFade(f32 fadeAmount, f32 time, bool fadeGUI) override;
+	void ScreenFadeFromCurrent(f32 fadeAmount, f32 time, bool fadeGUI) override;
+	bool IsFading() override;
+	f32 GetCurrentFade() override { return currentScreenFade; }
 	
-	void SetBackgroundCol(const video::SColor &col) { backgroundCol = col; }
+	void SetBackgroundCol(const video::SColor &col) override { backgroundCol = col; }
 	
-	void RenderInvisible();
+	void RenderInvisible() override;
 	
 	// Task methods
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };

@@ -23,7 +23,7 @@ public:
 			int idButtonWalkForwards,int idButtonWalkBackwards, int idButtonWalkLeft, int idButtonWalkRight,
 			ITransformable *moveRelativeTo);
 	
-	void Update(ICharacter *character);
+	void Update(ICharacter *character) override;
 };
 
 #endif

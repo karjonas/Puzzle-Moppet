@@ -45,37 +45,37 @@ public:
 	Character(IWorld *world, IPhysics *physics, IMesh *mesh, s32 idAnimIdle, s32 idAnimWalk, f32 height);
 	~Character();
 	
-	void SetPosition(const core::vector3df &pos);
-	void SetRotation(const core::vector3df &rot);
+	void SetPosition(const core::vector3df &pos) override;
+	void SetRotation(const core::vector3df &rot) override;
 	
-	core::vector3df GetPosition();
-	core::vector3df GetRotation();
+	core::vector3df GetPosition() override;
+	core::vector3df GetRotation() override;
 	
-	void SetAnimations(s32 idAnimIdle, s32 idAnimWalk);
-	bool IsSetAnimations(s32 idAnimIdle, s32 idAnimWalk);
+	void SetAnimations(s32 idAnimIdle, s32 idAnimWalk) override;
+	bool IsSetAnimations(s32 idAnimIdle, s32 idAnimWalk) override;
 	
-	void SetGravityEnabled(bool enabled);
-	void SetDensity(f32 density);
+	void SetGravityEnabled(bool enabled) override;
+	void SetDensity(f32 density) override;
 	
-	void SetMaterial(ICollisionMaterial *material);
+	void SetMaterial(ICollisionMaterial *material) override;
 	
-	void SetMoveSpeed(f32 speed);
+	void SetMoveSpeed(f32 speed) override;
 	
-	void SetMoveVec(const core::vector2df &vec);
-	core::vector2df GetMoveVec();
+	void SetMoveVec(const core::vector2df &vec) override;
+	core::vector2df GetMoveVec() override;
 	
-	void SetMedialMotion(c8 dir);
-	void SetLateralMotion(c8 dir);
+	void SetMedialMotion(c8 dir) override;
+	void SetLateralMotion(c8 dir) override;
 	
-	void SetTurnSmoothing(f32 smooth) { turnSmooth = smooth; }
+	void SetTurnSmoothing(f32 smooth) override { turnSmooth = smooth; }
 	
-	core::vector3df GetAttemptedMove();
+	core::vector3df GetAttemptedMove() override;
 	
-	void StopMoving();
+	void StopMoving() override;
 	
-	IMesh *GetMesh() { return mesh; }
-	IDynamicBody *GetBody() { return body; }
+	IMesh *GetMesh() override { return mesh; }
+	IDynamicBody *GetBody() override { return body; }
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };
 

@@ -23,8 +23,8 @@ class Task : public virtual IReferenceCounted, public IUpdatable
 	
 protected:
 	// Pause and resume are not available for the top level tasks, since they mustn't get out of sync.
-	void OnPause()	{ASSERT(false);}
-	void OnResume()	{ASSERT(false);}
+	void OnPause() override	{ASSERT(false);}
+	void OnResume() override	{ASSERT(false);}
 	
 public:
 	Task()
@@ -51,7 +51,7 @@ public:
 	f32 GetVirtualTime() { return engine->GetEngineTime(); }
 	
 	// Since a task cannot be paused, its updatables will always be updated.
-	virtual void Update(f32 dt)
+	virtual void Update(f32 dt) override
 	{
 		IUpdatable::Update(dt);
 	}
@@ -65,7 +65,7 @@ public:
 	}
 	
 	// Called by Kernel after task has been added to Kernel.
-	void InitUpdateTime()
+	void InitUpdateTime() override
 	{
 		IUpdatable::InitUpdateTime();
 		

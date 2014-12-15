@@ -13,9 +13,9 @@ public:
 	SphereCollisionGeometry(dSpaceID space, f32 radius);
 	~SphereCollisionGeometry();
 	
-	core::vector3df GetSize();
+	core::vector3df GetSize() override;
 	
-	f32 GetRadius();
+	f32 GetRadius() override;
 };
 
 #endif

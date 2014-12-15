@@ -16,7 +16,7 @@ public:
 	MeshCollisionGeometry(dSpaceID space, IMesh *mesh);
 	~MeshCollisionGeometry();
 	
-	core::vector3df GetSize();
+	core::vector3df GetSize() override;
 };
 
 #endif

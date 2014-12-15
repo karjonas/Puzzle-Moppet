@@ -13,17 +13,17 @@ class SoundSource : public ISoundSource
 	ISoundQueue *soundQueue;
 	
 protected:
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
 public:
 	SoundSource(ISoundSystem *soundSystem);
 	~SoundSource();
 	
-	ISound3D *GetSound();
-	ISoundQueue *GetSoundQueue();
+	ISound3D *GetSound() override;
+	ISoundQueue *GetSoundQueue() override;
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };
 
 #endif

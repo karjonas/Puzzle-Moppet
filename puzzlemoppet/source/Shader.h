@@ -55,25 +55,25 @@ public:
 	
 	u32 GetID() { return shaderId; }
 	
-	void SetVertexRegisterMap(const LowLevelShaderRegisterMap &registerMap);
-	void SetPixelRegisterMap(const LowLevelShaderRegisterMap &registerMap);
+	void SetVertexRegisterMap(const LowLevelShaderRegisterMap &registerMap) override;
+	void SetPixelRegisterMap(const LowLevelShaderRegisterMap &registerMap) override;
 	
-	void SetVertexConstant(const c8 *name, s32 value);
-	void SetVertexConstant(const c8 *name, f32 value);
+	void SetVertexConstant(const c8 *name, s32 value) override;
+	void SetVertexConstant(const c8 *name, f32 value) override;
 	
-	void SetVertexConstants(const c8 *name, s32 *values, u16 count);
-	void SetVertexConstants(const c8 *name, f32 *values, u16 count);
+	void SetVertexConstants(const c8 *name, s32 *values, u16 count) override;
+	void SetVertexConstants(const c8 *name, f32 *values, u16 count) override;
 	
-	void SetPixelConstant(const c8 *name, s32 value);
-	void SetPixelConstant(const c8 *name, f32 value);
+	void SetPixelConstant(const c8 *name, s32 value) override;
+	void SetPixelConstant(const c8 *name, f32 value) override;
 	
-	void SetPixelConstants(const c8 *name, s32 *values, u16 count);
-	void SetPixelConstants(const c8 *name, f32 *values, u16 count);
+	void SetPixelConstants(const c8 *name, s32 *values, u16 count) override;
+	void SetPixelConstants(const c8 *name, f32 *values, u16 count) override;
 	
-	void SetCallback(IShaderCallback *callback);
+	void SetCallback(IShaderCallback *callback) override;
 	
-	void ApplyToIrrMaterial(video::SMaterial &material);
-	void ClearFromIrrMaterial(video::SMaterial &material, video::E_MATERIAL_TYPE newMaterialType);
+	void ApplyToIrrMaterial(video::SMaterial &material) override;
+	void ClearFromIrrMaterial(video::SMaterial &material, video::E_MATERIAL_TYPE newMaterialType) override;
 	
 	// ShaderInstance forwards its OnSetConstants to this.
 	void OnSetConstants(video::IMaterialRendererServices *services, s32 userData);

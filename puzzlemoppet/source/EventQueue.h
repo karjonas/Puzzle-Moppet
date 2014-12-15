@@ -40,22 +40,22 @@ public:
 	EventQueue();
 	~EventQueue();
 	
-	void AddEvent(const Event &event);
+	void AddEvent(const Event &event) override;
 	
-	void AddTimeWait(f32 waitTime);
+	void AddTimeWait(f32 waitTime) override;
 	
-	void AddLogicWait(IWaitLogic *waitLogic);
+	void AddLogicWait(IWaitLogic *waitLogic) override;
 	
-	u32 GetEventsWaiting();
+	u32 GetEventsWaiting() override;
 	
-	bool IsEmpty();
+	bool IsEmpty() override;
 	
-	bool IsEventWaiting(const core::stringc &eventName);
+	bool IsEventWaiting(const core::stringc &eventName) override;
 	
-	void ScaleTimes(f32 scale);
+	void ScaleTimes(f32 scale) override;
 	
-	std::vector<Event *> GetAllEvents();
+	std::vector<Event *> GetAllEvents() override;
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };
 

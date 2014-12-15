@@ -77,49 +77,49 @@ public:
 	Mesh(scene::ISceneManager *smgr, const c8 *name);
 	~Mesh();
 	
-	core::aabbox3df GetBoundingBox();
+	core::aabbox3df GetBoundingBox() override;
 	
-	u32 GetMaterialCount();
+	u32 GetMaterialCount() override;
 	
-	video::SMaterial &GetMaterial(u32 material, u16 pass);
+	video::SMaterial &GetMaterial(u32 material, u16 pass) override;
 	
-	void SetShader(u32 material, IShader *shader, u16 pass);
+	void SetShader(u32 material, IShader *shader, u16 pass) override;
 	
-	void SetAllShaders(IShader *shader, u16 pass);
+	void SetAllShaders(IShader *shader, u16 pass) override;
 	
-	void DisableMaterial(u32 material, u16 pass);
+	void DisableMaterial(u32 material, u16 pass) override;
 	
-	void DisableAllMaterials(u16 pass);
+	void DisableAllMaterials(u16 pass) override;
 	
-	void SetVisible(bool visible);
+	void SetVisible(bool visible) override;
 	
-	void ReceiveRenderPosition(core::vector3df pos);
-	void ReceiveRenderRotation(core::vector3df rot);
+	void ReceiveRenderPosition(core::vector3df pos) override;
+	void ReceiveRenderRotation(core::vector3df rot) override;
 	
-	u16 GetPassCount();
+	u16 GetPassCount() override;
 	
-	void SetCurrentPass(u16 pass);
+	void SetCurrentPass(u16 pass) override;
 	
-	void AddPass(const c8 *meshName);
+	void AddPass(const c8 *meshName) override;
 	
-	void Render(u16 pass);
+	void Render(u16 pass) override;
 	
 	// an animation is: {start,end,FPS,looped?,interruptible?}
-	void DefineAnimation(s32 id, s32 start, s32 end, f32 fps, bool looped, bool interruptible, f32 transitionTime);
+	void DefineAnimation(s32 id, s32 start, s32 end, f32 fps, bool looped, bool interruptible, f32 transitionTime) override;
 	
-	void SetAnimation(s32 id);
+	void SetAnimation(s32 id) override;
 	
-	bool IsPlayingAnimation(s32 id);
+	bool IsPlayingAnimation(s32 id) override;
 	
 	void HaltAnimation();
 	
-	scene::IAnimatedMeshSceneNode *GetIrrlichtNode();
+	scene::IAnimatedMeshSceneNode *GetIrrlichtNode() override;
 	
 	// Mesh can be scaled. Should be taken into account by physics mesh geometry
-	void Scale(const core::vector3df &scale);
+	void Scale(const core::vector3df &scale) override;
 	
-	void Rotate(const core::vector3df &rotation);
+	void Rotate(const core::vector3df &rotation) override;
 	
-	void Translate(const core::vector3df &translation);
+	void Translate(const core::vector3df &translation) override;
 };
 

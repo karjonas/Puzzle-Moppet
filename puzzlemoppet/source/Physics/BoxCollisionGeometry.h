@@ -13,7 +13,7 @@ public:
 	BoxCollisionGeometry(dSpaceID space, const core::vector3df &size);
 	~BoxCollisionGeometry();
 	
-	core::vector3df GetSize();
+	core::vector3df GetSize() override;
 };
 
 #endif
