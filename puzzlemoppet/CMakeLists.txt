@@ -2,6 +2,7 @@ project(LithaEngine)
 
 cmake_minimum_required(VERSION 2.6)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_EXPORT_COMPILE_COMMANDS)
 
 # find-pkg is used to select -DdSINGLE or -DdDOUBLE for ODE
 INCLUDE(FindPkgConfig)
@@ -66,7 +67,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 # Irrlicht
 find_package(Irrlicht REQUIRED)
-message ("Using Irrlicht version "${IRRLICHT_VERSION})
+message ("Using Irrlicht version " ${IRRLICHT_VERSION})
 if (${IRRLICHT_VERSION} MATCHES "1.6.1")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DIRRLICHT_VERSION=161")
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DIRRLICHT_VERSION=161")
