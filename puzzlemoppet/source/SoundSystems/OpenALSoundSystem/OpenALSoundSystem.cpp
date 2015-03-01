@@ -257,16 +257,16 @@ void OpenALSoundSystem::SetGlobalVolume2D(f32 volume)
 {
 	globalVolume2D = volume;
 
-	for (u32 i = 0; i < allSounds2D.size(); i ++)
-		allSounds2D[i]->SetSeparateVolume(volume);
+	for (auto & elem : allSounds2D)
+		elem->SetSeparateVolume(volume);
 }
 
 void OpenALSoundSystem::SetGlobalVolume3D(f32 volume)
 {
 	globalVolume3D = volume;
 
-	for (u32 i = 0; i < allSounds3D.size(); i ++)
-		allSounds3D[i]->SetSeparateVolume(volume);
+	for (auto & elem : allSounds3D)
+		elem->SetSeparateVolume(volume);
 }
 
 void OpenALSoundSystem::StopAllSounds()

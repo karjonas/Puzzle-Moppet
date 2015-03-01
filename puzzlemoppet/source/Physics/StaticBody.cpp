@@ -34,8 +34,8 @@ Set<ICollisionGeometry *> StaticBody::GetCollisionGeometries()
 {
 	Set<ICollisionGeometry *> geometries;
 	
-	for (u32 i = 0; i < geometry.size(); i ++)
-		geometries.Insert(geometry[i]);
+	for (auto & elem : geometry)
+		geometries.Insert(elem);
 	
 	return geometries;
 }

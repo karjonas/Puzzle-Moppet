@@ -132,9 +132,9 @@ void Shader::OnSetConstants(video::IMaterialRendererServices *services, s32 user
 					= vertexRegisterMap.GetRegisterComponentNames();
 			std::vector<f32> data;
 			
-			for (u32 i = 0; i < names.size(); i ++)
+			for (auto & name : names)
 			{
-				LowLevelShaderRegisterMap::RegisterComponentGroup rcg = names[i];
+				LowLevelShaderRegisterMap::RegisterComponentGroup rcg = name;
 				
 				// Name NULL or doesn't exist in named variable map?
 				// Unused, just add zeroes.
@@ -152,8 +152,8 @@ void Shader::OnSetConstants(video::IMaterialRendererServices *services, s32 user
 				ASSERT( groupFloats.size() == rcg.size );
 				
 				// Add it to the data
-				for (u32 j = 0; j < groupFloats.size(); j ++)
-					data.push_back(groupFloats[j]);
+				for (auto & groupFloat : groupFloats)
+					data.push_back(groupFloat);
 			}
 			
 			// Each register has 4 components.
@@ -171,9 +171,9 @@ void Shader::OnSetConstants(video::IMaterialRendererServices *services, s32 user
 					= pixelRegisterMap.GetRegisterComponentNames();
 			std::vector<f32> data;
 			
-			for (u32 i = 0; i < names.size(); i ++)
+			for (auto & name : names)
 			{
-				LowLevelShaderRegisterMap::RegisterComponentGroup rcg = names[i];
+				LowLevelShaderRegisterMap::RegisterComponentGroup rcg = name;
 				
 				// Name NULL or doesn't exist in named variable map?
 				// Unused, just add zeroes.
@@ -191,8 +191,8 @@ void Shader::OnSetConstants(video::IMaterialRendererServices *services, s32 user
 				ASSERT( groupFloats.size() == rcg.size );
 				
 				// Add it to the data
-				for (u32 j = 0; j < groupFloats.size(); j ++)
-					data.push_back(groupFloats[j]);
+				for (auto & groupFloat : groupFloats)
+					data.push_back(groupFloat);
 			}
 			
 			// Each register has 4 components.

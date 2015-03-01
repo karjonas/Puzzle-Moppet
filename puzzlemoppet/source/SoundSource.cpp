@@ -53,18 +53,18 @@ void SoundSource::Update(f32 dt)
 	
 	const std::vector<ISound *> &soundQueueSounds = soundQueue->GetAllSounds();
 	
-	for (u32 i = 0; i < soundQueueSounds.size(); i ++)
-		tempAllSounds.push_back(soundQueueSounds[i]);
+	for (auto & soundQueueSound : soundQueueSounds)
+		tempAllSounds.push_back(soundQueueSound);
 	
 	// Set all 3D sounds with a position and velocity
 	
 	core::vector3df pos = GetAbsolutePosition();
 	core::vector3df vel = GetAbsoluteLinearVelocity();
 	
-	for (u32 i = 0; i < tempAllSounds.size(); i ++)
+	for (auto & tempAllSound : tempAllSounds)
 	{
 		// Is it a 3D sound?
-		if (ISound3D *sound3d = dynamic_cast<ISound3D *>(tempAllSounds[i]))
+		if (ISound3D *sound3d = dynamic_cast<ISound3D *>(tempAllSound))
 		{
 			sound3d->SetPosition( pos );
 			sound3d->SetVelocity( vel );

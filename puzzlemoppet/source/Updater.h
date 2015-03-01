@@ -66,9 +66,9 @@ public:
 			return;
 		
 		// check not already present
-		for (u32 i = 0; i < updatables.size(); i ++)
+		for (auto & elem : updatables)
 		{
-			if (updatables[i].ptr == updatable)
+			if (elem.ptr == updatable)
 				return;
 		}
 		

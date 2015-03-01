@@ -73,10 +73,10 @@ Shader *ShaderManager::GetShaderById(u32 shaderId)
 
 ShaderInstance *ShaderManager::GetShaderInstance(ShaderInstanceDef &shaderInstanceDef)
 {
-	for (u32 i = 0; i < shaderInstances.size(); i ++)
+	for (auto & elem : shaderInstances)
 	{
-		if (shaderInstances[i]->GetDef() == shaderInstanceDef)
-			return shaderInstances[i];
+		if (elem->GetDef() == shaderInstanceDef)
+			return elem;
 	}
 	
 	// Doesn't exist, so create

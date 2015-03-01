@@ -59,9 +59,9 @@ bool EventQueue::IsEventWaiting(const core::stringc &eventName)
 {
 	// Search queue
 	
-	for (u32 i = 0; i < items.size(); i ++)
+	for (auto & elem : items)
 	{
-		if (items[i].type == QIT_EVENT && items[i].event.IsType(eventName))
+		if (elem.type == QIT_EVENT && elem.event.IsType(eventName))
 			return true;
 	}
 	
@@ -70,20 +70,20 @@ bool EventQueue::IsEventWaiting(const core::stringc &eventName)
 
 void EventQueue::ScaleTimes(f32 scale)
 {
-	for (u32 i = 0; i < items.size(); i ++)
+	for (auto & elem : items)
 	{
-		if (items[i].type == QIT_TIME_WAIT)
+		if (elem.type == QIT_TIME_WAIT)
 		{
-			if (items[i].neverFirstInQueue)
+			if (elem.neverFirstInQueue)
 			{
-				items[i].waitTime *= scale;
+				elem.waitTime *= scale;
 			}
 			else // if first in queue, scale time remaining only
 			{
-				f32 timePassed = GetVirtualTime() - items[i].waitStartTime;
-				f32 timeRemaining = items[i].waitTime - timePassed;
+				f32 timePassed = GetVirtualTime() - elem.waitStartTime;
+				f32 timeRemaining = elem.waitTime - timePassed;
 				
-				items[i].waitTime = timePassed + timeRemaining * scale;
+				elem.waitTime = timePassed + timeRemaining * scale;
 			}
 		}
 	}
@@ -93,10 +93,10 @@ std::vector<Event *> EventQueue::GetAllEvents()
 {
 	std::vector<Event *> eventPointers;
 	
-	for (u32 i = 0; i < items.size(); i ++)
+	for (auto & elem : items)
 	{
-		if (items[i].type == QIT_EVENT)
-			eventPointers.push_back(&items[i].event);
+		if (elem.type == QIT_EVENT)
+			eventPointers.push_back(&elem.event);
 	}
 	
 	return eventPointers;

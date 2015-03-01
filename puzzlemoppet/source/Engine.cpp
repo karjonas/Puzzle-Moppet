@@ -380,8 +380,8 @@ Engine::~Engine()
 		
 		NOTE << "Executable path: " << exePath;
 		
-		for (u32 i = 0; i < args.size(); i ++)
-			NOTE << "Arg: " << args[i];
+		for (auto & elem : args)
+			NOTE << "Arg: " << elem;
 		
 		utils::log::backup(".old");
 		
