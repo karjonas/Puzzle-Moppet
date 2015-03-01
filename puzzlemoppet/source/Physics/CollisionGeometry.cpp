@@ -4,10 +4,10 @@
 CollisionGeometry::CollisionGeometry(dSpaceID space)
 {
 	collisionLayer = 0;
-	material = NULL;
+	material = nullptr;
 	
 	// Geom is set by a call to SetODEGeom in the constructor of derived classes.
-	geom = NULL;
+	geom = nullptr;
 }
 
 CollisionGeometry::~CollisionGeometry()

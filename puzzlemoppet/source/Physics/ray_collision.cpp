@@ -6,7 +6,7 @@
 #include "IPhysics.h"
 
 // want a pointer to this to check which layer collisions are enabled
-IPhysics *physics = NULL;
+IPhysics *physics = nullptr;
 
 dGeomID castRayGeom;
 std::vector<RayCollision> collisions;
@@ -110,7 +110,7 @@ const std::vector<RayCollision> &ray_cast(dGeomID rayGeom, dSpaceID space,
 	collisions.clear();
 	
 	// Collide ray with each geom in the space
-	dSpaceCollide2(rayGeom, (dGeomID)space, NULL, ray_callback);
+	dSpaceCollide2(rayGeom, (dGeomID)space, nullptr, ray_callback);
 	
 	return collisions;
 }

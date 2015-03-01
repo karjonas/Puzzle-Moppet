@@ -18,7 +18,7 @@ Mesh::Mesh(scene::ISceneManager *smgr, const c8 *name)
 	
 	// Animation...
 	meshNode->setJointMode(scene::EJUOR_CONTROL);
-	currentAnimation = NULL;
+	currentAnimation = nullptr;
 	
 	//onFirstFrame = true;
 	
@@ -322,7 +322,7 @@ bool Mesh::IsPlayingAnimation(s32 id)
 
 void Mesh::HaltAnimation()
 {
-	currentAnimation = NULL;
+	currentAnimation = nullptr;
 }
 
 scene::IAnimatedMeshSceneNode *Mesh::GetIrrlichtNode()

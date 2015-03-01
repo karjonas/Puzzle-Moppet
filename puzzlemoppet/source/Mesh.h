@@ -13,7 +13,7 @@ struct Pass
 		for (u32 i = 0; i < node->getMaterialCount(); i ++)
 			materials.push_back(node->getMaterial(i));
 		
-		shaders.assign(node->getMaterialCount(), NULL);
+		shaders.assign(node->getMaterialCount(), nullptr);
 	}
 	
 	// Create using the materials from a scene::IMesh
@@ -29,7 +29,7 @@ struct Pass
 			}
 		}
 		
-		shaders.assign(mesh->getMeshBufferCount(), NULL);
+		shaders.assign(mesh->getMeshBufferCount(), nullptr);
 	}
 	
 	~Pass()

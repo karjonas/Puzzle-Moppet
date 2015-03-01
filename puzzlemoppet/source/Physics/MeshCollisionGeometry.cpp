@@ -10,7 +10,7 @@ MeshCollisionGeometry::MeshCollisionGeometry(dSpaceID space, IMesh *mesh)
 			mesh->GetIrrlichtNode()->getScale()
 			);
 	
-	SetODEGeom( dCreateTriMesh(space, meshData->triMeshData, 0, 0, 0) );
+	SetODEGeom( dCreateTriMesh(space, meshData->triMeshData, nullptr, nullptr, nullptr) );
 }
 
 MeshCollisionGeometry::~MeshCollisionGeometry()

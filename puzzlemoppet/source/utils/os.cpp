@@ -487,7 +487,7 @@ bool run(const io::path &appPath, const std::vector<io::path> &args, u32 seconds
 		for (u32 i = 0; i < args.size(); i ++)
 			argv[i+1] = (char *)args[i].c_str();
 
-		argv[args.size()+1] = NULL;
+		argv[args.size()+1] = nullptr;
 
 		execv( fullAppPath.c_str(), argv );
 
@@ -681,10 +681,10 @@ void openwebpage(const io::path &url)
 			"google-chrome",
 			"midori",
 			"seamonkey",
-			NULL
+			nullptr
 		};
 
-		for (u32 i = 0; browserCommands[i] != NULL; i ++)
+		for (u32 i = 0; browserCommands[i] != nullptr; i ++)
 		{
 			if (run(browserCommands[i], args))
 				return;

@@ -13,7 +13,7 @@ Shader::Shader(ShaderManager *shaderManager, ShaderInstanceDef shaderInstanceDef
 	
 	ASSERT( shaderInstance );
 	
-	callback = NULL;
+	callback = nullptr;
 }
 
 Shader::~Shader()

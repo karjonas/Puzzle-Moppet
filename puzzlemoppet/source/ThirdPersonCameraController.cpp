@@ -70,7 +70,7 @@ ThirdPersonCameraController::ThirdPersonCameraController(IWorld *world, scene::I
 	this->minPitch = minPitch;
 	this->maxPitch = maxPitch;
 	
-	following = NULL;
+	following = nullptr;
 	
 	world->SubscribeToInput(this);
 	SetInputAxes(-1,-1,-1);
@@ -91,7 +91,7 @@ ThirdPersonCameraController::ThirdPersonCameraController(IWorld *world, scene::I
 	SetAngles(core::vector2df(0,0));
 	
 	// Collisions?
-	collider = NULL;
+	collider = nullptr;
 }
 
 ThirdPersonCameraController::~ThirdPersonCameraController()

@@ -240,27 +240,27 @@ bool from_bool(const core::stringc &value)
 	if (value.subString(0,4).equals_ignore_case("true"))
 		return true;
 	
-	return (bool)strtol(value.c_str(), NULL, 0);
+	return (bool)strtol(value.c_str(), nullptr, 0);
 }
 
 u32 from_u32(const core::stringc &value)
 {
-	return (u32)strtol(value.c_str(), NULL, 0);
+	return (u32)strtol(value.c_str(), nullptr, 0);
 }
 
 s32 from_s32(const core::stringc &value)
 {
-	return (s32)strtol(value.c_str(), NULL, 0);
+	return (s32)strtol(value.c_str(), nullptr, 0);
 }
 
 f32 from_f32(const core::stringc &value)
 {
-	return (f32)strtod(value.c_str(), NULL);
+	return (f32)strtod(value.c_str(), nullptr);
 }
 
 f64 from_f64(const core::stringc &value)
 {
-	return strtod(value.c_str(), NULL);
+	return strtod(value.c_str(), nullptr);
 }
 
 }

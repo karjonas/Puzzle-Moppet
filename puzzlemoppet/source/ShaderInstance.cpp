@@ -9,7 +9,7 @@ ShaderInstance::ShaderInstance(video::IVideoDriver *driver, ShaderManager *shade
 	this->shaderManager = shaderManager;
 	this->shaderInstanceDef = shaderInstanceDef;
 	
-	usedMaterial = NULL;
+	usedMaterial = nullptr;
 	
 	video::IGPUProgrammingServices *gpu = driver->getGPUProgrammingServices();
 	

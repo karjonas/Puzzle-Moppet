@@ -68,7 +68,7 @@ Shader *ShaderManager::GetShaderById(u32 shaderId)
 	if (shaders.count(shaderId))
 		return shaders[shaderId];
 	else
-		return NULL;
+		return nullptr;
 }
 
 ShaderInstance *ShaderManager::GetShaderInstance(ShaderInstanceDef &shaderInstanceDef)
@@ -127,7 +127,7 @@ Shader *ShaderManager::CreateShader(const c8 *vertexShaderFileName, const c8 *pi
 	if (!ShadersAreAvailable())
 	{
 		WARN << "Shaders not available.";
-		return NULL;
+		return nullptr;
 	}
 	
 	return new Shader(this, ShaderInstanceDef(vertexShaderFileName,pixelShaderFileName,baseMaterial));

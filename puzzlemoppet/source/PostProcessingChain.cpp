@@ -173,7 +173,7 @@ video::ITexture *PostProcessingChain::GetInputTexture()
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 

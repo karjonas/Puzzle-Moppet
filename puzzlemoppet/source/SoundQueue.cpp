@@ -81,7 +81,7 @@ void SoundQueue::Add3D(const c8 *soundFile, s32 flags)
 void SoundQueue::BreakLoop()
 {
 	QueuedSoundInfo info;
-	info.sound = NULL;
+	info.sound = nullptr;
 	info.flags = ESF_ENQUEUE|ESF_BREAK_LOOP;
 	info.started = false;
 	info.lastPlayPosition = 0.0;
