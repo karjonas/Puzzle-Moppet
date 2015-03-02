@@ -205,10 +205,10 @@ bool Physics::RayCast(const core::line3df &ray, RayCollision *collisionResult,
 	{
 		const RayCollision *closest = &collisions[0];
 		
-		for (auto & collision : collisions)
+		for (auto & rayCollision : collisions)
 		{
-			if (collision.collision.depth < closest->collision.depth)
-				closest = &collision;
+			if (rayCollision.collision.depth < closest->collision.depth)
+				closest = &rayCollision;
 		}
 		
 		*collisionResult = *closest;

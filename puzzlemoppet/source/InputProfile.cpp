@@ -362,10 +362,8 @@ void InputProfile::ProcessAndNotify(const Set<IWantInput *> &subscribers)
 	// Not gonna die as a result of below notifications!
 	grab();
 	
-	for (auto & elem : profileEventCacheCOPY)
+	for (const Event &event : profileEventCacheCOPY)
 	{
-		const Event &event = elem;
-		
 		if (event.IsType("ProfileButtonDown"))
 			NotifyButtonDown(event["button"], subscribers);
 		else if (event.IsType("ProfileButtonUp"))
