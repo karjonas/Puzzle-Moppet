@@ -34,9 +34,9 @@ void SoundQueue::Add(ISound *sound, const c8 *soundFile, s32 flags)
 	}
 	
 	// sound not already present?
-	for (u32 i = 0; i < soundInfos.size(); i ++)
+	for (auto & elem : soundInfos)
 	{
-		if (soundInfos[i].sound == sound)
+		if (elem.sound == sound)
 			return;
 	}
 	
@@ -81,7 +81,7 @@ void SoundQueue::Add3D(const c8 *soundFile, s32 flags)
 void SoundQueue::BreakLoop()
 {
 	QueuedSoundInfo info;
-	info.sound = NULL;
+	info.sound = nullptr;
 	info.flags = ESF_ENQUEUE|ESF_BREAK_LOOP;
 	info.started = false;
 	info.lastPlayPosition = 0.0;
@@ -92,11 +92,11 @@ const std::vector<ISound *> &SoundQueue::GetAllSounds()
 {
 	tempSounds.clear();
 	
-	for (u32 i = 0; i < soundInfos.size(); i ++)
+	for (auto & elem : soundInfos)
 	{
 		// ignore NULL sounds from BreakLoop()
-		if (soundInfos[i].sound)
-			tempSounds.push_back(soundInfos[i].sound);
+		if (elem.sound)
+			tempSounds.push_back(elem.sound);
 	}
 	
 	return tempSounds;

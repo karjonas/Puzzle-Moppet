@@ -14,23 +14,23 @@ class Camera : public ICamera
 public:
 	Camera(scene::ICameraSceneNode *irrCamera);
 	
-	void SetTarget(const core::vector3df &target);
-	void SetOrbitTarget(const core::vector3df &target);
+	void SetTarget(const core::vector3df &target) override;
+	void SetOrbitTarget(const core::vector3df &target) override;
 	
-	void SetTargetDistance(f32 distance);
-	f32 GetTargetDistance();
+	void SetTargetDistance(f32 distance) override;
+	f32 GetTargetDistance() override;
 	
-	f32 GetFOV()			{ return irrCamera->getFOV(); }
-	f32 GetAspectRatio()	{ return irrCamera->getAspectRatio(); }
+	f32 GetFOV() override			{ return irrCamera->getFOV(); }
+	f32 GetAspectRatio() override	{ return irrCamera->getAspectRatio(); }
 	
-	void CacheInterpolatableState();
+	void CacheInterpolatableState() override;
 	
 	// Camera has custom position interpolation code.
 	// (regular method does not ensure camera will remain looking at target)
-	core::vector3df GetInterpolatedPosition(f32 alpha);
+	core::vector3df GetInterpolatedPosition(f32 alpha) override;
 	
-	void ReceiveRenderPosition(core::vector3df pos);
-	void ReceiveRenderRotation(core::vector3df rot);
+	void ReceiveRenderPosition(core::vector3df pos) override;
+	void ReceiveRenderRotation(core::vector3df rot) override;
 };
 
 

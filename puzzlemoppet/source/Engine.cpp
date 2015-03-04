@@ -15,7 +15,7 @@
 //#include <X11/Xlib.h> // for XMoveWindow
 //#endif
 
-IEngine *engineInstance = NULL;
+IEngine *engineInstance = nullptr;
 
 IEngine *CreateEngine(int argc, const char **argv, const VariantMap *settings)
 {
@@ -275,7 +275,7 @@ Engine::Engine(int argc, const char **argv, const VariantMap *settings)
 	device->getSceneManager()->getParameters()->setAttribute(scene::B3D_LOADER_IGNORE_MIPMAP_FLAG, true);
 	
 	// this light and camera scene node is temporary!
-	scene::ILightSceneNode *light = device->getSceneManager()->addLightSceneNode(NULL,
+	scene::ILightSceneNode *light = device->getSceneManager()->addLightSceneNode(nullptr,
 		core::vector3df(0,5,0),
 		video::SColorf(), 6.0);
 	video::SLight &slight = light->getLightData();
@@ -380,8 +380,8 @@ Engine::~Engine()
 		
 		NOTE << "Executable path: " << exePath;
 		
-		for (u32 i = 0; i < args.size(); i ++)
-			NOTE << "Arg: " << args[i];
+		for (auto & elem : args)
+			NOTE << "Arg: " << elem;
 		
 		utils::log::backup(".old");
 		

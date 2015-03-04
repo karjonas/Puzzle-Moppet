@@ -79,8 +79,8 @@ bool savesettings(const io::path &fileName, const VariantMap &settings)
 	
 	// Through map, each key => value pair is a line.
 	
-	for (VariantMap::const_iterator i = settings.begin(); i != settings.end(); i ++)
-		lines.push_back( i->first + core::stringc("=") + i->second.To<core::stringc>() );
+	for (const auto & setting : settings)
+		lines.push_back( setting.first + core::stringc("=") + setting.second.To<core::stringc>() );
 	
 	if (!lines.size())
 		return true; // Nothing to write...
@@ -97,9 +97,9 @@ VariantMap loadsettings(const io::path &fileName)
 	if (!lines.size())
 		return settings;
 	
-	for (u32 i = 0; i < lines.size(); i ++)
+	for (auto & line : lines)
 	{
-		std::vector<core::stringc> parts = str::explode_at_assignment(lines[i]);
+		std::vector<core::stringc> parts = str::explode_at_assignment(line);
 		
 		if (parts[0].size() && parts[1].size())
 			settings[parts[0]] = parts[1];

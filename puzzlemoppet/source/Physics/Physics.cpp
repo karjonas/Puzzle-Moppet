@@ -17,7 +17,7 @@ Physics::Physics(IWorld *lithaWorld)
 	dInitODE();
 	
 	world = dWorldCreate();
-	space = dHashSpaceCreate(0);
+	space = dHashSpaceCreate(nullptr);
 	perStepContactJointGroup = dJointGroupCreate(0);
 	
 	//dWorldSetContactSurfaceLayer(world,0.001);
@@ -101,7 +101,7 @@ CollisionMaterialInteraction *Physics::GetCollisionMaterialInteraction(ICollisio
 			return &sub[m2];
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
 IMeshCollisionGeometry *Physics::CreateMeshCollisionGeometry(IMesh *mesh)
@@ -176,19 +176,19 @@ bool Physics::GetLayerCollisions(u32 layer1, u32 layer2)
 
 bool Physics::RayCast(const core::line3df &ray, RayCollision *collisionResult, u32 layer)
 {
-	return RayCast(ray, collisionResult, NULL, NULL, layer);
+	return RayCast(ray, collisionResult, nullptr, nullptr, layer);
 }
 
 bool Physics::RayCastIncluding(const core::line3df &ray, const Set<ICollisionGeometry *> &includingGeometry,
 		RayCollision *collisionResult, u32 layer)
 {
-	return RayCast(ray, collisionResult, &includingGeometry, NULL, layer);
+	return RayCast(ray, collisionResult, &includingGeometry, nullptr, layer);
 }
 
 bool Physics::RayCastExcluding(const core::line3df &ray, const Set<ICollisionGeometry *> &excludingGeometry,
 		RayCollision *collisionResult, u32 layer)
 {
-	return RayCast(ray, collisionResult, NULL, &excludingGeometry, layer);
+	return RayCast(ray, collisionResult, nullptr, &excludingGeometry, layer);
 }
 
 bool Physics::RayCast(const core::line3df &ray, RayCollision *collisionResult,
@@ -205,10 +205,10 @@ bool Physics::RayCast(const core::line3df &ray, RayCollision *collisionResult,
 	{
 		const RayCollision *closest = &collisions[0];
 		
-		for (u32 i = 0; i < collisions.size(); i ++)
+		for (auto & rayCollision : collisions)
 		{
-			if (collisions[i].collision.depth < closest->collision.depth)
-				closest = &collisions[i];
+			if (rayCollision.collision.depth < closest->collision.depth)
+				closest = &rayCollision;
 		}
 		
 		*collisionResult = *closest;
@@ -219,19 +219,19 @@ bool Physics::RayCast(const core::line3df &ray, RayCollision *collisionResult,
 
 std::vector<RayCollision> Physics::RayCast(const core::line3df &ray, u32 layer)
 {
-	return ray_cast(ray, space, NULL, NULL, layer, this);
+	return ray_cast(ray, space, nullptr, nullptr, layer, this);
 }
 
 std::vector<RayCollision> Physics::RayCastIncluding(const core::line3df &ray,
 		const Set<ICollisionGeometry *> &includingGeometry, u32 layer)
 {
-	return ray_cast(ray, space, &includingGeometry, NULL, layer, this);
+	return ray_cast(ray, space, &includingGeometry, nullptr, layer, this);
 }
 
 std::vector<RayCollision> Physics::RayCastExcluding(const core::line3df &ray,
 		const Set<ICollisionGeometry *> &excludingGeometry, u32 layer)
 {
-	return ray_cast(ray, space, NULL, &excludingGeometry, layer, this);
+	return ray_cast(ray, space, nullptr, &excludingGeometry, layer, this);
 }
 
 void Physics::ODE_GeomCollide(dGeomID o1, dGeomID o2)

@@ -32,13 +32,13 @@ public:
 		RemoveAllUpdatables();
 	}
 	
-	void InitAllUpdateTimes()
+	void InitAllUpdateTimes() override
 	{
 		for (u32 i = 0; i < updatables.size(); i ++)
 			updatables[i].ptr->InitUpdateTime();
 	}
 	
-	void UpdateAllUpdatables(f32 virtualTime, f32 dt)
+	void UpdateAllUpdatables(f32 virtualTime, f32 dt) override
 	{
 		// Cache the parent's virtual time
 		this->virtualTime = virtualTime;
@@ -50,25 +50,25 @@ public:
 			updatables[i].ptr->Update(dt);
 	}
 	
-	f32 GetVirtualTime() const
+	f32 GetVirtualTime() const override
 	{
 		return virtualTime;
 	}
 	
-	f32 GetLastDeltaTime() const
+	f32 GetLastDeltaTime() const override
 	{
 		return lastDeltaTime;
 	}
 	
-	void AddUpdatable(IUpdatable *updatable, bool keepRef = true)
+	void AddUpdatable(IUpdatable *updatable, bool keepRef = true) override
 	{
 		if (!updatable)
 			return;
 		
 		// check not already present
-		for (u32 i = 0; i < updatables.size(); i ++)
+		for (auto & elem : updatables)
 		{
-			if (updatables[i].ptr == updatable)
+			if (elem.ptr == updatable)
 				return;
 		}
 		
@@ -83,7 +83,7 @@ public:
 			updatable->Pause();
 	}
 	
-	void RemoveUpdatable(IUpdatable *updatable)
+	void RemoveUpdatable(IUpdatable *updatable) override
 	{
 		for (u32 i = 0; i < updatables.size(); i ++)
 		{
@@ -102,13 +102,13 @@ public:
 		}
 	}
 	
-	void RemoveAllUpdatables()
+	void RemoveAllUpdatables() override
 	{
 		while (updatables.size())
 			RemoveUpdatable(updatables.front().ptr);
 	}
 	
-	void RemoveAllUpdatablesRecursive()
+	void RemoveAllUpdatablesRecursive() override
 	{
 		for (u32 i = 0; i < updatables.size(); i ++)
 			updatables[i].ptr->GetUpdater().RemoveAllUpdatablesRecursive();
@@ -116,7 +116,7 @@ public:
 		RemoveAllUpdatables();
 	}
 	
-	void PauseAllUpdatables()
+	void PauseAllUpdatables() override
 	{
 		updatablesArePaused = true;
 		
@@ -124,7 +124,7 @@ public:
 			updatables[i].ptr->Pause();
 	}
 	
-	void ResumeAllUpdatables()
+	void ResumeAllUpdatables() override
 	{
 		updatablesArePaused = false;
 		

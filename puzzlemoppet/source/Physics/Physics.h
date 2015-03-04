@@ -16,50 +16,50 @@ public:
 	Physics(IWorld *lithaWorld);
 	~Physics();
 	
-	void Step(f32 dt);
+	void Step(f32 dt) override;
 	
-	void SetMaxContacts(s32 amount);
+	void SetMaxContacts(s32 amount) override;
 	
-	void SetGravity(const core::vector3df &grav);
+	void SetGravity(const core::vector3df &grav) override;
 	
-	ICollisionMaterial *AddCollisionMaterial();
+	ICollisionMaterial *AddCollisionMaterial() override;
 	void SetCollisionMaterialInteraction(ICollisionMaterial *m1, ICollisionMaterial *m2,
-			const CollisionMaterialInteraction &interaction);
+			const CollisionMaterialInteraction &interaction) override;
 	
-	ICollisionMaterial &GetDefaultCollisionMaterial();
+	ICollisionMaterial &GetDefaultCollisionMaterial() override;
 	CollisionMaterialInteraction *GetCollisionMaterialInteraction(ICollisionMaterial *m1,
-			ICollisionMaterial *m2);
+			ICollisionMaterial *m2) override;
 	
-	IMeshCollisionGeometry *CreateMeshCollisionGeometry(IMesh *mesh);
+	IMeshCollisionGeometry *CreateMeshCollisionGeometry(IMesh *mesh) override;
 	
-	IBoxCollisionGeometry *CreateBoxCollisionGeometry(const core::vector3df &size);
-	IBoxCollisionGeometry *CreateBoxCollisionGeometryFromBB(IMesh *mesh);
+	IBoxCollisionGeometry *CreateBoxCollisionGeometry(const core::vector3df &size) override;
+	IBoxCollisionGeometry *CreateBoxCollisionGeometryFromBB(IMesh *mesh) override;
 	
-	ISphereCollisionGeometry *CreateSphereCollisionGeometry(f32 radius);
-	ISphereCollisionGeometry *CreateSphereCollisionGeometryFromBB(IMesh *mesh, bool inside);
+	ISphereCollisionGeometry *CreateSphereCollisionGeometry(f32 radius) override;
+	ISphereCollisionGeometry *CreateSphereCollisionGeometryFromBB(IMesh *mesh, bool inside) override;
 	
-	IDynamicBody *AddDynamicBody();
-	IStaticBody *AddStaticBody();
+	IDynamicBody *AddDynamicBody() override;
+	IStaticBody *AddStaticBody() override;
 	
-	void SetLayerCollisions(u32 layer1, u32 layer2, bool enabled);
-	bool GetLayerCollisions(u32 layer1, u32 layer2);
+	void SetLayerCollisions(u32 layer1, u32 layer2, bool enabled) override;
+	bool GetLayerCollisions(u32 layer1, u32 layer2) override;
 	
-	bool RayCast(const core::line3df &ray, RayCollision *collisionResult, u32 layer);
+	bool RayCast(const core::line3df &ray, RayCollision *collisionResult, u32 layer) override;
 	bool RayCastIncluding(const core::line3df &ray, const Set<ICollisionGeometry *> &includingGeometry,
-			RayCollision *collisionResult, u32 layer);
+			RayCollision *collisionResult, u32 layer) override;
 	bool RayCastExcluding(const core::line3df &ray, const Set<ICollisionGeometry *> &excludingGeometry,
-			RayCollision *collisionResult, u32 layer);
+			RayCollision *collisionResult, u32 layer) override;
 	// internal method only
 	bool RayCast(const core::line3df &ray, RayCollision *collisionResult,
 			const Set<ICollisionGeometry *> *includingGeometry,
 			const Set<ICollisionGeometry *> *excludingGeometry,
 			u32 layer);
 	
-	std::vector<RayCollision> RayCast(const core::line3df &ray, u32 layer);
+	std::vector<RayCollision> RayCast(const core::line3df &ray, u32 layer) override;
 	std::vector<RayCollision> RayCastIncluding(const core::line3df &ray,
-			const Set<ICollisionGeometry *> &includingGeometry, u32 layer);
+			const Set<ICollisionGeometry *> &includingGeometry, u32 layer) override;
 	std::vector<RayCollision> RayCastExcluding(const core::line3df &ray,
-			const Set<ICollisionGeometry *> &excludingGeometry, u32 layer);
+			const Set<ICollisionGeometry *> &excludingGeometry, u32 layer) override;
 	
 private:
 	

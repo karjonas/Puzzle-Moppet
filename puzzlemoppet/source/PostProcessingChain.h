@@ -29,18 +29,18 @@ public:
 	PostProcessingChain(video::IVideoDriver *driver, bool renderScreen);
 	~PostProcessingChain();
 	
-	void AddEffect(video::SMaterial material, IShader *shader, core::dimension2du size);
+	void AddEffect(video::SMaterial material, IShader *shader, core::dimension2du size) override;
 	
-	void AddEffect(video::SMaterial material, IShader *shader, u32 screenFraction = 1);
+	void AddEffect(video::SMaterial material, IShader *shader, u32 screenFraction = 1) override;
 	
 	
-	bool ShouldRenderScreen() { return renderScreen; }
+	bool ShouldRenderScreen() override { return renderScreen; }
 	
-	video::ITexture *GetInputTexture();
+	video::ITexture *GetInputTexture() override;
 	
-	void Process();
+	void Process() override;
 	
-	void ApplyToScreen();
+	void ApplyToScreen() override;
 };
 
 #endif

@@ -8,5 +8,5 @@ public:
 	OpenALSound2D(OpenALSoundSystem *soundSystem);
 	~OpenALSound2D();
 	
-	void SetPan(f32 panning);
+	void SetPan(f32 panning) override;
 };

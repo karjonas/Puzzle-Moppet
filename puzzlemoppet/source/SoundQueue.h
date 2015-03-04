@@ -20,23 +20,23 @@ class SoundQueue : public ISoundQueue, public IUpdatable
 	std::vector<ISound *> tempSounds;
 	
 protected:
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
 public:
 	SoundQueue(ISoundSystem *soundSystem);
 	~SoundQueue();
 	
-	void Add(ISound *sound, const c8 *soundFile, s32 flags);
+	void Add(ISound *sound, const c8 *soundFile, s32 flags) override;
 	
-	void Add2D(const c8 *soundFile, s32 flags);
-	void Add3D(const c8 *soundFile, s32 flags);
+	void Add2D(const c8 *soundFile, s32 flags) override;
+	void Add3D(const c8 *soundFile, s32 flags) override;
 	
-	void BreakLoop();
+	void BreakLoop() override;
 	
-	const std::vector<ISound *> &GetAllSounds();
+	const std::vector<ISound *> &GetAllSounds() override;
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };
 
 

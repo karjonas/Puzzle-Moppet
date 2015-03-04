@@ -65,30 +65,30 @@ class InputProfile : public IInputProfile, public IWantEvents
 	bool IsAxisEnabled(s32 id);
 	
 protected:
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
 public:
 	InputProfile(s32 buttonCount, s32 axesCount, IEngine *engine);
 	~InputProfile();
 	
-	void BindButton(s32 id, s32 button);
+	void BindButton(s32 id, s32 button) override;
 	
-	void BindAxis(s32 id, s32 axis, bool inverted);
+	void BindAxis(s32 id, s32 axis, bool inverted) override;
 	
-	void BindButtonAsAxis(s32 id, s32 button, f32 delta);
+	void BindButtonAsAxis(s32 id, s32 button, f32 delta) override;
 	
 	// This returns state from engine.GetButtonState
-	bool IsButtonDown(s32 id);
+	bool IsButtonDown(s32 id) override;
 	
-	void ForceButtonState(s32 id, bool state);
+	void ForceButtonState(s32 id, bool state) override;
 	
-	void SetButtonEnabled(s32 id, bool enabled);
+	void SetButtonEnabled(s32 id, bool enabled) override;
 	
-	void SetAxisEnabled(s32 id, bool enabled);
+	void SetAxisEnabled(s32 id, bool enabled) override;
 	
-	void OnEvent(const Event &event);
+	void OnEvent(const Event &event) override;
 	
-	void ProcessAndNotify(const Set<IWantInput *> &subscribers);
+	void ProcessAndNotify(const Set<IWantInput *> &subscribers) override;
 };
 

@@ -62,63 +62,63 @@ class Engine : public IEngine, public IEventReceiver
 	void ClearButtonStates();
 	
 protected:
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
 public:
-	VariantMap GetDefaultSettings();
-	VariantMap GetCreationSettings();
+	VariantMap GetDefaultSettings() override;
+	VariantMap GetCreationSettings() override;
 	
 	Engine(int argc, const char **argv, const VariantMap *settings);
 	~Engine();
 	
-	IrrlichtDevice *GetIrrlichtDevice();
+	IrrlichtDevice *GetIrrlichtDevice() override;
 	
-	IWorld *GetWorld();
-	IRenderSystem *GetRenderSystem();
-	ISoundSystem *GetSoundSystem();
+	IWorld *GetWorld() override;
+	IRenderSystem *GetRenderSystem() override;
+	ISoundSystem *GetSoundSystem() override;
 	
-	IUpdater &GetLogicUpdater();
-	IUpdater &GetRenderUpdater();
+	IUpdater &GetLogicUpdater() override;
+	IUpdater &GetRenderUpdater() override;
 	
-	IUpdater *CreateUpdater();
-	IEventQueue *CreateEventQueue();
+	IUpdater *CreateUpdater() override;
+	IEventQueue *CreateEventQueue() override;
 	
-	void InitUpdateTiming();
+	void InitUpdateTiming() override;
 	
-	bool GetButtonState(s32 button);
-	ButtonStates GetButtonStates();
-	void SetButtonState(s32 button, bool state);
+	bool GetButtonState(s32 button) override;
+	ButtonStates GetButtonStates() override;
+	void SetButtonState(s32 button, bool state) override;
 	
-	f32 GetEngineTime();
+	f32 GetEngineTime() override;
 	
-	f32 GetLogicInterpolationAlpha();
+	f32 GetLogicInterpolationAlpha() override;
 	
-	void Run();
-	void Exit(const core::stringc &pageURL);
-	void Restart();
-	bool WillRestart();
+	void Run() override;
+	void Exit(const core::stringc &pageURL) override;
+	void Restart() override;
+	bool WillRestart() override;
 	
-	void SetWindowTitle(const core::stringw &title) { device->setWindowCaption(title.c_str()); }
+	void SetWindowTitle(const core::stringw &title) override { device->setWindowCaption(title.c_str()); }
 	
-	void PushWorkingDirectory(const io::path &path);
-	void PopWorkingDirectory();
-	io::path GetStartingDirectory();
-	io::path GetLocalSettingsDir();
-	io::path GetSettingsPath();
+	void PushWorkingDirectory(const io::path &path) override;
+	void PopWorkingDirectory() override;
+	io::path GetStartingDirectory() override;
+	io::path GetLocalSettingsDir() override;
+	io::path GetSettingsPath() override;
 	
-	void RegisterEventInterest(IWantEvents *receiver, const core::stringc &eventName);
-	void UnregisterEventInterest(IWantEvents *receiver, const core::stringc &eventName);
-	void RegisterAllEventInterest(IWantEvents *receiver);
-	void UnregisterAllEventInterest(IWantEvents *receiver);
-	void PostEvent(const Event &event);
-	void QueueEvent(const Event &event, f32 delay);
-	void ProcessEventQueue();
+	void RegisterEventInterest(IWantEvents *receiver, const core::stringc &eventName) override;
+	void UnregisterEventInterest(IWantEvents *receiver, const core::stringc &eventName) override;
+	void RegisterAllEventInterest(IWantEvents *receiver) override;
+	void UnregisterAllEventInterest(IWantEvents *receiver) override;
+	void PostEvent(const Event &event) override;
+	void QueueEvent(const Event &event, f32 delay) override;
+	void ProcessEventQueue() override;
 	
-	void SetAutoMouseCentring(bool centreX, bool centreY);
-	void CentreMouse();
-	core::dimension2du GetDesktopResolution();
+	void SetAutoMouseCentring(bool centreX, bool centreY) override;
+	void CentreMouse() override;
+	core::dimension2du GetDesktopResolution() override;
 	
-	bool OnEvent(const SEvent &irrEvent);
+	bool OnEvent(const SEvent &irrEvent) override;
 };
 

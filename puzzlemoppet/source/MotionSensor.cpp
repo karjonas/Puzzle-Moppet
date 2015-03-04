@@ -3,9 +3,9 @@
 
 MotionSensor::MotionSensor()
 {
-	translateCallback = NULL;
-	rotateCallback = NULL;
-	anyCallback = NULL;
+	translateCallback = nullptr;
+	rotateCallback = nullptr;
+	anyCallback = nullptr;
 	
 	updateCount = 0;
 	skipCounter = 0;

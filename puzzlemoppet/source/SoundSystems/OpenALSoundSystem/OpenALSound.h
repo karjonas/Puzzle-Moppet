@@ -20,21 +20,21 @@ protected:
 	
 	ALuint source;
 	
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
 public:
 	OpenALSound(OpenALSoundSystem *soundSystem);
 	~OpenALSound();
 	
-	void Play(const c8 *soundFile);
+	void Play(const c8 *soundFile) override;
 	
-	void Stop();
-	void SetIsLooped(bool loop);
-	bool IsFinished();
-	bool IsPlaying();
-	f32 GetPlayPosition();
-	void SetVolume(f32 volume);
+	void Stop() override;
+	void SetIsLooped(bool loop) override;
+	bool IsFinished() override;
+	bool IsPlaying() override;
+	f32 GetPlayPosition() override;
+	void SetVolume(f32 volume) override;
 	
 	void SetSeparateVolume(f32 volume);
 	

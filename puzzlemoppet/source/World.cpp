@@ -25,13 +25,13 @@
 
 World::World()
 {
-	inputProfile = NULL;
-	cameraController = NULL;
-	lastCameraController = NULL;
+	inputProfile = nullptr;
+	cameraController = nullptr;
+	lastCameraController = nullptr;
 	
 	// world effects
-	skyBoxNode = NULL;
-	skyBoxShader = NULL;
+	skyBoxNode = nullptr;
+	skyBoxShader = nullptr;
 	
 	engine = GetEngine();
 	
@@ -52,7 +52,7 @@ World::~World()
 	
 	// Must set camera to NULL so it is not added back in by RemoveAllTransformables
 	// (otherwise RemoveAllTransformables adds camera back to transformables after removing all).
-	camera = NULL;
+	camera = nullptr;
 	
 	if (inputProfile)
 		inputProfile->drop();
@@ -110,7 +110,7 @@ void World::SetCameraController(ICameraController *cameraController)
 	SET_REF_COUNTED_POINTER(this->cameraController, cameraController)
 	
 	// assume camera has changed...
-	lastCameraController = NULL;
+	lastCameraController = nullptr;
 }
 
 ICameraController *World::GetCameraController()
@@ -384,7 +384,7 @@ void World::ClearSkyBox()
 	if (skyBoxNode)
 	{
 		skyBoxNode->remove();
-		skyBoxNode = NULL;
+		skyBoxNode = nullptr;
 	}
 }
 

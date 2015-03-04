@@ -7,8 +7,8 @@
 
 OpenALSoundSystem::OpenALSoundSystem()
 {
-	device = alcOpenDevice(NULL);
-	context = NULL;
+	device = alcOpenDevice(nullptr);
+	context = nullptr;
 
 	if (!device)
 	{
@@ -16,12 +16,12 @@ OpenALSoundSystem::OpenALSoundSystem()
 	}
 	else
 	{
-		context = alcCreateContext(device, NULL);
+		context = alcCreateContext(device, nullptr);
 
 		if (!context)
 		{
 			alcCloseDevice(device);
-			device = NULL;
+			device = nullptr;
 			WARN << "Failed to create OpenAL context.";
 		}
 		else
@@ -30,8 +30,8 @@ OpenALSoundSystem::OpenALSoundSystem()
 			{
 				alcDestroyContext(context);
 				alcCloseDevice(device);
-				context = NULL;
-				device = NULL;
+				context = nullptr;
+				device = nullptr;
 				WARN << "Failed to make OpenAL context current.";
 			}
 		}
@@ -59,7 +59,7 @@ OpenALSoundSystem::~OpenALSoundSystem()
 	{
 		check_openal_error();
 
-		if (!alcMakeContextCurrent(NULL))
+		if (!alcMakeContextCurrent(nullptr))
 			WARN << "Failed to clear current OpenAL context.";
 		else
 		{
@@ -126,7 +126,7 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *b
 			bool gotFrequency = false;
 
 			int error;
-			stb_vorbis *v = stb_vorbis_open_filename((char *)fileName.c_str(), &error, NULL);
+			stb_vorbis *v = stb_vorbis_open_filename((char *)fileName.c_str(), &error, nullptr);
 
 			if (v)
 			{
@@ -142,7 +142,7 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *b
 
 			// Load the ogg
 
-			short *data = NULL;
+			short *data = nullptr;
 			int channels, len, sample_rate;
 
 			len = stb_vorbis_decode_filename((char *)fileName.c_str(), &channels, &sample_rate, &data);
@@ -257,16 +257,16 @@ void OpenALSoundSystem::SetGlobalVolume2D(f32 volume)
 {
 	globalVolume2D = volume;
 
-	for (u32 i = 0; i < allSounds2D.size(); i ++)
-		allSounds2D[i]->SetSeparateVolume(volume);
+	for (auto & elem : allSounds2D)
+		elem->SetSeparateVolume(volume);
 }
 
 void OpenALSoundSystem::SetGlobalVolume3D(f32 volume)
 {
 	globalVolume3D = volume;
 
-	for (u32 i = 0; i < allSounds3D.size(); i ++)
-		allSounds3D[i]->SetSeparateVolume(volume);
+	for (auto & elem : allSounds3D)
+		elem->SetSeparateVolume(volume);
 }
 
 void OpenALSoundSystem::StopAllSounds()

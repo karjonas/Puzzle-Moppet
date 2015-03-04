@@ -49,21 +49,21 @@ public:
 	MotionSensor();
 	~MotionSensor();
 	
-	void SetTranslateMotionCallback(IMotionCallback *callback);
-	void SetRotateMotionCallback(IMotionCallback *callback);
-	void SetAnyMotionCallback(IMotionCallback *callback);
+	void SetTranslateMotionCallback(IMotionCallback *callback) override;
+	void SetRotateMotionCallback(IMotionCallback *callback) override;
+	void SetAnyMotionCallback(IMotionCallback *callback) override;
 	
-	void SetRelative(bool relative);
-	void EnableInitialEvents(bool initialEvents);
+	void SetRelative(bool relative) override;
+	void EnableInitialEvents(bool initialEvents) override;
 	
-	void SetMinTranslateSpeed(f32 speed);
-	void SetMinRotateSpeed(f32 speed);
+	void SetMinTranslateSpeed(f32 speed) override;
+	void SetMinRotateSpeed(f32 speed) override;
 	
-	void SetAveragingCount(u32 count);
-	void SetAveragingSkip(u32 skip);
+	void SetAveragingCount(u32 count) override;
+	void SetAveragingSkip(u32 skip) override;
 	
-	void EnableTranslateAxes(s32 flags);
+	void EnableTranslateAxes(s32 flags) override;
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };
 

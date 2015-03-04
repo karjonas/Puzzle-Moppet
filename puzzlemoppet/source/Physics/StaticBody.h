@@ -17,11 +17,11 @@ public:
 	StaticBody();
 	~StaticBody();
 	
-	void AddCollisionGeometry(ICollisionGeometry *geom);
-	Set<ICollisionGeometry *> GetCollisionGeometries();
+	void AddCollisionGeometry(ICollisionGeometry *geom) override;
+	Set<ICollisionGeometry *> GetCollisionGeometries() override;
 	
-	void SetPosition(const core::vector3df &pos);
-	void SetRotation(const core::vector3df &rot);
+	void SetPosition(const core::vector3df &pos) override;
+	void SetRotation(const core::vector3df &rot) override;
 	
 	// Get Pos/Rot handled by ITransformable default implementation.
 };

@@ -19,19 +19,19 @@ public:
 	
 	bool GetOpenALBuffer(const core::stringc &fileName, ALuint *buffer);
 	
-	void PreloadSound(const c8 *soundFile);
+	void PreloadSound(const c8 *soundFile) override;
 	
-	void SetListenerPosition(core::vector3df pos);
-	void SetListenerOrientation(core::vector3df lookVec, core::vector3df upVec);
-	void SetListenerVelocity(core::vector3df vel);
+	void SetListenerPosition(core::vector3df pos) override;
+	void SetListenerOrientation(core::vector3df lookVec, core::vector3df upVec) override;
+	void SetListenerVelocity(core::vector3df vel) override;
 	
-	ISound2D *CreateSound2D();
-	ISound3D *CreateSound3D();
+	ISound2D *CreateSound2D() override;
+	ISound3D *CreateSound3D() override;
 	
-	void SetGlobalVolume(f32 volume);
-	void SetGlobalVolume2D(f32 volume);
-	void SetGlobalVolume3D(f32 volume);
+	void SetGlobalVolume(f32 volume) override;
+	void SetGlobalVolume2D(f32 volume) override;
+	void SetGlobalVolume3D(f32 volume) override;
 	
-	void StopAllSounds();
+	void StopAllSounds() override;
 };
 

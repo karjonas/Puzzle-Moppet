@@ -30,9 +30,9 @@ public:
 	// NEED TO ENSURE THAT IRRLICHT DOES ACTUALLY SET THE MATERIAL BEFORE CALLING
 	// OnSetConstants!!
 	
-	void OnSetMaterial(const video::SMaterial &material);
+	void OnSetMaterial(const video::SMaterial &material) override;
 	
-	void OnSetConstants(video::IMaterialRendererServices *services, s32 userData);
+	void OnSetConstants(video::IMaterialRendererServices *services, s32 userData) override;
 };
 
 #endif

@@ -21,7 +21,7 @@ RenderTask::RenderTask(World *world)
 	shaderManager = new ShaderManager( engine->GetIrrlichtDevice()->getVideoDriver() );
 	
 	// No post processing chain set.
-	ppChain = NULL;
+	ppChain = nullptr;
 	postProcessingEnabled = true;
 	
 	// No screen fade
@@ -57,7 +57,7 @@ IPostProcessingChain *RenderTask::CreatePostProcessingChain(bool renderScreen)
 void RenderTask::SetActivePostProcessingChain(IPostProcessingChain *chain)
 {
 	if (!postProcessingEnabled)
-		chain = NULL;
+		chain = nullptr;
 	
 	SET_REF_COUNTED_POINTER(ppChain, chain)
 }

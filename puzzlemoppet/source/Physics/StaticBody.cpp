@@ -24,7 +24,7 @@ void StaticBody::AddCollisionGeometry(ICollisionGeometry *geom)
 	{
 		dGeomID odeGeom = hasGeom->GetODEGeom();
 		odeGeoms.push_back(odeGeom);
-		dGeomSetBody(odeGeom, 0);
+		dGeomSetBody(odeGeom, nullptr);
 	}
 	else
 		FAIL << "A collision geometry could not be dynamically cast to CollisionGeometry.";
@@ -34,8 +34,8 @@ Set<ICollisionGeometry *> StaticBody::GetCollisionGeometries()
 {
 	Set<ICollisionGeometry *> geometries;
 	
-	for (u32 i = 0; i < geometry.size(); i ++)
-		geometries.Insert(geometry[i]);
+	for (auto & elem : geometry)
+		geometries.Insert(elem);
 	
 	return geometries;
 }

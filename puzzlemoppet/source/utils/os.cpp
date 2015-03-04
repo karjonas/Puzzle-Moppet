@@ -211,10 +211,10 @@ std::vector<io::path> listfiles(const io::path &path)
 	std::vector<io::path> all = listdir(path);
 	std::vector<io::path> filesOnly;
 
-	for (u32 i = 0; i < all.size(); i ++)
+	for (auto & elem : all)
 	{
-		if ( path::is_file(path::concat(path, all[i])) )
-			filesOnly.push_back(all[i]);
+		if ( path::is_file(path::concat(path, elem)) )
+			filesOnly.push_back(elem);
 	}
 
 	return filesOnly;
@@ -225,10 +225,10 @@ std::vector<io::path> listsubdirs(const io::path &path)
 	std::vector<io::path> all = listdir(path);
 	std::vector<io::path> dirsOnly;
 
-	for (u32 i = 0; i < all.size(); i ++)
+	for (auto & elem : all)
 	{
-		if ( path::is_dir(path::concat(path, all[i])) )
-			dirsOnly.push_back(all[i]);
+		if ( path::is_dir(path::concat(path, elem)) )
+			dirsOnly.push_back(elem);
 	}
 
 	return dirsOnly;
@@ -418,8 +418,8 @@ bool run(const io::path &appPath, const std::vector<io::path> &args, u32 seconds
 
 	NOTE << "Running process: " << fullAppPath;
 
-	for (u32 i = 0; i < args.size(); i ++)
-		NOTE << "Arg: " << args[i];
+	for (auto & arg : args)
+		NOTE << "Arg: " << arg;
 
 #if defined(_IRR_WINDOWS_API_)
 	STARTUPINFO sinfo;
@@ -487,7 +487,7 @@ bool run(const io::path &appPath, const std::vector<io::path> &args, u32 seconds
 		for (u32 i = 0; i < args.size(); i ++)
 			argv[i+1] = (char *)args[i].c_str();
 
-		argv[args.size()+1] = NULL;
+		argv[args.size()+1] = nullptr;
 
 		execv( fullAppPath.c_str(), argv );
 
@@ -529,9 +529,9 @@ io::path searchpath(const io::path &appName)
 		std::vector<core::stringc> parts = str::explode(":", path);
 #endif
 
-		for (u32 i = 0; i < parts.size(); i ++)
+		for (auto & part : parts)
 		{
-			fullPath = os::path::concat(parts[i], appName);
+			fullPath = os::path::concat(part, appName);
 
 			if (os::path::is_file(fullPath))
 			{
@@ -681,10 +681,10 @@ void openwebpage(const io::path &url)
 			"google-chrome",
 			"midori",
 			"seamonkey",
-			NULL
+			nullptr
 		};
 
-		for (u32 i = 0; browserCommands[i] != NULL; i ++)
+		for (u32 i = 0; browserCommands[i] != nullptr; i ++)
 		{
 			if (run(browserCommands[i], args))
 				return;

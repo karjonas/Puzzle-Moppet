@@ -22,7 +22,7 @@ public:
 			irrNode->remove();
 	}
 	
-	scene::ISceneNode *GetIrrNode() { return irrNode; }
+	scene::ISceneNode *GetIrrNode() override { return irrNode; }
 	
 	
 	// NOTE: Most of the IGraphic functions are not implemented yet.
@@ -41,8 +41,8 @@ public:
 	void DisableAllMaterials(u16 pass) {}
 	*/
 	
-	void ReceiveRenderPosition(core::vector3df pos);
-	void ReceiveRenderRotation(core::vector3df rot);
+	void ReceiveRenderPosition(core::vector3df pos) override;
+	void ReceiveRenderRotation(core::vector3df rot) override;
 };
 
 #endif

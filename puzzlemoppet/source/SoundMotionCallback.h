@@ -22,7 +22,7 @@ public:
 		soundQueue = soundSource->GetSoundQueue();
 	}
 	
-	void OnMotionStart()
+	void OnMotionStart() override
 	{
 		if (startSound.size())
 			soundQueue->Add3D(startSound.c_str(), ESF_ENQUEUE|ESF_NO_WAIT);
@@ -31,7 +31,7 @@ public:
 			soundQueue->Add3D(motionLoopSound.c_str(), ESF_ENQUEUE|ESF_LOOP|ESF_UNTIL_NEXT);
 	}
 	
-	void OnMotionStop()
+	void OnMotionStop() override
 	{
 		if (stopSound.size())
 			soundQueue->Add3D(stopSound.c_str(), ESF_ENQUEUE|ESF_NO_WAIT);

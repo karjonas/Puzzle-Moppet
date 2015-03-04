@@ -8,7 +8,7 @@ public:
 	OpenALSound3D(OpenALSoundSystem *soundSystem);
 	~OpenALSound3D();
 	
-	void SetPosition(core::vector3df pos);
-	void SetVelocity(core::vector3df vel);
-	void SetMaxVolumePoint(f32 proximity);
+	void SetPosition(core::vector3df pos) override;
+	void SetVelocity(core::vector3df vel) override;
+	void SetMaxVolumePoint(f32 proximity) override;
 };
