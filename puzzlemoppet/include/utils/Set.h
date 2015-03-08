@@ -19,7 +19,7 @@ class Set
 public:
 	
 	// returns true if the set did not already contain the element
-	bool Insert(Type element)
+	inline bool Insert(Type element)
 	{
 		if (Contains(element))
 			return false;
@@ -29,9 +29,11 @@ public:
 	}
 	
 	// returns true if the set did contain the element
-	bool Remove(Type element)
+	inline bool Remove(Type element)
 	{
-		for (u32 i = 0; i < elements.size(); i ++)
+		const u32 num_elements = elements.size();
+
+		for (u32 i = 0; i < num_elements; i ++)
 		{
 			if (elements[i] == element)
 			{
@@ -42,11 +44,11 @@ public:
 		return false;
 	}
 	
-	bool Contains(Type element) const
+	inline bool Contains(Type element) const
 	{
-		for (u32 i = 0; i < elements.size(); i ++)
+		for (auto& elem : elements)
 		{
-			if (elements[i] == element)
+			if (elem == element)
 				return true;
 		}
 		return false;
@@ -55,7 +57,7 @@ public:
 	// adds all elements from another set to this set, ensuring no duplicates.
 	// Returns true if this set changes as a result. (i.e. a new element
 	// has been added that wasn't already present)
-	bool Union(const Set<Type> &other)
+	inline bool Union(const Set<Type> &other)
 	{
 		bool changed = false;
 		
@@ -69,17 +71,17 @@ public:
 	}
 	
 	// Probably slow. Copies entire vector.
-	std::vector<Type> ToVector() const
+	inline std::vector<Type> ToVector() const
 	{
 		return elements;
 	}
 	
-	u32 size() const
+	inline u32 size() const
 	{
 		return elements.size();
 	}
 	
-	void clear()
+	inline void clear()
 	{
 		elements.clear();
 	}
@@ -91,7 +93,7 @@ public:
 		return elements[index];
 	}*/
 	
-	const Type &operator[](u32 index) const
+	inline const Type &operator[](u32 index) const
 	{
 		ASSERT(index < elements.size());
 		return elements[index];
@@ -99,11 +101,22 @@ public:
 	
 	// Useful when elements are removed one by one by some external code.
 	// Should ensure at least one element exists with size() before calling this.
-	const Type &GetAnyForRemoval() const
+	inline const Type &GetAnyForRemoval() const
 	{
 		ASSERT(elements.size());
 		// front will be found first by Remove method.
 		return elements.front();
+	}
+
+	// For range-based for loops
+	inline auto begin() -> decltype (elements.begin())
+	{
+		return elements.begin();
+	}
+
+	inline auto end() -> decltype (elements.end())
+	{
+		return elements.end();
 	}
 };
 
