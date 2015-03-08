@@ -40,8 +40,8 @@ void Positioner::Add(gui::IGUIElement *element, s32 id)
 
 void Positioner::Reset()
 {
-	for (u32 i = 0; i < elements.size(); i ++)
-		elements[i]->remove();
+	for (auto & elem : elements)
+		elem->remove();
 	
 	elements.clear();
 	ids.clear();
@@ -63,13 +63,13 @@ s32 Positioner::GetMouseOverId()
 
 gui::IGUIElement *Positioner::GetMouseOverElement()
 {
-	for (u32 i = 0; i < elements.size(); i ++)
+	for (auto & elem : elements)
 	{
-		if (elements[i]->getAbsolutePosition().isPointInside(
+		if (elem->getAbsolutePosition().isPointInside(
 				GetEngine()->GetIrrlichtDevice()->getCursorControl()->getPosition()
 				))
 		{
-			return elements[i];
+			return elem;
 		}
 	}
 	return NULL;
@@ -116,8 +116,8 @@ void RowPositioner::Apply()
 	
 	s32 sumWidths = 0;
 	
-	for (u32 i = 0; i < elements.size(); i ++)
-		sumWidths += elements[i]->getRelativePosition().getWidth();
+	for (auto & elem : elements)
+		sumWidths += elem->getRelativePosition().getWidth();
 	
 	// centred
 	s32 xPos = driver->getScreenSize().Width/2;
@@ -125,11 +125,11 @@ void RowPositioner::Apply()
 	xPos -= sumWidths/2;
 	xPos -= (spacing * (elements.size()-1)) / 2;
 	
-	for (u32 i = 0; i < elements.size(); i ++)
+	for (auto & elem : elements)
 	{
-		core::rect<s32> rect = elements[i]->getRelativePosition();
+		core::rect<s32> rect = elem->getRelativePosition();
 		
-		SetTopLeft(elements[i],
+		SetTopLeft(elem,
 				xPos,
 				yPos - ( vertCentred ? (rect.getHeight()/2) : 0 )  // Vertically centred??
 				);
@@ -186,19 +186,19 @@ void ColumnPositioner::Apply()
 	
 	s32 totalHeight = 0;
 	
-	for (u32 i = 0; i < elements.size(); i ++)
-		totalHeight += elements[i]->getRelativePosition().getHeight();
+	for (auto & elem : elements)
+		totalHeight += elem->getRelativePosition().getHeight();
 	
 	totalHeight += spacing * (elements.size()-1);
 	
 	s32 xPos = (s32)(marginLeft*driver->getScreenSize().Width);
 	s32 yPos = driver->getScreenSize().Height - (s32)((marginBottom*driver->getScreenSize().Height)) - totalHeight;
 	
-	for (u32 i = 0; i < elements.size(); i ++)
+	for (auto & elem : elements)
 	{
-		core::rect<s32> rect = elements[i]->getRelativePosition();
+		core::rect<s32> rect = elem->getRelativePosition();
 		
-		SetTopLeft(elements[i],
+		SetTopLeft(elem,
 				xPos,
 				yPos
 				);
@@ -227,19 +227,19 @@ void ColumnPositionerCentred::Apply()
 	
 	s32 totalHeight = 0;
 	
-	for (u32 i = 0; i < elements.size(); i ++)
-		totalHeight += elements[i]->getRelativePosition().getHeight();
+	for (auto & elem : elements)
+		totalHeight += elem->getRelativePosition().getHeight();
 	
 	totalHeight += spacing * (elements.size()-1);
 	
 	s32 xPos = driver->getScreenSize().Width/2;
 	s32 yPos = driver->getScreenSize().Height - (s32)((marginBottom*driver->getScreenSize().Height)) - totalHeight;
 	
-	for (u32 i = 0; i < elements.size(); i ++)
+	for (auto & elem : elements)
 	{
-		core::rect<s32> rect = elements[i]->getRelativePosition();
+		core::rect<s32> rect = elem->getRelativePosition();
 		
-		SetTopLeft(elements[i],
+		SetTopLeft(elem,
 				xPos - rect.getWidth()/2,
 				yPos
 				);

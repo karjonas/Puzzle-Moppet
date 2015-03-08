@@ -16,10 +16,10 @@ SoundQueue::SoundQueue(ISoundSystem *soundSystem)
 
 SoundQueue::~SoundQueue()
 {
-	for (u32 i = 0; i < soundInfos.size(); i ++)
+	for (auto & elem : soundInfos)
 	{
-		if (soundInfos[i].sound)
-			soundInfos[i].sound->drop();
+		if (elem.sound)
+			elem.sound->drop();
 	}
 	
 	GetEngine()->GetLogicUpdater().RemoveUpdatable(this);
@@ -110,8 +110,8 @@ void SoundQueue::OnPause()
 	
 	GetAllSounds();
 	
-	for (u32 i = 0; i < tempSounds.size(); i ++)
-		tempSounds[i]->Pause();
+	for (auto & elem : tempSounds)
+		elem->Pause();
 }
 
 void SoundQueue::OnResume()
@@ -122,8 +122,8 @@ void SoundQueue::OnResume()
 	
 	GetAllSounds();
 	
-	for (u32 i = 0; i < tempSounds.size(); i ++)
-		tempSounds[i]->Resume();
+	for (auto & elem : tempSounds)
+		elem->Resume();
 }
 
 void SoundQueue::Update(f32 dt)

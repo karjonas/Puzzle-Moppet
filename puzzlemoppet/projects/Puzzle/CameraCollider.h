@@ -106,15 +106,15 @@ public:
 		
 		std::vector<core::line3df> segments;
 		
-		for (u32 i = 0; i < forwardsCollisions.size(); i ++)
+		for (auto & forwardsCollision : forwardsCollisions)
 		{
-			for (u32 j = 0; j < backwardsCollisions.size(); j ++)
+			for (auto & backwardsCollision : backwardsCollisions)
 			{
-				if (forwardsCollisions[i].geometry == backwardsCollisions[j].geometry)
+				if (forwardsCollision.geometry == backwardsCollision.geometry)
 				{
 					// Found pair!
 					segments.push_back(
-							core::line3df(forwardsCollisions[i].collision.pos, backwardsCollisions[j].collision.pos)
+							core::line3df(forwardsCollision.collision.pos, backwardsCollision.collision.pos)
 							);
 				}
 			}
@@ -122,10 +122,10 @@ public:
 		
 		// Extend segments towards the camera by a minimum distance
 		// and also towards the target point by a minimum distance
-		for (u32 i = 0; i < segments.size(); i ++)
+		for (auto & segment : segments)
 		{
-			segments[i].start -= rayVec * minCameraFrontDist;
-			segments[i].end += rayVec * minCameraBackDist;
+			segment.start -= rayVec * minCameraFrontDist;
+			segment.end += rayVec * minCameraBackDist;
 		}
 		
 		// Some points...

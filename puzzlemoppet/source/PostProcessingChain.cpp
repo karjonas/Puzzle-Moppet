@@ -35,12 +35,12 @@ PostProcessingChain::PostProcessingChain(video::IVideoDriver *driver, bool rende
 PostProcessingChain::~PostProcessingChain()
 {
 	// Remove all RTTs and drop all shaders
-	for (u32 i = 0; i < effects.size(); i ++)
+	for (auto & elem : effects)
 	{
-		driver->removeTexture( effects[i].material.TextureLayer[0].Texture );
+		driver->removeTexture( elem.material.TextureLayer[0].Texture );
 
-		if (effects[i].shader)
-			effects[i].shader->drop();
+		if (elem.shader)
+			elem.shader->drop();
 	}
 }
 

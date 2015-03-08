@@ -88,8 +88,8 @@ public:
 			{
 				std::vector<Type> ret;
 				
-				for (u32 i = 0; i < moredata._vec.size(); i ++)
-					ret.push_back(moredata._vec[i].To<Type>());
+				for (auto & elem : moredata._vec)
+					ret.push_back(elem.To<Type>());
 				
 				return ret;
 			}
@@ -114,8 +114,8 @@ public:
 		
 		moredata._vec.clear();
 		
-		for (u32 i = 0; i < value.size(); i ++)
-			moredata._vec.push_back(value[i]);
+		for (auto & elem : value)
+			moredata._vec.push_back(elem);
 		
 		return *this;
 	}

@@ -93,8 +93,8 @@ void delete_game_saves()
 
 	std::vector<io::path> scoreFiles = os::listfiles(scoreDir);
 
-	for (u32 i = 0; i < scoreFiles.size(); i ++)
-		os::path::ensure_delete( os::path::concat(scoreDir,scoreFiles[i]) );
+	for (auto & scoreFile : scoreFiles)
+		os::path::ensure_delete( os::path::concat(scoreDir,scoreFile) );
 }
 
 std::vector<core::stringc> find_levels()
@@ -103,9 +103,9 @@ std::vector<core::stringc> find_levels()
 
 	std::vector<core::stringc> lines = get_lines(LEVEL_LIST_FILE);
 
-	for (u32 i = 0; i < lines.size(); i ++)
+	for (auto & line : lines)
 	{
-		if (lines[i] == "###END###")
+		if (line == "###END###")
 		{
 			// This causes parsing to stop
 			// This is useful when I want to test the game ending.
@@ -114,10 +114,10 @@ std::vector<core::stringc> find_levels()
 			break;
 		}
 
-		if (lines[i].size())
+		if (line.size())
 		{
-			levelFileNames.push_back(lines[i]);
-			NOTE << "Identified level: " << lines[i];
+			levelFileNames.push_back(line);
+			NOTE << "Identified level: " << line;
 		}
 	}
 
@@ -353,16 +353,16 @@ void MainState::ShowInitTexts()
 
 void MainState::RemoveInitTexts()
 {
-	for (u32 i = 0; i < introTexts.size(); i ++)
-		introTexts[i]->remove();
+	for (auto & elem : introTexts)
+		elem->remove();
 
 	introTexts.clear();
 }
 
 void MainState::RemoveStartLevelTexts()
 {
-	for (u32 i = 0; i < startLevelTexts.size(); i ++)
-		startLevelTexts[i]->remove();
+	for (auto & elem : startLevelTexts)
+		elem->remove();
 
 	startLevelTexts.clear();
 }
@@ -850,8 +850,8 @@ void MainState::NextLevel(bool wait)
 
 		// Clear any irrlicht scene nodes.
 		// This removes water between the two parts of end game cutscene.
-		for (u32 i = 0; i < finalSceneNodes.size(); i ++)
-			finalSceneNodes[i]->remove();
+		for (auto & elem : finalSceneNodes)
+			elem->remove();
 
 		finalSceneNodes.clear();
 
@@ -1054,9 +1054,9 @@ void MainState::Update(f32 dt)
 
 		// fade text?
 
-		for (u32 i = 0; i < introTexts.size(); i ++)
+		for (auto & elem : introTexts)
 		{
-			introTexts[i]->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
+			elem->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
 		}
 	}
 
@@ -1078,9 +1078,9 @@ void MainState::Update(f32 dt)
 
 		// fade text?
 
-		for (u32 i = 0; i < startLevelTexts.size(); i ++)
+		for (auto & elem : startLevelTexts)
 		{
-			startLevelTexts[i]->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
+			elem->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
 		}
 	}
 
@@ -1344,11 +1344,11 @@ void MainState::OnEvent(const Event &event)
 
 			const std::vector<gui::IGUIElement *> &elements = pauseMenuPositioner->GetElements();
 
-			for (u32 i = 0; i < elements.size(); i ++)
+			for (auto & element : elements)
 			{
-				gui::IGUIStaticText *textElement = (gui::IGUIStaticText *)elements[i];
+				gui::IGUIStaticText *textElement = (gui::IGUIStaticText *)element;
 
-				if (elements[i] == mouseOverElement)
+				if (element == mouseOverElement)
 				{
 					if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
 						menuSound->Play(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");

@@ -49,8 +49,8 @@ DynamicBody::~DynamicBody()
 {
 	dBodyDestroy(body);
 	
-	for (u32 i = 0; i < geometry.size(); i ++)
-		geometry[i]->drop();
+	for (auto & elem : geometry)
+		elem->drop();
 }
 
 void DynamicBody::AddCollisionGeometry(ICollisionGeometry *geom)

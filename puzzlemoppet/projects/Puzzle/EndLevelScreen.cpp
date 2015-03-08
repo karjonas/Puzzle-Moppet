@@ -43,8 +43,8 @@ EndLevelScreen::~EndLevelScreen()
 
 	engine->UnregisterAllEventInterest(this);
 
-	for (u32 i = 0; i < guiElements.size(); i ++)
-		guiElements[i]->remove();
+	for (auto & elem : guiElements)
+		elem->remove();
 }
 
 void offset_y(gui::IGUIElement *element, s32 y)
@@ -112,10 +112,10 @@ void EndLevelScreen::OnEvent(const Event &event)
 		// apply fades to all stuff created so far
 		// (fade on)
 
-		for (u32 i = 0; i < guiElements.size(); i ++)
+		for (auto & elem : guiElements)
 		{
 			GUIElementFade *fade = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
-					guiElements[i], this, itemFadeOnTime, itemFadeOnTime, false);
+					elem, this, itemFadeOnTime, itemFadeOnTime, false);
 			fade->drop();
 			fade->OnPostRender(0);
 		}
@@ -194,17 +194,17 @@ void EndLevelScreen::OnEvent(const Event &event)
 
 
 		// apply to all gui elements created so far
-		for (u32 i = 0; i < guiElements.size(); i ++)
-			offset_y(guiElements[i], yOffset);
+		for (auto & elem : guiElements)
+			offset_y(elem, yOffset);
 
 		// and all those waiting in events...
 		// (hack alert!)
 
 		std::vector<Event *> allEvents = eventQueue->GetAllEvents();
 
-		for (u32 i = 0; i < allEvents.size(); i ++)
+		for (auto & elem : allEvents)
 		{
-			Event &event = *(allEvents[i]);
+			Event &event = (*elem);
 
 			if (event.HasKey("y_pos"))
 				event["y_pos"] = event["y_pos"] + yOffsetFloat;

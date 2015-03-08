@@ -40,50 +40,42 @@ Map::~Map()
 std::vector<core::vector3di> Map::GetAllEvents()
 {
 	std::vector<core::vector3di> eventCoords;
-	
-	for (std::map<int, std::map<int, std::map<int, MapLocation> > >::const_iterator i = map.begin(); i != map.end(); i ++)
+
+	for (const auto &i_map : map)
 	{
-		const std::map<int, std::map<int, MapLocation> > &map2 = i->second;
-		
-		for (std::map<int, std::map<int, MapLocation> >::const_iterator j = map2.begin(); j != map2.end(); j ++)
+		for (const auto &j_map : i_map.second)
 		{
-			const std::map<int, MapLocation> &map3 = j->second;
-			
-			for (std::map<int, MapLocation>::const_iterator k = map3.begin(); k != map3.end(); k ++)
+			for (const auto &k_map : j_map.second)
 			{
 				//k->second is MapLocation
-				
-				if (k->second.event)
-					eventCoords.push_back(core::vector3di(i->first, j->first, k->first));
+
+				if (k_map.second.event)
+					eventCoords.push_back(core::vector3di(i_map.first, j_map.first, k_map.first));
 			}
 		}
 	}
-	
+
 	return eventCoords;
 }
 
 std::vector<core::vector3di> Map::GetAllObjects()
 {
 	std::vector<core::vector3di> objectCoords;
-	
-	for (std::map<int, std::map<int, std::map<int, MapLocation> > >::const_iterator i = map.begin(); i != map.end(); i ++)
+
+	for (const auto &i_map : map)
 	{
-		const std::map<int, std::map<int, MapLocation> > &map2 = i->second;
-		
-		for (std::map<int, std::map<int, MapLocation> >::const_iterator j = map2.begin(); j != map2.end(); j ++)
+		for (const auto &j_map : i_map.second)
 		{
-			const std::map<int, MapLocation> &map3 = j->second;
-			
-			for (std::map<int, MapLocation>::const_iterator k = map3.begin(); k != map3.end(); k ++)
+			for (const auto &k_map : j_map.second)
 			{
 				//k->second is MapLocation
-				
-				if (k->second.containsObject)
-					objectCoords.push_back(core::vector3di(i->first, j->first, k->first));
+
+				if (k_map.second.containsObject)
+					objectCoords.push_back(core::vector3di(i_map.first, j_map.first, k_map.first));
 			}
 		}
 	}
-	
+
 	return objectCoords;
 }
 
@@ -91,19 +83,15 @@ std::vector<core::vector3di> Map::GetAllMapLocations()
 {
 	std::vector<core::vector3di> mapLocationCoords;
 	
-	for (std::map<int, std::map<int, std::map<int, MapLocation> > >::const_iterator i = map.begin(); i != map.end(); i ++)
+	for (const auto &i_map : map)
 	{
-		const std::map<int, std::map<int, MapLocation> > &map2 = i->second;
-		
-		for (std::map<int, std::map<int, MapLocation> >::const_iterator j = map2.begin(); j != map2.end(); j ++)
+		for (const auto &j_map : i_map.second)
 		{
-			const std::map<int, MapLocation> &map3 = j->second;
-			
-			for (std::map<int, MapLocation>::const_iterator k = map3.begin(); k != map3.end(); k ++)
+			for (const auto &k_map : j_map.second)
 			{
 				//k->second is MapLocation
 				
-				mapLocationCoords.push_back(core::vector3di(i->first, j->first, k->first));
+				mapLocationCoords.push_back(core::vector3di(i_map.first, j_map.first, k_map.first));
 			}
 		}
 	}

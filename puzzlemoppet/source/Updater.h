@@ -34,8 +34,8 @@ public:
 	
 	void InitAllUpdateTimes() override
 	{
-		for (u32 i = 0; i < updatables.size(); i ++)
-			updatables[i].ptr->InitUpdateTime();
+		for (auto & elem : updatables)
+			elem.ptr->InitUpdateTime();
 	}
 	
 	void UpdateAllUpdatables(f32 virtualTime, f32 dt) override
@@ -46,7 +46,9 @@ public:
 		// Cache delta time
 		lastDeltaTime = dt;
 		
-		for (u32 i = 0; i < updatables.size(); i ++)
+		// NOTE: cannot use range-based loop here since elements
+		// can be added or removed during update
+		for (u32 i = 0; i < updatables.size(); i++)
 			updatables[i].ptr->Update(dt);
 	}
 	
@@ -110,8 +112,8 @@ public:
 	
 	void RemoveAllUpdatablesRecursive() override
 	{
-		for (u32 i = 0; i < updatables.size(); i ++)
-			updatables[i].ptr->GetUpdater().RemoveAllUpdatablesRecursive();
+		for (auto & elem : updatables)
+			elem.ptr->GetUpdater().RemoveAllUpdatablesRecursive();
 		
 		RemoveAllUpdatables();
 	}
@@ -120,16 +122,16 @@ public:
 	{
 		updatablesArePaused = true;
 		
-		for (u32 i = 0; i < updatables.size(); i ++)
-			updatables[i].ptr->Pause();
+		for (auto & elem : updatables)
+			elem.ptr->Pause();
 	}
 	
 	void ResumeAllUpdatables() override
 	{
 		updatablesArePaused = false;
 		
-		for (u32 i = 0; i < updatables.size(); i ++)
-			updatables[i].ptr->Resume();
+		for (auto & elem : updatables)
+			elem.ptr->Resume();
 	}
 };
 

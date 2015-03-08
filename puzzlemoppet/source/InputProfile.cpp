@@ -108,9 +108,9 @@ bool InputProfile::IsButtonDown(s32 id)
 	
 	Set<s32> realButtons = GetReverseButtonBinding(id);
 	
-	for (u32 i = 0; i < realButtons.size(); i ++)
+	for (auto & realButton : realButtons)
 	{
-		if (engine->GetButtonState(realButtons[i]))
+		if (engine->GetButtonState(realButton))
 			return true;
 	}
 	
@@ -356,8 +356,8 @@ void InputProfile::ProcessAndNotify(const Set<IWantInput *> &subscribers)
 	// CHANGE: we used to do this after the below NotifyButtonDown etc
 	// but now we do it before, since the button downs may delete this InputProfile.
 	// We also queue the event instead of instantly posting it for a similar reason.
-	for (u32 i = 0; i < profileEventCacheCOPY.size(); i ++)
-		engine->QueueEvent(profileEventCacheCOPY[i]);
+	for (auto & elem : profileEventCacheCOPY)
+		engine->QueueEvent(elem);
 	
 	// Not gonna die as a result of below notifications!
 	grab();

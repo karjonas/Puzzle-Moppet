@@ -561,10 +561,9 @@ void Engine::UnregisterAllEventInterest(IWantEvents *receiver)
 	allEventInterest.Remove(receiver);
 	
 	// also remove from all specific event interest sets
-	for (std::map<core::stringc, Set<IWantEvents *> >::iterator i = specificEventInterest.begin();
-			i != specificEventInterest.end(); i ++)
+	for (auto & elem : specificEventInterest)
 	{
-		i->second.Remove(receiver);
+		elem.second.Remove(receiver);
 	}
 }
 
@@ -585,8 +584,8 @@ void Engine::PostEvent(const Event &event)
 	// One OnEvent may delete a recipient later in the list.
 	// So a pointer may become invalid.
 	
-	for (u32 i = 0; i < recipients.size(); i ++)
-		recipients[i]->OnEvent(event);
+	for (auto & recipient : recipients)
+		recipient->OnEvent(event);
 }
 
 void Engine::QueueEvent(const Event &event, f32 delay)
@@ -613,8 +612,8 @@ void Engine::ProcessEventQueue()
 	}
 	
 	// And then send them...
-	for (u32 i = 0; i < readyEvents.size(); i ++)
-		PostEvent(readyEvents[i]);
+	for (auto & readyEvent : readyEvents)
+		PostEvent(readyEvent);
 }
 
 void Engine::ClearButtonStates()
@@ -778,8 +777,8 @@ bool Engine::OnEvent(const SEvent &irrEvent)
 	}
 	
 	// Send 'em all!
-	for (u32 i = 0; i < newEvents.size(); i ++)
-		PostEvent(newEvents[i]);
+	for (auto & newEvent : newEvents)
+		PostEvent(newEvent);
 	
 	return false;
 }

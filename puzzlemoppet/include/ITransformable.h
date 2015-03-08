@@ -51,8 +51,8 @@ public:
 		linearVel = core::vector3df(0,0,0);
 		
 		// Also immediately position all children.
-		for (u32 i = 0; i < children.size(); i ++)
-			children[i]->ApplyTransformNow();
+		for (auto & elem : children)
+			elem->ApplyTransformNow();
 	}
 	
 	// ************* Scene Graph *************
@@ -64,9 +64,9 @@ public:
 		
 		// Not already a child?
 		
-		for (u32 i = 0; i < children.size(); i ++)
+		for (auto & elem : children)
 		{
-			if (children[i] == child)
+			if (elem == child)
 				return;
 		}
 		
@@ -122,9 +122,9 @@ public:
 	{
 		std::vector<Type *> childrenOfType;
 		
-		for (u32 i = 0; i < children.size(); i ++)
+		for (auto & elem : children)
 		{
-			if (Type *child = dynamic_cast<Type *>(children[i]))
+			if (Type *child = dynamic_cast<Type *>(elem))
 				childrenOfType.push_back(child);
 		}
 		
@@ -133,9 +133,9 @@ public:
 	
 	template<class Type> Type *GetFirstChildOfType()
 	{
-		for (u32 i = 0; i < children.size(); i ++)
+		for (auto & elem : children)
 		{
-			if (Type *child = dynamic_cast<Type *>(children[i]))
+			if (Type *child = dynamic_cast<Type *>(elem))
 				return child;
 		}
 		
@@ -224,8 +224,8 @@ public:
 	
 	void RemoveAllAnimators()
 	{
-		for (u32 i = 0; i < animators.size(); i ++)
-			animators[i]->drop();
+		for (auto & elem : animators)
+			elem->drop();
 		
 		animators.clear();
 	}

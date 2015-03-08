@@ -572,8 +572,8 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 {
 	f32 marginBottom = 0.2;
 	
-	for (u32 i = 0; i < optionsMenus.size(); i ++)
-		delete optionsMenus[i];
+	for (auto & elem : optionsMenus)
+		delete elem;
 				
 	optionsMenus.clear();
 	
@@ -644,14 +644,14 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 		
 		const std::vector<gui::IGUIElement *> &elements = vertMenu->GetElements();
 		
-		for (u32 i = 0; i < elements.size(); i ++)
+		for (auto & element : elements)
 		{
 			// find colon in element text
 			// find distance the text up to that colon is
 			// then horizontally offset somehow
 			// (all colons should align)
 			
-			const wchar_t *s = elements[i]->getText();
+			const wchar_t *s = element->getText();
 			core::stringw upToColon;
 			
 			for (u32 j = 0; s[j] && s[j] != ':'; j ++)
@@ -660,8 +660,8 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 			u32 upToColonDist = font->getDimension(upToColon.c_str()).Width;
 				
 			// offset left by that amount
-			elements[i]->setRelativePosition( elements[i]->getRelativePosition()
-					+ core::vector2di(elements[i]->getRelativePosition().getWidth()/2,0)
+			element->setRelativePosition( element->getRelativePosition()
+					+ core::vector2di(element->getRelativePosition().getWidth()/2,0)
 					- core::vector2di(upToColonDist, 0)
 					+ core::vector2di(20,0)
 					);
@@ -845,8 +845,8 @@ void StartScreen::OnEvent(const Event &event)
 		{
 			if (event["button"] == EMI_OPTIONS_CANCEL || event["button"] == EMI_OPTIONS_OK)
 			{
-				for (u32 i = 0; i < optionsMenus.size(); i ++)
-					delete optionsMenus[i];
+				for (auto & elem : optionsMenus)
+					delete elem;
 				
 				optionsMenus.clear();
 				

@@ -128,13 +128,13 @@ void SimpleMenu::OnEvent(const Event &event)
 			
 			const std::vector<gui::IGUIElement *> &elements = positioner->GetElements();
 			
-			for (u32 i = 0; i < elements.size(); i ++)
+			for (auto & element : elements)
 			{
-				if (elements[i]->getType() == gui::EGUIET_STATIC_TEXT)
+				if (element->getType() == gui::EGUIET_STATIC_TEXT)
 				{
-					gui::IGUIStaticText *textElement = (gui::IGUIStaticText *)elements[i];
+					gui::IGUIStaticText *textElement = (gui::IGUIStaticText *)element;
 					
-					if (elements[i] == mouseOverElement)
+					if (element == mouseOverElement)
 					{
 						if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
 						{
@@ -149,11 +149,11 @@ void SimpleMenu::OnEvent(const Event &event)
 						textElement->setOverrideColor( TEXT_COL );
 					}
 				}
-				else if (elements[i]->getType() == gui::EGUIET_IMAGE)
+				else if (element->getType() == gui::EGUIET_IMAGE)
 				{
-					gui::IGUIImage *imageElement = (gui::IGUIImage *)elements[i];
+					gui::IGUIImage *imageElement = (gui::IGUIImage *)element;
 					
-					if (elements[i] == mouseOverElement)
+					if (element == mouseOverElement)
 					{
 						// Play sound if state not detected before, or if it was not previously mouse-overed.
 						if (!mouseOverStates.count(imageElement)

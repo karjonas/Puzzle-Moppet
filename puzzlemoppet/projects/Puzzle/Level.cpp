@@ -641,35 +641,35 @@ void Level::OptimiseLevel()
 	std::vector<core::vector3di> objectCoords = map->GetAllObjects();
 	std::vector<core::vector3di> surrounded_GroundBlocks;
 	
-	for (u32 i = 0; i < objectCoords.size(); i ++)
+	for (auto & objectCoord : objectCoords)
 	{
 		// If a ground block, and surrounded completely by other ground blocks...
 		
-		if (map->GetObjectType(objectCoords[i]) == EOT_GROUND_BLOCK)
+		if (map->GetObjectType(objectCoord) == EOT_GROUND_BLOCK)
 		{
 			u8 j;
 			
 			for (j = 0; j < cross.size(); j ++)
 			{
-				core::vector3di coord = objectCoords[i]+cross[j];
+				core::vector3di coord = objectCoord+cross[j];
 				
 				if (!map->GetObject(coord) || map->GetObjectType(coord) != EOT_GROUND_BLOCK)
 					break;
 			}
 			
 			if (j == cross.size())
-				surrounded_GroundBlocks.push_back(objectCoords[i]);
+				surrounded_GroundBlocks.push_back(objectCoord);
 		}
 	}
 	
 	// Then replace these with a ground block mesh that has no sides.
 	
-	for (u32 i = 0; i < surrounded_GroundBlocks.size(); i ++)
+	for (auto & surrounded_GroundBlock : surrounded_GroundBlocks)
 	{
-		RemoveObject(surrounded_GroundBlocks[i]);
+		RemoveObject(surrounded_GroundBlock);
 		
-		IMesh *mesh = AddObject(surrounded_GroundBlocks[i], "ground_single_sideless.b3d", false, EOT_GROUND_BLOCK);
-		GroundBlockUV_Adjust2(mesh, surrounded_GroundBlocks[i]);
+		IMesh *mesh = AddObject(surrounded_GroundBlock, "ground_single_sideless.b3d", false, EOT_GROUND_BLOCK);
+		GroundBlockUV_Adjust2(mesh, surrounded_GroundBlock);
 	}
 	
 	
@@ -688,8 +688,8 @@ void Level::OptimiseLevel()
 			combinedLevelMesh = NULL;
 		}
 		
-		for (u32 i = 0; i < combinedLevelMeshShaders.size(); i ++)
-			combinedLevelMeshShaders[i]->drop();
+		for (auto & elem : combinedLevelMeshShaders)
+			elem->drop();
 		
 		combinedLevelMeshShaders.clear();
 		
@@ -713,17 +713,17 @@ void Level::OptimiseLevel()
 		
 		// First remove all existing ground blocks meshes.
 		
-		for (u32 i = 0; i < objectCoords.size(); i ++)
+		for (auto & objectCoord : objectCoords)
 		{
-			if (map->GetObjectType(objectCoords[i]) == EOT_GROUND_BLOCK)
+			if (map->GetObjectType(objectCoord) == EOT_GROUND_BLOCK)
 			{
-				core::vector3df pos = GetPosFromCoord(objectCoords[i]);
+				core::vector3df pos = GetPosFromCoord(objectCoord);
 				
 				// All ground blocks are solid.
 				// Therefore, we just remove children of this block, and not the block itself.
 				// (the block itself is the physical body, and needs to stay)
 				
-				ITransformable *obj = map->GetObject(objectCoords[i]);
+				ITransformable *obj = map->GetObject(objectCoord);
 				
 				// Find the ground block mesh.
 				
@@ -924,12 +924,12 @@ void Level::OptimiseLevel()
 	
 	std::vector<core::vector3di> eventCoords = map->GetAllEvents();
 	
-	for (u32 i = 0; i < eventCoords.size(); i ++)
+	for (auto & eventCoord : eventCoords)
 	{
 		// Fan event?
-		if (map->GetEvent(eventCoords[i])->GetType() == EET_FAN_EVENT)
+		if (map->GetEvent(eventCoord)->GetType() == EET_FAN_EVENT)
 		{
-			core::vector3di coordBelow = eventCoords[i] + core::vector3di(0,-1,0);
+			core::vector3di coordBelow = eventCoord + core::vector3di(0,-1,0);
 			
 			// Is the event the bottom one?
 			// (i.e. there does not exist a fan event below this one)
@@ -937,7 +937,7 @@ void Level::OptimiseLevel()
 					|| map->GetEvent(coordBelow)->GetType() != EET_FAN_EVENT)
 			{
 				u32 fanEventCount = 1;
-				core::vector3di coord = eventCoords[i];
+				core::vector3di coord = eventCoord;
 				
 				// Now count the fan events stacked above this one, to get the height for the fan particle system
 				while (true)
@@ -962,7 +962,7 @@ void Level::OptimiseLevel()
 				
 				// so I changed my mind about the above
 				// it's nice to see objects floating in the particles
-				AddFanParticleSystem(eventCoords[i], (f32)fanEventCount);
+				AddFanParticleSystem(eventCoord, (f32)fanEventCount);
 			}
 		}
 	}
@@ -1297,12 +1297,12 @@ void Level::CreateEvent(core::vector3di mapCoord, E_EVENT_TYPE type)
 		return;
 	
 	// find the event in the list...
-	for (u32 i = 0; i < mapEventInstances.size(); i ++)
+	for (auto & elem : mapEventInstances)
 	{
-		if (mapEventInstances[i]->GetType() == type)
+		if (elem->GetType() == type)
 		{
 			// Match found, set a pointer to it.
-			map->SetEvent(mapCoord, mapEventInstances[i]);
+			map->SetEvent(mapCoord, elem);
 			
 			// calculate a bounding box for the level.
 			ExpandBB(mapCoord);
@@ -1844,9 +1844,9 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 			f32 displayTime = displayTimeDefault;
 			f32 delayTime = delayTimeDefault;
 			
-			for (u32 i = 0; i < lines.size(); i ++)
+			for (auto & line : lines)
 			{
-				std::vector<core::stringc> parts = str::explode_at_assignment(lines[i]);
+				std::vector<core::stringc> parts = str::explode_at_assignment(line);
 				
 				if (parts[0].size() && parts[1].size())
 				{
@@ -1889,7 +1889,7 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 							}
 							else
 							{
-								WARN << "Invalid trigger in tutorial text: " << lines[i];
+								WARN << "Invalid trigger in tutorial text: " << line;
 								fail = true;
 							}
 						}
@@ -1911,7 +1911,7 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 							}
 							else
 							{
-								WARN << "Invalid trigger in tutorial text: " << lines[i];
+								WARN << "Invalid trigger in tutorial text: " << line;
 								fail = true;
 							}
 						}
@@ -1947,22 +1947,22 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 			
 			// Just for info, output what was read.
 			
-			for (u32 i = 0; i < tutorialTexts.size(); i ++)
+			for (auto & elem : tutorialTexts)
 			{
 				NOTE << "[tutorial item]";
 				
-				for (u32 j = 0; j < tutorialTexts[i].lines.size(); j ++)
+				for (auto & line : elem.lines)
 				{
-					NOTE << "Line: " << tutorialTexts[i].lines[j];
+					NOTE << "Line: " << line;
 				}
 				
-				NOTE << "Will delay for: " << tutorialTexts[i].delayTime << " seconds";
-				NOTE << "Will display for: " << tutorialTexts[i].displayTime << " seconds";
+				NOTE << "Will delay for: " << elem.delayTime << " seconds";
+				NOTE << "Will display for: " << elem.displayTime << " seconds";
 				
 				NOTE << "Condition: trigger on map location {"
-						<< tutorialTexts[i].trigger.X << ","
-						<< tutorialTexts[i].trigger.Y << ","
-						<< tutorialTexts[i].trigger.Z << "}";
+						<< elem.trigger.X << ","
+						<< elem.trigger.Y << ","
+						<< elem.trigger.Z << "}";
 			}
 		}
 	}
@@ -2022,8 +2022,8 @@ Level::~Level()
 	if (combinedLevelMesh)
 		combinedLevelMesh->remove();
 	
-	for (u32 i = 0; i < combinedLevelMeshShaders.size(); i ++)
-		combinedLevelMeshShaders[i]->drop();
+	for (auto & elem : combinedLevelMeshShaders)
+		elem->drop();
 	
 	ClearTutorialTextElements();
 	
@@ -2039,15 +2039,15 @@ Level::~Level()
 		playerController->drop();
 	
 	// remove stray irrlicht nodes
-	for (u32 i = 0; i < irrNodes.size(); i ++)
-		irrNodes[i]->remove();
+	for (auto & elem : irrNodes)
+		elem->remove();
 	
 	// need to step through map and remove objects from world.(???)
 	std::vector<core::vector3di> mapObjects = map->GetAllObjects();
 	
-	for (u32 i = 0; i < mapObjects.size(); i ++)
+	for (auto & mapObject : mapObjects)
 	{
-		if (ITransformable *entity = map->GetObject(mapObjects[i]))
+		if (ITransformable *entity = map->GetObject(mapObject))
 		{
 			world->RemoveTransformable(entity);
 			
@@ -2065,15 +2065,15 @@ Level::~Level()
 	}
 	
 	// delete events
-	for (u32 i = 0; i < mapEventInstances.size(); i ++)
-		mapEventInstances[i]->drop();
+	for (auto & elem : mapEventInstances)
+		elem->drop();
 	
 	delete map;
 	
 	// remove all actors including player
 	// may of course have been removed above (when stepping through mapObjects)
-	for (u32 i = 0; i < actors.size(); i ++)
-		world->RemoveTransformable(actors[i].entity);
+	for (auto & elem : actors)
+		world->RemoveTransformable(elem.entity);
 	
 	// Remove anything else (e.g. flowers)
 	world->RemoveAllTransformables();
@@ -2213,21 +2213,21 @@ void Level::ReplaceWith(core::stringc fileName)
 	NOTE << "Replacing level with contents from: " << fileName;
 	
 	// remove stray irrlicht nodes
-	for (u32 i = 0; i < irrNodes.size(); i ++)
-		irrNodes[i]->remove();
+	for (auto & elem : irrNodes)
+		elem->remove();
 	
 	irrNodes.clear();
 	
 	// need to step through map and remove objects from world.(???)
 	std::vector<core::vector3di> mapObjects = map->GetAllObjects();
 	
-	for (u32 i = 0; i < mapObjects.size(); i ++)
+	for (auto & mapObject : mapObjects)
 	{
 		// except player
-		if (ITransformable *entity = map->GetObject(mapObjects[i]))
+		if (ITransformable *entity = map->GetObject(mapObject))
 		{
-			if (map->GetObjectType(mapObjects[i]) != EOT_PLAYER_CENTRE
-				&& map->GetObjectType(mapObjects[i]) != EOT_PLAYER_INTERSECTING)
+			if (map->GetObjectType(mapObject) != EOT_PLAYER_CENTRE
+				&& map->GetObjectType(mapObject) != EOT_PLAYER_INTERSECTING)
 			{
 				world->RemoveTransformable(entity);
 			}
@@ -2239,10 +2239,8 @@ void Level::ReplaceWith(core::stringc fileName)
 	
 	// let's clear some random other stuff
 	
-	for (u32 i = 0; i < actors.size(); i ++)
-	{
-		Actor &c = actors[i];
-		
+	for (auto & c : actors)
+	{		
 		c.lastLocations.clear();
 		c.centreLocationSet = false;
 	}
@@ -2378,8 +2376,8 @@ void Level::ShowEndLevelScreen()
 void Level::ClearEndLevelTeleportEffects()
 {
 	// Remove player teleport effects.
-	for (u32 i = 0; i < endLevelPlayerEffects.size(); i ++)
-		world->RemoveTransformable(endLevelPlayerEffects[i]);
+	for (auto & elem : endLevelPlayerEffects)
+		world->RemoveTransformable(elem);
 	
 	endLevelPlayerEffects.clear();
 }
@@ -2405,11 +2403,11 @@ UndoState Level::CreateUndoState()
 	
 	std::vector<core::vector3di> mapLocations = map->GetAllMapLocations();
 	
-	for (u32 i = 0; i < mapLocations.size(); i ++)
+	for (auto & mapLocation : mapLocations)
 	{
 		UndoState::MapLoc mapLoc;
 		
-		core::vector3di &coord = mapLocations[i];
+		core::vector3di &coord = mapLocation;
 		
 		mapLoc.coord = coord;
 		mapLoc.objectType = map->GetObject(coord) ? map->GetObjectType(coord) : EOT_UNKNOWN;
@@ -2454,19 +2452,19 @@ void Level::ApplyUndo(bool died)
 		{
 			// Through all past states, incrementing undo and death counters as necessary.
 			// Since those things remain even after undoing.
-			for (u32 i = 0; i < undoHistory.size(); i ++)
+			for (auto & elem : undoHistory)
 			{
 				if (died)
-					undoHistory[i].stats.deaths ++;
+					elem.stats.deaths ++;
 				else
-					undoHistory[i].stats.undos ++;
+					elem.stats.undos ++;
 			}
 			
 			// Also replace all undo texts with the current undo texts.
 			// So tutorial texts are not re-shown after undoing.
-			for (u32 i = 0; i < undoHistory.size(); i ++)
+			for (auto & elem : undoHistory)
 			{
-				undoHistory[i].tutorialTexts = tutorialTexts;
+				elem.tutorialTexts = tutorialTexts;
 			}
 			
 			mainState->RestartLevel(&undoHistory);
@@ -2491,9 +2489,9 @@ void Level::Save()
 	
 	if (fp)
 	{
-		for (u32 i = 0; i < mapLocations.size(); i ++)
+		for (auto & mapLocation : mapLocations)
 		{
-			core::vector3di &coord = mapLocations[i];
+			core::vector3di &coord = mapLocation;
 			
 			// position
 			// objectType
@@ -2563,9 +2561,9 @@ void Level::Load(UndoState *undoState)
 	{
 		std::vector<UndoState::MapLoc> &mapContents = undoState->mapContents;
 		
-		for (u32 i = 0; i < mapContents.size(); i ++)
+		for (auto & mapContent : mapContents)
 		{
-			UndoState::MapLoc &loc = mapContents[i];
+			UndoState::MapLoc &loc = mapContent;
 			
 			// Successfully read a location, so create stuff!
 			CreateObject(loc.coord, (E_OBJECT_TYPE)loc.objectType);
@@ -2637,14 +2635,14 @@ void Level::Load(UndoState *undoState)
 	// NOW NEED TO CALL OnEnterLocation for each square containing an object.
 	std::vector<core::vector3di> mapLocations = map->GetAllMapLocations();
 	
-	for (u32 i = 0; i < mapLocations.size(); i ++)
+	for (auto & mapLocation : mapLocations)
 	{
-		if (map->GetObject(mapLocations[i]))
+		if (map->GetObject(mapLocation))
 		{
 			// Object has been initially positioned.
 			// Need to call any events etc set for that location.
 			// Also trigger any object actions (e.g. fall)
-			OnEnterLocation(mapLocations[i]);
+			OnEnterLocation(mapLocation);
 		}
 	}
 }
@@ -2654,10 +2652,8 @@ bool Level::StartMapObjectMove(core::vector3di source, core::vector3di dest, boo
 	if (map->StartObjectMove(source, dest, forceMove))
 	{
 		// Check if a actor is being moved, if so then update the actor's centreLocation.
-		for (u32 i = 0; i < actors.size(); i ++)
+		for (auto & c : actors)
 		{
-			Actor &c = actors[i];
-			
 			if (c.centreLocationSet)
 			{
 				// Update centreLocation if it is this actor being moved.
@@ -2934,10 +2930,10 @@ void Level::HandleTutorialEvents(const Event &event)
 	}
 	else if (event.IsType("TutorialFadeOn"))
 	{
-		for (u32 i = 0; i < tutorialTextElements.size(); i ++)
+		for (auto & elem : tutorialTextElements)
 		{
 			GUIElementFade *fade = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
-					tutorialTextElements[i], this, event["fade_time"], event["fade_time"], false);
+					elem, this, event["fade_time"], event["fade_time"], false);
 			fade->drop();
 			
 			// hack. run once, so fade is initialised to zero.
@@ -2946,10 +2942,10 @@ void Level::HandleTutorialEvents(const Event &event)
 	}
 	else if (event.IsType("TutorialFadeOff"))
 	{
-		for (u32 i = 0; i < tutorialTextElements.size(); i ++)
+		for (auto & elem : tutorialTextElements)
 		{
 			GUIElementFade *fade = new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
-					tutorialTextElements[i], this, event["fade_time"], event["fade_time"], true);
+					elem, this, event["fade_time"], event["fade_time"], true);
 			fade->drop();
 		}
 	}
@@ -3020,9 +3016,9 @@ void Level::Update(f32 dt)
 						surrounding.push_back(tt.trigger + core::vector3di(-1,0,1));
 						surrounding.push_back(tt.trigger + core::vector3di(0,0,1));
 						
-						for (u32 i = 0; i < surrounding.size(); i ++)
+						for (auto & elem : surrounding)
 						{
-							if (surrounding[i] == playerMapPos)
+							if (elem == playerMapPos)
 							{
 								isHit = true;
 								break;
@@ -3406,23 +3402,23 @@ void Level::Update(f32 dt)
 	// Does player touch any?
 	// Probably want to first check if any of these actually have a movable block in them.
 	
-	for (u32 i = 0; i < adjacentCross.size(); i ++)
+	for (auto & adjacentCros : adjacentCross)
 	{
-		core::vector3di above = adjacentCross[i];
+		core::vector3di above = adjacentCros;
 		above.Y ++;
 		
-		if ( map->GetObject(adjacentCross[i])
+		if ( map->GetObject(adjacentCros)
 				// Is actually touching the coordinate...
-				&& IsActorTouchingCoord(GetPlayerActor(), adjacentCross[i], 1.05)//1.8)//1.3)// was 1.05
+				&& IsActorTouchingCoord(GetPlayerActor(), adjacentCros, 1.05)//1.8)//1.3)// was 1.05
 				// Also mustn't push if this is the player's own location!?
-				&& (!GetPlayerActor().centreLocationSet || adjacentCross[i] != GetPlayerActor().centreLocation)
+				&& (!GetPlayerActor().centreLocationSet || adjacentCros != GetPlayerActor().centreLocation)
 				// ...and mustn't push other actors (enemies)
-				&& !(map->GetObject(adjacentCross[i]) && map->GetObjectType(adjacentCross[i]) == EOT_PLAYER_CENTRE)
+				&& !(map->GetObject(adjacentCros) && map->GetObjectType(adjacentCros) == EOT_PLAYER_CENTRE)
 				// And mustn't push if there is a movable object above this one!
 				// UPDATE: commented out movable check, now cannot move if any object is above
 				//&& !(map->GetObject(above) /*&& map->IsObjectMovable(above)*/)
 				// UPDATE2: Now using defaultEvent for this.
-				&& defaultEvent->RequestActionPermission(adjacentCross[i], EAT_MOVE_BY_PUSH)
+				&& defaultEvent->RequestActionPermission(adjacentCros, EAT_MOVE_BY_PUSH)
 				)
 		{
 			// BOOYA. Touching.
@@ -3439,7 +3435,7 @@ void Level::Update(f32 dt)
 			core::vector2df currentPlayerPos2D(playerPos.X,playerPos.Z);
 			core::vector2df attemptedMove2D(attemptedMove.X,attemptedMove.Z);
 			core::vector2df desiredPlayerPos2D = currentPlayerPos2D + attemptedMove2D;
-			core::vector2df coordPos( GetPosFromCoord(adjacentCross[i]).X, GetPosFromCoord(adjacentCross[i]).Z );
+			core::vector2df coordPos( GetPosFromCoord(adjacentCros).X, GetPosFromCoord(adjacentCros).Z );
 			
 			if (coordPos.getDistanceFromSQ(desiredPlayerPos2D)+0.001 < coordPos.getDistanceFromSQ(currentPlayerPos2D))
 			{
@@ -3456,9 +3452,9 @@ void Level::Update(f32 dt)
 				if ((currentPlayerPos2D + attemptedMove2D*touchDist).getDistanceFrom(coordPos) < someDistance)
 				{
 					// Vector to move the movable block (if possible and next map coord is unoccupied)
-					core::vector3di moveVec = adjacentCross[i] - playerMapPos;
+					core::vector3di moveVec = adjacentCros - playerMapPos;
 					
-					PlayerPushed(adjacentCross[i], moveVec);
+					PlayerPushed(adjacentCros, moveVec);
 				}
 			}
 		}
@@ -3510,10 +3506,8 @@ void Level::Update(f32 dt)
 	// Also attempt to set or move the actor centre location, which is a movable block.
 	
 	// Remove all previous occupations
-	for (u32 i = 0; i < actors.size(); i ++)
+	for (auto & c : actors)
 	{
-		Actor &c = actors[i];
-		
 		for (u32 j = 0; j < c.lastLocations.size(); j ++)
 		{
 			// ASSERT that actor currently occupies this square
@@ -3530,10 +3524,8 @@ void Level::Update(f32 dt)
 	
 	
 	// Create the actor centre locations that haven't been created yet.
-	for (u32 i = 0; i < actors.size(); i ++)
+	for (auto & c : actors)
 	{
-		Actor &c = actors[i];
-		
 		if (!c.centreLocationSet)
 		{
 			core::vector3di actorMapPos = GetCoord( c.entity->GetPosition() );
@@ -3550,10 +3542,8 @@ void Level::Update(f32 dt)
 	
 	// Attempt to move any actor location that the actor has moved to a different location.
 	// If the move fails then it will stay where it is...
-	for (u32 i = 0; i < actors.size(); i ++)
+	for (auto & c : actors)
 	{
-		Actor &c = actors[i];
-		
 		core::vector3di actorMapPos = GetCoord( c.entity->GetPosition() );
 		
 		if (c.centreLocationSet && actorMapPos != c.centreLocation)
@@ -3676,16 +3666,14 @@ void Level::Update(f32 dt)
 	
 	
 	// Occupy new actor intersecting locations...
-	for (u32 i = 0; i < actors.size(); i ++)
+	for (auto & c : actors)
 	{
-		Actor &c = actors[i];
-		
 		// Get possible candidate locations for occupation
 		std::vector<core::vector3di> possibleActorLocations = GetActorIntersectingCoords(c);
 		
-		for (u32 j = 0; j < possibleActorLocations.size(); j ++)
+		for (auto & possibleActorLocation : possibleActorLocations)
 		{
-			core::vector3di &loc = possibleActorLocations[j];
+			core::vector3di &loc = possibleActorLocation;
 			
 			// Occupy provided there is not already an object there!
 			if ( !map->GetObject(loc)
@@ -3708,10 +3696,8 @@ void Level::Update(f32 dt)
 	// If actor is on an event square and that event denies gravity... then disable gravity!
 	// Otherwise enabled it.
 	// Maybe should also zero downwards velocity...
-	for (u32 i = 0; i < actors.size(); i ++)
+	for (auto & c : actors)
 	{
-		Actor &c = actors[i];
-		
 		core::vector3di actorMapPos = GetCoord( c.entity->GetPosition() );
 		
 		c.GetCharacter()->SetGravityEnabled( defaultEvent->RequestActionPermission(actorMapPos, EAT_FALL) );
@@ -3846,10 +3832,8 @@ void Level::Update(f32 dt)
 		// NEW: Just started to enter a location.
 		// I.e. just leaving a previous location.
 		// (previous location cached in map)
-		for (u32 i = 0; i < locationsStartedToEnter.size(); i ++)
+		for (auto & coord : locationsStartedToEnter)
 		{
-			core::vector3di &coord = locationsStartedToEnter[i];
-			
 			IMapEventOwner *event = map->GetEvent(coord);
 			
 			if (event)
@@ -3861,10 +3845,8 @@ void Level::Update(f32 dt)
 		
 		// Originally this was the only event we had.
 		// Called when an object has completely finished moving in to a new position.
-		for (u32 i = 0; i < locationsEntered.size(); i ++)
+		for (auto & coord : locationsEntered)
 		{
-			core::vector3di &coord = locationsEntered[i];
-			
 			IMapEventOwner *event = map->GetEvent(coord);
 			
 			// SHOULD INITIATE ANY NEW ACTIONS HERE.
@@ -3897,8 +3879,8 @@ void Level::Update(f32 dt)
 		
 		std::vector<core::vector3di> allObjects = map->GetAllObjects();
 		
-		for (u32 i = 0; i < allObjects.size(); i ++)
-			PerhapsGravity(allObjects[i]);
+		for (auto & allObject : allObjects)
+			PerhapsGravity(allObject);
 	}
 	
 	locationsEntered.clear();
@@ -3969,10 +3951,8 @@ void Level::ShovePlayerOutOfTheWay(core::vector3di coord)
 	
 	// So find the actor that is intersecting this square.
 	// (if any...)
-	for (u32 i = 0; i < actors.size(); i ++)
+	for (auto & c : actors)
 	{
-		Actor &c = actors[i];
-		
 		if (c.entity == map->GetObject(coord))
 		{
 			// Found the actor, now find its record of this coord (in lastLocations).

@@ -15,8 +15,8 @@ Kernel::Kernel()
 
 Kernel::~Kernel()
 {
-	for (u32 i = 0; i < tasks.size(); i ++)
-		tasks[i]->drop();
+	for (auto & elem : tasks)
+		elem->drop();
 }
 
 void Kernel::AddTask(Task *task)
@@ -60,12 +60,12 @@ void Kernel::Run()
 		// If engine is not paused, then we update tasks!
 		if (!engine->IsPaused())
 		{
-			for (u32 i = 0; i < tasks.size(); i ++)
+			for (auto & elem : tasks)
 			{
 				// A potential task update...
 				// (PotentialUpdate determines whether or not enough time has passed
 				// to perform an actual update).
-				tasks[i]->PotentialUpdate();
+				elem->PotentialUpdate();
 			}
 
             // If the window size has changed a "ScreenResize" event is sent

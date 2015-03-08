@@ -172,8 +172,8 @@ class Level : public IUpdatable, public IWantInput, public IWantEvents
 	
 	void ClearTutorialTextElements()
 	{
-		for (u32 i = 0; i < tutorialTextElements.size(); i ++)
-			tutorialTextElements[i]->remove();
+		for (auto & elem : tutorialTextElements)
+			elem->remove();
 		
 		tutorialTextElements.clear();
 	}

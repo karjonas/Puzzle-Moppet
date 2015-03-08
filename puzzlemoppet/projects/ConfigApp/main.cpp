@@ -119,12 +119,12 @@ void InitGUI()
 	for (s32 i = 0; i < vmList->getVideoModeCount(); i ++)
 		videoModes.Insert( vmList->getVideoModeResolution(i) );
 	
-	for (u32 i = 0; i < videoModes.size(); i ++)
+	for (auto & videoMode : videoModes)
 	{
 		core::stringw resStr;
-		resStr += videoModes[i].Width;
+		resStr += videoMode.Width;
 		resStr += "x";
-		resStr += videoModes[i].Height;
+		resStr += videoMode.Height;
 		comboboxScreenRes->addItem(resStr.c_str());
 	}
 	
