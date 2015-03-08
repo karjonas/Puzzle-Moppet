@@ -58,15 +58,15 @@ public:
 	~Editor();
 	
 	// irr events
-	bool OnEvent(const SEvent &event);
+	bool OnEvent(const SEvent &event) override;
 	// litha engine events
-	void OnEvent(const Event &event);
+	void OnEvent(const Event &event) override;
 	
-	void OnAxisChange(int id, float delta);
-	void OnButtonDown(int id);
-	void OnButtonUp(int id);
+	void OnAxisChange(int id, float delta) override;
+	void OnButtonDown(int id) override;
+	void OnButtonUp(int id) override;
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 };
 
 

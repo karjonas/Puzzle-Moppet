@@ -5,8 +5,8 @@
 
 
 // oh no another global
-ISound *bgAmbientSound = NULL;
-ISound *bgMusic = NULL;
+ISound *bgAmbientSound = nullptr;
+ISound *bgMusic = nullptr;
 
 // and another
 bool globalIsInEditor = false;
@@ -41,7 +41,7 @@ public:
 		lastBrightness = 1.f;
 	}
 	
-	void ShaderOnSetConstants(IShader *shader)
+	void ShaderOnSetConstants(IShader *shader) override
 	{
 		shader->SetPixelConstant("rippleScroll", engine->GetRenderUpdater().GetVirtualTime() * 0.02);
 		
@@ -217,7 +217,7 @@ int main(int argc, const char **argv)
 		IShader *skyShader = renderSystem->CreateShader("SkyBox.vert", "SkyBox.frag", video::EMT_SOLID);
 		
 		LowLevelShaderRegisterMap rmap;
-		rmap.PushSingleRegister("rippleScroll", "brightness", NULL,NULL);
+		rmap.PushSingleRegister("rippleScroll", "brightness", nullptr,nullptr);
 		
 		skyShader->SetPixelRegisterMap(rmap);
 		
@@ -399,7 +399,7 @@ int main(int argc, const char **argv)
 	// Now, instead of going straight into the game we have a start screen.
 	// ...unless the game was started by command line, in which case we jump straight in.
 	
-	MainState *mainState = NULL;
+	MainState *mainState = nullptr;
 	
 	if (levelFileName.size())
 	{

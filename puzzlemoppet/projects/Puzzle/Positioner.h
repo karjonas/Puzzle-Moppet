@@ -56,8 +56,8 @@ public:
 	// a "title" element that appears above the row...
 	void SetTitle(gui::IGUIElement *element);
 	
-	void Apply();
-	void Reset();
+	void Apply() override;
+	void Reset() override;
 };
 
 class ColumnPositioner : public Positioner
@@ -65,7 +65,7 @@ class ColumnPositioner : public Positioner
 public:
 	ColumnPositioner(video::IVideoDriver *driver, s32 spacing);
 	
-	void Apply();
+	void Apply() override;
 };
 
 class ColumnPositionerCentred : public Positioner
@@ -75,7 +75,7 @@ class ColumnPositionerCentred : public Positioner
 public:
 	ColumnPositionerCentred(video::IVideoDriver *driver, s32 spacing, f32 marginBottom = 0.1);
 	
-	void Apply();
+	void Apply() override;
 };
 
 class EitherSidePositioner : public Positioner
@@ -90,7 +90,7 @@ public:
 	// and before Apply.
 	void Enable(bool left, bool right);
 	
-	void Apply();
+	void Apply() override;
 };
 
 #endif

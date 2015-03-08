@@ -255,8 +255,8 @@ MainState::MainState(MainState **mainStatePtrLoc)
 
 	device = engine->GetIrrlichtDevice();
 
-	level = NULL;
-	editor = NULL;
+	level = nullptr;
+	editor = nullptr;
 
 	engine->GetLogicUpdater().AddUpdatable(this, false);
 
@@ -280,7 +280,7 @@ MainState::MainState(MainState **mainStatePtrLoc)
 	menuSound->SetVolume(0.5);
 
 	// Nullify final scene stuff
-	finalSceneSea = NULL;
+	finalSceneSea = nullptr;
 
 	// pause menu
 	video::IVideoDriver *driver = device->getVideoDriver();
@@ -399,14 +399,14 @@ void MainState::RemoveLevelAndEditor()
 	{
 		NOTE << "Removing editor.";
 		world->GetUpdater().RemoveUpdatable(editor);
-		editor = NULL;
+		editor = nullptr;
 	}
 
 	if (level)
 	{
 		NOTE << "Removing level.";
 		world->GetUpdater().RemoveUpdatable(level);
-		level = NULL;
+		level = nullptr;
 	}
 }
 
@@ -554,7 +554,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::d
 		sunDirection = core::vector3df(0,1,0);
 
 		// actually, we'll disable the shader completely...
-		world->SetSkyBoxShader(NULL);
+		world->SetSkyBoxShader(nullptr);
 
 
 		// Create the sandy beach
@@ -692,7 +692,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::d
 			player->SetRotation( core::vector3df(0, walkedLeft ? 0 : 180, 0) );
 
 			// disabled user control
-			player->SetController(NULL);
+			player->SetController(nullptr);
 
 			// walk off by itself
 			player->SetMoveVec( core::vector2df(0.2, walkedLeft ? 1.0 : -1.0) );
@@ -708,7 +708,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::d
 				footStepSoundSource->GetSound()->SetVolume(0.0);
 
 			// Fixed camera
-			world->SetCameraController(NULL);
+			world->SetCameraController(nullptr);
 			ICamera *camera = world->GetCamera();
 			camera->SetPosition(core::vector3df(-6,2,walkedLeft ? 15 : -15));
 			camera->SetTarget(core::vector3df(-6,1,walkedLeft ? 20 : -20));
@@ -808,8 +808,8 @@ void MainState::StartFirstLevel()
 
 		// First level is the falling intro, so we want some special modifications...
 
-		world->SetCameraController(NULL);
-		level->GetPlayer()->SetController(NULL);
+		world->SetCameraController(nullptr);
+		level->GetPlayer()->SetController(nullptr);
 
 		ICamera *camera = world->GetCamera();
 		camera->SetPosition(core::vector3df(0,0,6));
@@ -995,7 +995,7 @@ void MainState::RestartLevel(std::deque<UndoState> *undoHistory)
 
 	RemoveLevelAndEditor();
 
-	StartLevel( fileName, false, undoHistory ? &undoHistoryCopy : NULL );
+	StartLevel( fileName, false, undoHistory ? &undoHistoryCopy : nullptr );
 
 
 	// Hacked in.
@@ -1241,7 +1241,7 @@ void MainState::OnEvent(const Event &event)
 
 					// clear main.cpp pointer
 					// this is all stupidly hacked in.
-					*mainStatePtrLoc = NULL;
+					*mainStatePtrLoc = nullptr;
 
 					StartScreen *startScreen = new StartScreen(mainStatePtrLoc);
 					engine->GetLogicUpdater().AddUpdatable(startScreen);

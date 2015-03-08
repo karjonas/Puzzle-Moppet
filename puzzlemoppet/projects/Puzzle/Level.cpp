@@ -32,7 +32,7 @@ inline u32 time_in_ms(f32 timeSeconds)
 class PlayerInteractionPreparator : public IInteractionPreparator
 {
 public:
-	void Prepare(CollisionMaterialInteraction &interaction, const Collision &collision)
+	void Prepare(CollisionMaterialInteraction &interaction, const Collision &collision) override
 	{
 		// Collisions with walls have zero friction.
 		if (fabs(collision.normal.Y) < 0.1)
@@ -155,7 +155,7 @@ std::vector<core::vector3di> Level::GetActorIntersectingCoords(Actor &actor)
 
 void Level::PutDebugCube(core::vector3di mapCoord)
 {
-	engine->GetIrrlichtDevice()->getSceneManager()->addCubeSceneNode(1.0, NULL, -1,
+	engine->GetIrrlichtDevice()->getSceneManager()->addCubeSceneNode(1.0, nullptr, -1,
 		GetPosFromCoord(mapCoord)
 		);
 }
@@ -164,7 +164,7 @@ LowLevelShaderRegisterMap get_vertex_shader_register_map()
 {
 	LowLevelShaderRegisterMap rmap;
 	rmap.PushFourRegisters("TransWorldMatrix");
-	rmap.PushSingleRegister("timeSeconds", NULL,NULL,NULL);
+	rmap.PushSingleRegister("timeSeconds", nullptr,nullptr,nullptr);
 	return rmap;
 }
 
@@ -188,7 +188,7 @@ public:
 		this->driver = engine->GetIrrlichtDevice()->getVideoDriver();
 	}
 	
-	void ShaderOnSetConstants(IShader *shader)
+	void ShaderOnSetConstants(IShader *shader) override
 	{
 		core::matrix4 matWorld = driver->getTransform(video::ETS_WORLD);
 		matWorld = matWorld.getTransposed();
@@ -685,7 +685,7 @@ void Level::OptimiseLevel()
 		if (combinedLevelMesh)
 		{
 			combinedLevelMesh->remove();
-			combinedLevelMesh = NULL;
+			combinedLevelMesh = nullptr;
 		}
 		
 		for (auto & elem : combinedLevelMeshShaders)
@@ -1113,7 +1113,7 @@ void Level::CreateObject(core::vector3di mapCoord, E_OBJECT_TYPE type)
 		return;
 	}
 	
-	IMesh *mesh = NULL;
+	IMesh *mesh = nullptr;
 	
 	switch (type)
 	{
@@ -1176,7 +1176,7 @@ void Level::CreateObject(core::vector3di mapCoord, E_OBJECT_TYPE type)
 			// brassy sphere map
 			
 			video::ITexture *sphereMap = engine->GetIrrlichtDevice()->getVideoDriver()->getTexture("brass_spheremap.png");
-			bladeMesh->SetShader(0, NULL);
+			bladeMesh->SetShader(0, nullptr);
 			bladeMesh->GetMaterial(0).MaterialType = video::EMT_SPHERE_MAP;
 			bladeMesh->GetMaterial(0).TextureLayer[0].Texture = sphereMap;
 			
@@ -1323,7 +1323,7 @@ void Level::RemoveObject(core::vector3di mapCoord)
 				&& map->GetObjectType(mapCoord) != EOT_PLAYER_INTERSECTING)
 		{
 			world->RemoveTransformable(object);
-			map->SetObject(mapCoord, NULL, false, EOT_UNKNOWN);
+			map->SetObject(mapCoord, nullptr, false, EOT_UNKNOWN);
 		}
 	}
 }
@@ -1396,7 +1396,7 @@ void Level::PlayerPushed(core::vector3di mapCoord, core::vector3di pushVec)
 		
 		{
 			// We have a pause. With push animation.
-			GetPlayer()->SetController(NULL);
+			GetPlayer()->SetController(nullptr);
 			GetPlayer()->StopMoving();
 			Event event("PlayerPushedPause");
 			TimedEvent(event, 0.5);
@@ -1756,7 +1756,7 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 	cloudShadowTexture = engine->GetIrrlichtDevice()->getVideoDriver()->getTexture("cloudshadow.png");
 	
 	combineMeshes = true;
-	combinedLevelMesh = NULL;
+	combinedLevelMesh = nullptr;
 	
 	if (globalIsInEditor)
 		combineMeshes = false;
@@ -1770,10 +1770,10 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 	CreatePlayer(core::vector3di(0,0,0));
 	
 	// Camera is created on Start
-	thirdPersonCamera = NULL;
+	thirdPersonCamera = nullptr;
 	
 	// created in constructor..
-	playerController = NULL;
+	playerController = nullptr;
 	
 	// Logic enabled. Not in editor by default.
 	logicEnabled = true;
@@ -2031,7 +2031,7 @@ Level::~Level()
 	
 	if (thirdPersonCamera) // may not have been created if Start was not called.
 	{
-		world->SetCameraController(NULL);
+		world->SetCameraController(nullptr);
 		thirdPersonCamera->drop();
 	}
 	
@@ -2732,10 +2732,10 @@ void Level::StartNextLevelTransition(bool stopMoving)
 	
 	touchedEndLevelPortal = true;
 	
-	world->SetCameraController(NULL);
+	world->SetCameraController(nullptr);
 	//thirdPersonCamera->Follow(portal);
 	
-	GetPlayer()->SetController(NULL);
+	GetPlayer()->SetController(nullptr);
 	
 	// stopMoving flag hacked in.
 	// We don't want the player to stop moving when ending in the final scenes.
@@ -2779,9 +2779,9 @@ public:
 		removeTime = localUpdatable->GetVirtualTime() + lifeTime;
 	}
 	
-	void Init(ITransformable *target) {}
+	void Init(ITransformable *target) override {}
 	
-	void Animate(ITransformable *target, f32 dt)
+	void Animate(ITransformable *target, f32 dt) override
 	{
 		if (localUpdatable->GetVirtualTime() > removeTime)
 		{
@@ -2855,7 +2855,7 @@ public:
 		originalPlayerPos = level->GetPlayer()->GetPosition();
 	}
 	
-	bool IsWaitOver(IEventQueue *eventQueue, f32 waitStartTime)
+	bool IsWaitOver(IEventQueue *eventQueue, f32 waitStartTime) override
 	{
 		// (waitTime has passed AND a certain distance has been moved by the player)
 		// OR (a next tutorial item is queued and waiting)
@@ -3130,7 +3130,7 @@ void Level::Update(f32 dt)
 		
 		if (playerPos.Y < lowestPoint)
 		{
-			GetPlayer()->SetController(NULL);
+			GetPlayer()->SetController(nullptr);
 			GetPlayer()->StopMoving();
 			
 			
@@ -3144,7 +3144,7 @@ void Level::Update(f32 dt)
 				GetPlayer()->SetAnimations(ANIM_FALL, -1);
 			}
 			
-			world->SetCameraController(NULL);
+			world->SetCameraController(nullptr);
 			
 			// HACK.
 			// Rotate to watch character as it falls.
@@ -3516,7 +3516,7 @@ void Level::Update(f32 dt)
 			ASSERT( map->GetObject(c.lastLocations[j]) == c.entity );
 			
 			// Now remove reference to this actor's entity
-			map->SetObject( c.lastLocations[j], NULL, false, EOT_UNKNOWN );
+			map->SetObject( c.lastLocations[j], nullptr, false, EOT_UNKNOWN );
 		}
 		
 		c.lastLocations.clear();
@@ -3719,7 +3719,7 @@ void Level::Update(f32 dt)
 		{
 			// we can't locomote. We're stuck?
 			// bob animation for fan is set in FanEvent
-			GetPlayer()->SetController(NULL);
+			GetPlayer()->SetController(nullptr);
 			GetPlayer()->ClearMotion();
 		}
 		
@@ -3963,7 +3963,7 @@ void Level::ShovePlayerOutOfTheWay(core::vector3di coord)
 				{
 					// Remove reference to this actor's entity
 					// (same as when refreshing actor occupied locations in Update)
-					map->SetObject( c.lastLocations[j], NULL, false, EOT_UNKNOWN );
+					map->SetObject( c.lastLocations[j], nullptr, false, EOT_UNKNOWN );
 					
 					// and remove the record of it
 					c.lastLocations.erase(c.lastLocations.begin()+j);

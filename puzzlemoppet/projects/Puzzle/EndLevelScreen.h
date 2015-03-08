@@ -27,6 +27,6 @@ public:
 	EndLevelScreen(MainState *mainState, Level *level);
 	~EndLevelScreen();
 	
-	void OnEvent(const Event &event);
+	void OnEvent(const Event &event) override;
 };
 

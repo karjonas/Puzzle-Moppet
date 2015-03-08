@@ -57,7 +57,7 @@ public:
 	const std::vector<gui::IGUIElement *> &GetElements();
 	
 	// used internally
-	void OnEvent(const Event &event);
+	void OnEvent(const Event &event) override;
 };
 
 // A horizontal list of choices that appears in the centre of the screen.

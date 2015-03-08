@@ -72,7 +72,7 @@ gui::IGUIElement *Positioner::GetMouseOverElement()
 			return elem;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 /*gui::IGUIElement *Positioner::GetElementById(s32 id)
@@ -99,7 +99,7 @@ RowPositioner::RowPositioner(video::IVideoDriver *driver, s32 yPos, s32 spacing,
 	this->yPos = yPos;
 	this->vertCentred = vertCentred;
 	
-	title = NULL;
+	title = nullptr;
 }
 
 void RowPositioner::SetTitle(gui::IGUIElement *element)
@@ -158,7 +158,7 @@ void RowPositioner::Reset()
 	if (title)
 	{
 		title->remove();
-		title = NULL;
+		title = nullptr;
 	}
 }
 

@@ -15,7 +15,7 @@ class ICharacter : public ITransformable
 public:
 	ICharacter()
 	{
-		controller = NULL;
+		controller = nullptr;
 	}
 	
 	virtual ~ICharacter()

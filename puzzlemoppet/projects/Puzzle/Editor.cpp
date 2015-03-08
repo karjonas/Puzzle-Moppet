@@ -74,11 +74,11 @@ Editor::Editor(Level *level)
 	level->SetLogicEnabled(false);
 	
 	// Remove third person camera and such
-	level->GetPlayer()->SetController(NULL);
-	world->SetCameraController(NULL);
+	level->GetPlayer()->SetController(nullptr);
+	world->SetCameraController(nullptr);
 	
 	// Remove usual input system
-	world->SetInputProfile(NULL);
+	world->SetInputProfile(nullptr);
 	
 	// Create "target cube", a 3D cursor.
 	targetCube = smgr->addCubeSceneNode(1.0);
@@ -122,7 +122,7 @@ Editor::Editor(Level *level)
 		SKeyMap(EKA_STRAFE_RIGHT, KEY_KEY_D)
 	};
 	
-	camera = smgr->addCameraSceneNodeFPS(NULL, 100.0, 0.005,
+	camera = smgr->addCameraSceneNodeFPS(nullptr, 100.0, 0.005,
 			-1, keyMapArray, 8);
 	
 	smgr->setActiveCamera( camera );
@@ -330,7 +330,7 @@ void Editor::OnButtonDown(int id)
 		// Remove event
 		if (map->GetEvent(targetCoord))
 		{
-			map->SetEvent(targetCoord, NULL);
+			map->SetEvent(targetCoord, nullptr);
 			HideEvent(targetCoord);
 		}
 	}

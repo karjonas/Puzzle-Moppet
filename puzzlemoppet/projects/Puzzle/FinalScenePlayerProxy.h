@@ -4,7 +4,7 @@
 class FinalScenePlayerProxy : public ITransformable
 {
 public:
-	core::vector3df GetPosition()
+	core::vector3df GetPosition() override
 	{
 		// Need to see if player (parent) is below certain height...
 		// If so, we remain at that minimum height...

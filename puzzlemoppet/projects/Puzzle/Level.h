@@ -349,7 +349,7 @@ public:
 	
 	// MainState pointer is now optional (can be NULL), since we may create a level without
 	// mainstate existing for preview in start screen.
-	Level(MainState *mainState, core::stringc fileName, std::deque<UndoState> *undoHistory = NULL);
+	Level(MainState *mainState, core::stringc fileName, std::deque<UndoState> *undoHistory = nullptr);
 	~Level();
 	
 	// used by options menu... for sfx testing...
@@ -373,8 +373,8 @@ public:
 	
 	void ClearEndLevelTeleportEffects();
 	
-	void OnButtonDown(s32 id);
-	void OnEvent(const Event &event);
+	void OnButtonDown(s32 id) override;
+	void OnEvent(const Event &event) override;
 	
 	// hacked in.
 	void ShowEndLevelScreen();
@@ -385,7 +385,7 @@ public:
 	Map *GetMap() { return map; }
 	
 	void Save();
-	void Load(UndoState *undoState = NULL);
+	void Load(UndoState *undoState = nullptr);
 	
 	ICharacter *GetPlayer() { return GetPlayerActor().GetCharacter(); }
 	IThirdPersonCameraController *GetCamera() { return thirdPersonCamera; }
@@ -403,7 +403,7 @@ public:
 	const LevelStats &GetLevelStats();
 	
 	// Called at a certain FPS as defined in Engine.
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 	
 	// There are hacks, and then there are *hacks*. This is in the latter category.
 	// Used by some events/moving objects to push the player out of the way.
@@ -419,8 +419,8 @@ public:
 	void ClearPlayerMapObjectMove();
 	
 private:
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 };
 
 #endif

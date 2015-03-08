@@ -31,8 +31,8 @@ protected:
 public:
 	ITransformable()
 	{
-		world = NULL;
-		parent = NULL;
+		world = nullptr;
+		parent = nullptr;
 		firstVelocityCalculation = true;
 	}
 	
@@ -104,7 +104,7 @@ public:
 			if (children[i] == child)
 			{
 				children.erase(children.begin()+i);
-				child->parent = NULL;
+				child->parent = nullptr;
 				child->drop();
 				world->RemoveTransformable(child);
 				return;
@@ -139,7 +139,7 @@ public:
 				return child;
 		}
 		
-		return NULL;
+		return nullptr;
 	}
 	
 	// This is called internally by World.AddTransformable(..)

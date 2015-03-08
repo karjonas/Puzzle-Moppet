@@ -179,7 +179,7 @@ Settings may have any of the following keys defined:
 	softwareMode - should software rendering be used?
 				Defaults to false, OpenGL is used.
 */
-IEngine *CreateEngine(int argc, const char **argv, const VariantMap *settings = NULL);
+IEngine *CreateEngine(int argc, const char **argv, const VariantMap *settings = nullptr);
 
 // Get a pointer to the created engine. May only be called after engine creation.
 // Useful to avoid passing pointers to the engine around everywhere.

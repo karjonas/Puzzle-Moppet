@@ -53,7 +53,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
 	device = engine->GetIrrlichtDevice();
 	world = engine->GetWorld();
 	
-	mainState = NULL;
+	mainState = nullptr;
 	
 	engine->RegisterEventInterest(this, "ButtonDown");
 	engine->RegisterEventInterest(this, "ScreenFadeFinished");
@@ -70,11 +70,11 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
 	
 	// TEST. Level previewing!
 	
-	levelPreview = NULL;
-	camControl = NULL;
-	levelTitleText = NULL;
-	levelRatingText = NULL;
-	levelFractionText = NULL;
+	levelPreview = nullptr;
+	camControl = nullptr;
+	levelTitleText = nullptr;
+	levelRatingText = nullptr;
+	levelFractionText = nullptr;
 	
 	core::stringc continueLevel = find_next_level();
 	
@@ -158,7 +158,7 @@ void StartScreen::CreatePreviewLevel(core::stringc previewLevelName)
 		previewLevelName = "titlescreen.lev";
 	}
 	
-	levelPreview = new Level( NULL, level_path_rel_exe(previewLevelName) );
+	levelPreview = new Level( nullptr, level_path_rel_exe(previewLevelName) );
 	levelPreview->SetLogicEnabled(false);
 	world->GetUpdater().AddUpdatable(levelPreview);
 	levelPreview->drop();
@@ -276,7 +276,7 @@ void StartScreen::CreateLevelSelectButtons()
 		if (levelTitleText)
 		{
 			levelTitleText->remove();
-			levelTitleText = NULL;
+			levelTitleText = nullptr;
 		}
 		
 		core::stringw text;
@@ -325,7 +325,7 @@ void StartScreen::CreateLevelSelectButtons()
 		if (levelRatingText)
 		{
 			levelRatingText->remove();
-			levelRatingText = NULL;
+			levelRatingText = nullptr;
 		}
 		
 		
@@ -395,7 +395,7 @@ void StartScreen::CreateLevelSelectButtons()
 		if (levelFractionText)
 		{
 			levelFractionText->remove();
-			levelFractionText = NULL;
+			levelFractionText = nullptr;
 		}
 		
 		{
@@ -490,16 +490,16 @@ void StartScreen::AndSoItBegins()
 	if (menu)
 	{
 		delete menu;
-		menu = NULL;
+		menu = nullptr;
 	}
 	
 	if (menuLevelSelect)
 	{
 		delete menuLevelSelect;
-		menuLevelSelect = NULL;
+		menuLevelSelect = nullptr;
 	}
 	
-	world->SetCameraController(NULL);
+	world->SetCameraController(nullptr);
 	world->RemoveTransformable(camTarget);
 	
 	// Don't want start screen to do anything else now.
@@ -515,7 +515,7 @@ void StartScreen::AndSoItBegins()
 	{
 		playLevelName = levelPreview->GetShortName();
 		engine->GetWorld()->GetUpdater().RemoveUpdatable(levelPreview);
-		levelPreview = NULL;
+		levelPreview = nullptr;
 	}
 	
 	// Remove title text?
@@ -747,28 +747,28 @@ void StartScreen::OnEvent(const Event &event)
 				
 				ASSERT(menu);
 				delete menu;
-				menu = NULL;
+				menu = nullptr;
 				
 				ASSERT(menuLevelSelect);
 				delete menuLevelSelect;
-				menuLevelSelect = NULL;
+				menuLevelSelect = nullptr;
 				
 				if (levelTitleText)
 				{
 					levelTitleText->remove();
-					levelTitleText = NULL;
+					levelTitleText = nullptr;
 				}
 				
 				if (levelRatingText)
 				{
 					levelRatingText->remove();
-					levelRatingText = NULL;
+					levelRatingText = nullptr;
 				}
 				
 				if (levelFractionText)
 				{
 					levelFractionText->remove();
-					levelFractionText = NULL;
+					levelFractionText = nullptr;
 				}
 				
 				originalConfig = get_current_config();
@@ -783,28 +783,28 @@ void StartScreen::OnEvent(const Event &event)
 				
 				ASSERT(menu);
 				delete menu;
-				menu = NULL;
+				menu = nullptr;
 				
 				ASSERT(menuLevelSelect);
 				delete menuLevelSelect;
-				menuLevelSelect = NULL;
+				menuLevelSelect = nullptr;
 				
 				if (levelTitleText)
 				{
 					levelTitleText->remove();
-					levelTitleText = NULL;
+					levelTitleText = nullptr;
 				}
 				
 				if (levelRatingText)
 				{
 					levelRatingText->remove();
-					levelRatingText = NULL;
+					levelRatingText = nullptr;
 				}
 				
 				if (levelFractionText)
 				{
 					levelFractionText->remove();
-					levelFractionText = NULL;
+					levelFractionText = nullptr;
 				}
 				
 				SimpleHorizontalMenu *horizMenu = new SimpleHorizontalMenu(START_NEW_GAME_MENU_ID);
@@ -823,7 +823,7 @@ void StartScreen::OnEvent(const Event &event)
 			{
 				ASSERT(menu);
 				delete menu;
-				menu = NULL;
+				menu = nullptr;
 				
 				// Go back to first menu.
 				CreateFirstMenu();
@@ -1059,7 +1059,7 @@ void StartScreen::OnEvent(const Event &event)
 			
 			// Re-show prev/next buttons
 			delete menuLevelSelect;
-			menuLevelSelect = NULL;
+			menuLevelSelect = nullptr;
 			CreateLevelSelectButtons();
 		}
 	}

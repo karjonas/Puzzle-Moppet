@@ -17,7 +17,7 @@ SimpleMenu::SimpleMenu(s32 uniqueId)
 	engine = GetEngine();
 	device = engine->GetIrrlichtDevice();
 	
-	positioner = NULL;
+	positioner = nullptr;
 	
 	// sound
 	menuSound = engine->GetSoundSystem()->CreateSound2D();

@@ -23,7 +23,7 @@ public:
 		return col;
 	}
 	
-	void draw()
+	void draw() override
 	{
 		if (IsVisible)
 		{
@@ -80,7 +80,7 @@ public:
 	
 	virtual ~GUIElementFade(){}
 	
-	void OnPostRender(u32 timeMs)
+	void OnPostRender(u32 timeMs) override
 	{
 		if (disabled)
 			return;

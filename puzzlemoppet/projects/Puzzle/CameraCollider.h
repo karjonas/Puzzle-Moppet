@@ -33,17 +33,17 @@ public:
 		minCameraFrontDist = 0.5;
 	}
 	
-	void SetCollisionLayer(u32 layer)
+	void SetCollisionLayer(u32 layer) override
 	{
 		collisionLayer = layer;
 	}
 	
-	void ExcludeGeometry(const Set<ICollisionGeometry *> &excluding)
+	void ExcludeGeometry(const Set<ICollisionGeometry *> &excluding) override
 	{
 		excludedGeometries.Union(excluding);
 	}
 	
-	void ClearExcludedGeometry()
+	void ClearExcludedGeometry() override
 	{
 		excludedGeometries.clear();
 	}
@@ -60,7 +60,7 @@ public:
 		minCameraFrontDist = dist;
 	}
 	
-	bool ProcessCollision(const core::line3df &cameraRay, core::vector3df &resultPos)
+	bool ProcessCollision(const core::line3df &cameraRay, core::vector3df &resultPos) override
 	{
 		// Get all geoms...
 		std::vector<RayCollision> collisions = physics->RayCastExcluding(cameraRay, excludedGeometries, collisionLayer);

@@ -220,10 +220,10 @@ ITransformable *Map::GetObject(core::vector3di coord)
 		if (loc.containsObject)
 			return loc.object.object;
 		else
-			return NULL;
+			return nullptr;
 	}
 	else
-		return NULL;
+		return nullptr;
 }
 
 IMapEventOwner *Map::GetEvent(core::vector3di coord)
@@ -231,7 +231,7 @@ IMapEventOwner *Map::GetEvent(core::vector3di coord)
 	if (LocationExists(coord))
 		return GetLocation(coord).event;
 	else
-		return NULL;
+		return nullptr;
 }
 
 E_OBJECT_TYPE Map::GetObjectType(core::vector3di coord)

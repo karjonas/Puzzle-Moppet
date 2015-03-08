@@ -84,18 +84,18 @@ public:
 	// Returns true if an intersection occurs.
 	// If collisionResult is set, it will be filled with the result of the closest collision.
 	// layer - the layer this ray is considered a member of.
-	virtual bool RayCast(const core::line3df &ray, RayCollision *collisionResult = NULL, u32 layer = 0) = 0;
+	virtual bool RayCast(const core::line3df &ray, RayCollision *collisionResult = nullptr, u32 layer = 0) = 0;
 	
 	// Ray cast against only the specified geometry.
 	virtual bool RayCastIncluding(const core::line3df &ray,
 			const Set<ICollisionGeometry *> &includingGeometry,
-			RayCollision *collisionResult = NULL,
+			RayCollision *collisionResult = nullptr,
 			u32 layer = 0) = 0;
 	
 	// Ray cast against all geometry excluding that specified.
 	virtual bool RayCastExcluding(const core::line3df &ray,
 			const Set<ICollisionGeometry *> &excludingGeometry,
-			RayCollision *collisionResult = NULL,
+			RayCollision *collisionResult = nullptr,
 			u32 layer = 0) = 0;
 	
 	// Same as other ray cast methods but returns a list of *all* collisions that occurred, not just the closest.
