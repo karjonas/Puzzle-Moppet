@@ -2403,12 +2403,10 @@ UndoState Level::CreateUndoState()
 	
 	std::vector<core::vector3di> mapLocations = map->GetAllMapLocations();
 	
-	for (auto & mapLocation : mapLocations)
+	for (auto & coord : mapLocations)
 	{
 		UndoState::MapLoc mapLoc;
-		
-		core::vector3di &coord = mapLocation;
-		
+
 		mapLoc.coord = coord;
 		mapLoc.objectType = map->GetObject(coord) ? map->GetObjectType(coord) : EOT_UNKNOWN;
 		mapLoc.eventType = map->GetEvent(coord) ? map->GetEvent(coord)->GetType() : EET_UNKNOWN;
