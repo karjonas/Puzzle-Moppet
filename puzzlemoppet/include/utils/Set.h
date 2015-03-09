@@ -4,6 +4,7 @@
 
 #include "litha_internal.h"
 #include <vector>
+#include <algorithm>
 
 namespace utils
 {
@@ -29,29 +30,37 @@ public:
 	}
 	
 	// returns true if the set did contain the element
-	inline bool Remove(Type element)
+	inline bool Remove(const Type& element)
 	{
-		const u32 num_elements = elements.size();
+		auto it = std::find(elements.begin(), elements.end(), element);
 
-		for (u32 i = 0; i < num_elements; i ++)
+		if (it != elements.end())
 		{
-			if (elements[i] == element)
-			{
-				elements.erase(elements.begin()+i);
-				return true;
-			}
+			elements.erase(it);
+			return true;
+		}
+		return false;
+	}
+
+	// Removes the element by swapping it with the last one
+	// and popping the back to avoid unnecessary moving of elements.
+	inline bool SwapRemove(const Type& element)
+	{
+		auto it = std::find(elements.begin(), elements.end(), element);
+
+		if (it != elements.end())
+		{
+			swap_erase(elements, it);
+			return true;
 		}
 		return false;
 	}
 	
-	inline bool Contains(Type element) const
+	inline bool Contains(const Type& element) const
 	{
-		for (auto& elem : elements)
-		{
-			if (elem == element)
-				return true;
-		}
-		return false;
+		auto it = std::find(elements.begin(), elements.end(), element);
+
+		return it != elements.end();
 	}
 	
 	// adds all elements from another set to this set, ensuring no duplicates.
