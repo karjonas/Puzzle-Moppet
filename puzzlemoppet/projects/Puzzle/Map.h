@@ -10,7 +10,7 @@ struct MapObject
 {
 	MapObject()
 	{
-		object = NULL;
+		object = nullptr;
 		movable = false;
 		type = EOT_UNKNOWN;
 		previousCoordSet = false;
@@ -46,7 +46,7 @@ class Map
 		
 		MapLocation()
 		{
-			event = NULL;
+			event = nullptr;
 			traversing = false;
 			containsObject = false;
 			eventType = EET_UNKNOWN;

@@ -271,7 +271,7 @@ void OpenALSoundSystem::SetGlobalVolume3D(f32 volume)
 
 void OpenALSoundSystem::StopAllSounds()
 {
-	for (u32 i = 0; i < allSounds.size(); i ++)
-		allSounds[i]->Stop();
+	for (auto & allSound : allSounds)
+		allSound->Stop();
 }
 

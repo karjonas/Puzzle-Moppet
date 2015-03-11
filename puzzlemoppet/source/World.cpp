@@ -393,14 +393,14 @@ void World::OnPause()
 	IUpdatable::OnPause();
 	
 	// Need to pause all in-world sounds, but *NOT* the entire sound manager.
-	for (u32 i = 0; i < soundSources.size(); i ++)
-		soundSources[i]->Pause();
+	for (auto & elem : soundSources)
+		elem->Pause();
 	
 	// Stop all logic-graphics interpolation
 	// This will cause a millisecond pause when resuming, but that is acceptable.
 	
-	for (u32 i = 0; i < transformables.size(); i ++)
-		transformables[i]->CacheInterpolatableState();
+	for (auto & elem : transformables)
+		elem->CacheInterpolatableState();
 	
 	// Pause animation and other graphics by stopping Irrlicht's virtual timer
 	engine->GetIrrlichtDevice()->getTimer()->stop();
@@ -418,8 +418,8 @@ void World::OnResume()
 	IUpdatable::OnResume();
 	
 	// Resume sounds
-	for (u32 i = 0; i < soundSources.size(); i ++)
-		soundSources[i]->Resume();
+	for (auto & elem : soundSources)
+		elem->Resume();
 	
 	// Resume Irrlicht graphics
 	engine->GetIrrlichtDevice()->getTimer()->start();
@@ -452,15 +452,15 @@ void World::Update(f32 dt)
 	// yet parent does not have to be a graphic.
 	// So all nodes must be able to be interpolated if necessary.
 	
-	for (u32 i = 0; i < transformables.size(); i ++)
+	for (auto & elem : transformables)
 	{
 		// Calculate velocity *before* caching the new position etc.
 		// So velocity has a lag of one frame.
 		// This is required since the final new position is not known yet
 		// (and the final position may change at various points during this Update)
-		transformables[i]->CalculateVelocities(dt);
+		elem->CalculateVelocities(dt);
 		
-		transformables[i]->CacheInterpolatableState();
+		elem->CacheInterpolatableState();
 	}
 	
 	// Step physics! (updates bodies)
@@ -469,18 +469,18 @@ void World::Update(f32 dt)
 	
 	// Update characters and character controllers.
 	
-	for (u32 i = 0; i < characters.size(); i ++)
+	for (auto & elem : characters)
 	{
-		if (characters[i]->GetController())
-			characters[i]->GetController()->Update(characters[i]);
+		if (elem->GetController())
+			elem->GetController()->Update(elem);
 		
-		characters[i]->Update(dt);
+		elem->Update(dt);
 	}
 	
 	// Update sensors
 	
-	for (u32 i = 0; i < sensors.size(); i ++)
-		sensors[i]->Update(dt);
+	for (auto & elem : sensors)
+		elem->Update(dt);
 	
 	
 	// Update other updatables after all ITransformables but before camera in case any Updatables
@@ -507,12 +507,12 @@ void World::Update(f32 dt)
 	
 	// Update animators on every transformable
 	
-	for (u32 i = 0; i < transformables.size(); i ++)
+	for (auto & elem : transformables)
 	{
-		const std::vector<IMotionAnimator *> &animators = transformables[i]->GetAnimators();
+		const std::vector<IMotionAnimator *> &animators = elem->GetAnimators();
 		
-		for (u32 j = 0; j < animators.size(); j ++)
-			animators[j]->Animate(transformables[i], dt);
+		for (auto & animator : animators)
+			animator->Animate(elem, dt);
 	}
 	
 	// Update sound listener to be at camera position.
@@ -535,8 +535,8 @@ void World::Update(f32 dt)
 	
 	// Update sound sources.
 	
-	for (u32 i = 0; i < soundSources.size(); i ++)
-		soundSources[i]->Update(dt);
+	for (auto & elem : soundSources)
+		elem->Update(dt);
 	
 	
 	// Remove anything queued for removal.

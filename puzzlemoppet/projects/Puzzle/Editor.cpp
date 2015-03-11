@@ -40,8 +40,8 @@ void Editor::HideEvent(core::vector3di coord)
 
 void Editor::RefreshEventDisplay()
 {
-	for (u32 i = 0; i < displayedEvents.size(); i ++)
-		world->RemoveTransformable(displayedEvents[i].entity);
+	for (auto & elem : displayedEvents)
+		world->RemoveTransformable(elem.entity);
 	
 	displayedEvents.clear();
 	
@@ -49,8 +49,8 @@ void Editor::RefreshEventDisplay()
 	
 	std::vector<core::vector3di> eventCoords = map->GetAllEvents();
 	
-	for (u32 i = 0; i < eventCoords.size(); i ++)
-		DisplayEvent(eventCoords[i]);
+	for (auto & eventCoord : eventCoords)
+		DisplayEvent(eventCoord);
 }
 
 Editor::Editor(Level *level)
@@ -74,11 +74,11 @@ Editor::Editor(Level *level)
 	level->SetLogicEnabled(false);
 	
 	// Remove third person camera and such
-	level->GetPlayer()->SetController(NULL);
-	world->SetCameraController(NULL);
+	level->GetPlayer()->SetController(nullptr);
+	world->SetCameraController(nullptr);
 	
 	// Remove usual input system
-	world->SetInputProfile(NULL);
+	world->SetInputProfile(nullptr);
 	
 	// Create "target cube", a 3D cursor.
 	targetCube = smgr->addCubeSceneNode(1.0);
@@ -122,7 +122,7 @@ Editor::Editor(Level *level)
 		SKeyMap(EKA_STRAFE_RIGHT, KEY_KEY_D)
 	};
 	
-	camera = smgr->addCameraSceneNodeFPS(NULL, 100.0, 0.005,
+	camera = smgr->addCameraSceneNodeFPS(nullptr, 100.0, 0.005,
 			-1, keyMapArray, 8);
 	
 	smgr->setActiveCamera( camera );
@@ -232,8 +232,8 @@ void Editor::CreateBrushSelector()
 
 void Editor::DestroyBrushSelector()
 {
-	for (u32 i = 0; i < brushes.size(); i ++)
-		brushes[i].image->remove();
+	for (auto & elem : brushes)
+		elem.image->remove();
 	
 	brushes.clear();
 }
@@ -248,11 +248,11 @@ bool Editor::OnEvent(const SEvent &event)
 		selectedBrush = 0;
 		
 		// Need to match Caller to an object or event type...
-		for (u32 i = 0; i < brushes.size(); i ++)
+		for (auto & elem : brushes)
 		{
-			if (brushes[i].image == event.GUIEvent.Caller)
+			if (elem.image == event.GUIEvent.Caller)
 			{
-				selectedBrush = brushes[i].id;
+				selectedBrush = elem.id;
 				break;
 			}
 		}
@@ -330,7 +330,7 @@ void Editor::OnButtonDown(int id)
 		// Remove event
 		if (map->GetEvent(targetCoord))
 		{
-			map->SetEvent(targetCoord, NULL);
+			map->SetEvent(targetCoord, nullptr);
 			HideEvent(targetCoord);
 		}
 	}

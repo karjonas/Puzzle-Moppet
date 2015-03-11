@@ -59,24 +59,24 @@ class DefaultEvent : public IMapEventOwner, public IPausable
 	void MoveStack(const core::vector3di &belowStack, const core::vector3di &moveDir);
 	
 protected:
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
 public:
 	DefaultEvent(Level *level);
 	~DefaultEvent();
 	
-	void OnMapEvent(core::vector3di coord);
+	void OnMapEvent(core::vector3di coord) override;
 	
-	void OnMapMoveEvent(core::vector3di coord);
+	void OnMapMoveEvent(core::vector3di coord) override;
 	
-	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord);
+	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord) override;
 	
-	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action);
+	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action) override;
 	
-	E_EVENT_TYPE GetType() { return EET_DEFAULT_EVENT; }
+	E_EVENT_TYPE GetType() override { return EET_DEFAULT_EVENT; }
 	
-	core::stringc GetIconMeshName() { FAIL << "This should not be called."; return ""; }
+	core::stringc GetIconMeshName() override { FAIL << "This should not be called."; return ""; }
 };
 
 class FanEvent : public IMapEventOwner
@@ -84,17 +84,17 @@ class FanEvent : public IMapEventOwner
 public:
 	FanEvent(Level *level) : IMapEventOwner(level) {}
 	
-	void OnMapEvent(core::vector3di coord);
+	void OnMapEvent(core::vector3di coord) override;
 	
-	void OnMapMoveEvent(core::vector3di coord) {}
+	void OnMapMoveEvent(core::vector3di coord) override {}
 	
-	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord);
+	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord) override;
 	
-	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action);
+	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action) override;
 	
-	E_EVENT_TYPE GetType() { return EET_FAN_EVENT; }
+	E_EVENT_TYPE GetType() override { return EET_FAN_EVENT; }
 	
-	core::stringc GetIconMeshName() { return core::stringc("event_fan_draft.b3d"); }
+	core::stringc GetIconMeshName() override { return core::stringc("event_fan_draft.b3d"); }
 };
 
 class LiftEvent : public IMapEventOwner
@@ -127,16 +127,16 @@ public:
 	
 	LiftEvent(Level *level) : IMapEventOwner(level) {}
 	
-	void OnMapEvent(core::vector3di coord);
+	void OnMapEvent(core::vector3di coord) override;
 	
-	void OnMapMoveEvent(core::vector3di coord) {}
-	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord) {}
+	void OnMapMoveEvent(core::vector3di coord) override {}
+	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord) override {}
 	
-	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action);
+	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action) override;
 	
-	E_EVENT_TYPE GetType() { return EET_LIFT_EVENT; }
+	E_EVENT_TYPE GetType() override { return EET_LIFT_EVENT; }
 	
-	core::stringc GetIconMeshName() { return core::stringc("event_lift.b3d"); }
+	core::stringc GetIconMeshName() override { return core::stringc("event_lift.b3d"); }
 };
 
 // Dummy event, does nothing. Used to indicate a position that the player can start the level from.
@@ -145,15 +145,15 @@ class PlayerStartEvent : public IMapEventOwner
 public:
 	PlayerStartEvent(Level *level) : IMapEventOwner(level) {}
 	
-	void OnMapEvent(core::vector3di coord){}
-	void OnMapMoveEvent(core::vector3di coord) {}
-	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord) {}
+	void OnMapEvent(core::vector3di coord) override{}
+	void OnMapMoveEvent(core::vector3di coord) override {}
+	void OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoord) override {}
 	
-	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action) { return true; }
+	bool RequestActionPermission(core::vector3di coord, E_ACTION_TYPE action) override { return true; }
 	
-	E_EVENT_TYPE GetType() { return EET_PLAYER_START_EVENT; }
+	E_EVENT_TYPE GetType() override { return EET_PLAYER_START_EVENT; }
 	
-	core::stringc GetIconMeshName() { return core::stringc("event_player_start.b3d"); }
+	core::stringc GetIconMeshName() override { return core::stringc("event_player_start.b3d"); }
 };
 
 

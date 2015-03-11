@@ -11,8 +11,8 @@ StaticBody::StaticBody()
 
 StaticBody::~StaticBody()
 {
-	for (u32 i = 0; i < geometry.size(); i ++)
-		geometry[i]->drop();
+	for (auto & elem : geometry)
+		elem->drop();
 }
 
 void StaticBody::AddCollisionGeometry(ICollisionGeometry *geom)
@@ -44,15 +44,15 @@ void StaticBody::SetPosition(const core::vector3df &pos)
 {
 	ITransformable::SetPosition(pos);
 	
-	for (u32 i = 0; i < odeGeoms.size(); i ++)
-		ODESetGeomPosition(odeGeoms[i], pos);
+	for (auto & elem : odeGeoms)
+		ODESetGeomPosition(elem, pos);
 }
 
 void StaticBody::SetRotation(const core::vector3df &rot)
 {
 	ITransformable::SetRotation(rot);
 	
-	for (u32 i = 0; i < odeGeoms.size(); i ++)
-		ODESetGeomRotation(odeGeoms[i], rot);
+	for (auto & elem : odeGeoms)
+		ODESetGeomRotation(elem, rot);
 }
 

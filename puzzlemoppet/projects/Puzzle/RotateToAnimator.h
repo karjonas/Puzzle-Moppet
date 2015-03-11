@@ -14,7 +14,7 @@ public:
 	{
 	}
 	
-	void Init(ITransformable *target)
+	void Init(ITransformable *target) override
 	{
 	}
 	
@@ -23,7 +23,7 @@ public:
 		this->finalY = finalY;
 	}
 	
-	void Animate(ITransformable *target, f32 dt)
+	void Animate(ITransformable *target, f32 dt) override
 	{
 		f32 currentRotY = maths::extract_y_rotation(target->GetRotation());
 		

@@ -24,7 +24,7 @@ public:
 	AlphaOnAnimator(IUpdater *localUpdater, u8 onAlpha)
 		: onAlpha(onAlpha)
 	{
-		mesh = NULL;
+		mesh = nullptr;
 		fadingOn = false;
 		
 		fadeSpeed = 256.f * 0.5f;
@@ -42,12 +42,12 @@ public:
 		fadingOn = false;
 	}
 	
-	void Init(ITransformable *target)
+	void Init(ITransformable *target) override
 	{
 		ASSERT( mesh = dynamic_cast<IMesh *>(target) );
 	}
 	
-	void Animate(ITransformable *target, f32 dt)
+	void Animate(ITransformable *target, f32 dt) override
 	{
 		if (fadingOn)
 		{
@@ -133,7 +133,7 @@ public:
 		isMovingIntoLocation = false;
 	}
 	
-	void Update(ICharacter *character)
+	void Update(ICharacter *character) override
 	{
 		// *camera* is facing (near) a move direction?
 		bool atMoveAngle = false;

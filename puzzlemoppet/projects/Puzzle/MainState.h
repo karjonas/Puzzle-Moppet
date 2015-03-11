@@ -125,7 +125,7 @@ public:
 	// Load level (reloads it even if started before with PreviewLevel...), and actually start it,
 	// with player control. (level->Start() is called)
 	// filename *NOT* absolute
-	void StartLevel(core::stringc levelFileName, bool startEditor = false, std::deque<UndoState> *undoHistory = NULL);
+	void StartLevel(core::stringc levelFileName, bool startEditor = false, std::deque<UndoState> *undoHistory = nullptr);
 	
 	// Start playing a level that is currently being previewed (from a call to PreviewLevel)
 	//void StartFromPreview();
@@ -145,14 +145,14 @@ public:
 	
 	// Essentially the same as calling StartLevel again.
 	// can optionally use an undo state rather than loading from file.
-	void RestartLevel(std::deque<UndoState> *undoHistory = NULL);
+	void RestartLevel(std::deque<UndoState> *undoHistory = nullptr);
 	
-	void OnPause();
-	void OnResume();
+	void OnPause() override;
+	void OnResume() override;
 	
-	void Update(f32 dt);
+	void Update(f32 dt) override;
 	
-	void OnEvent(const Event &event);
+	void OnEvent(const Event &event) override;
 	
 	void ShowPauseMenu();
 	void HidePauseMenu();

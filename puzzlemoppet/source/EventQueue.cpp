@@ -8,10 +8,10 @@ EventQueue::EventQueue()
 
 EventQueue::~EventQueue()
 {
-	for (u32 i = 0; i < items.size(); i ++)
+	for (auto & elem : items)
 	{
-		if (items[i].type == QIT_LOGIC_WAIT)
-			items[i].waitLogic->drop();
+		if (elem.type == QIT_LOGIC_WAIT)
+			elem.waitLogic->drop();
 	}
 }
 

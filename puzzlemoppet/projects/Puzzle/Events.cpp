@@ -181,7 +181,7 @@ public:
 		baseEmitter->drop();
 	}
 
-	s32 emitt(u32 now, u32 timeSinceLastCall, scene::SParticle*& outArray)
+	s32 emitt(u32 now, u32 timeSinceLastCall, scene::SParticle*& outArray) override
 	{
 		s32 emitted = 0;
 
@@ -198,107 +198,107 @@ public:
 		return emitted;
 	}
 
-	void setDirection( const core::vector3df& newDirection )
+	void setDirection( const core::vector3df& newDirection ) override
 	{
 		baseEmitter->setDirection(newDirection);
 	}
 
-	void setMinParticlesPerSecond( u32 minPPS )
+	void setMinParticlesPerSecond( u32 minPPS ) override
 	{
 		baseEmitter->setMinParticlesPerSecond(minPPS);
 	}
 
-	void setMaxParticlesPerSecond( u32 maxPPS )
+	void setMaxParticlesPerSecond( u32 maxPPS ) override
 	{
 		baseEmitter->setMaxParticlesPerSecond(maxPPS);
 	}
 
-	void setMinStartColor( const video::SColor& color )
+	void setMinStartColor( const video::SColor& color ) override
 	{
 		baseEmitter->setMinStartColor(color);
 	}
 
-	void setMinLifeTime( u32 lifeTimeMin )
+	void setMinLifeTime( u32 lifeTimeMin ) override
 	{
 		baseEmitter->setMinLifeTime(lifeTimeMin);
 	}
 
-	void setMaxLifeTime( u32 lifeTimeMax )
+	void setMaxLifeTime( u32 lifeTimeMax ) override
 	{
 		baseEmitter->setMaxLifeTime(lifeTimeMax);
 	}
 
-	void setMaxAngleDegrees( s32 maxAngleDegrees )
+	void setMaxAngleDegrees( s32 maxAngleDegrees ) override
 	{
 		baseEmitter->setMaxAngleDegrees(maxAngleDegrees);
 	}
 
-	u32 getMinLifeTime() const
+	u32 getMinLifeTime() const override
 	{
 		return baseEmitter->getMinLifeTime();
 	}
 
-	u32 getMaxLifeTime() const
+	u32 getMaxLifeTime() const override
 	{
 		return baseEmitter->getMaxLifeTime();
 	}
 
-	s32 getMaxAngleDegrees() const
+	s32 getMaxAngleDegrees() const override
 	{
 		return baseEmitter->getMaxAngleDegrees();
 	}
 
-	void setMaxStartColor( const video::SColor& color )
+	void setMaxStartColor( const video::SColor& color ) override
 	{
 		baseEmitter->setMaxStartColor(color);
 	}
 
-	void setMaxStartSize( const core::dimension2df& size )
+	void setMaxStartSize( const core::dimension2df& size ) override
 	{
 		baseEmitter->setMaxStartSize(size);
 	}
 
-	void setMinStartSize( const core::dimension2df& size )
+	void setMinStartSize( const core::dimension2df& size ) override
 	{
 		baseEmitter->setMinStartSize(size);
 	}
 
-	const core::vector3df& getDirection() const
+	const core::vector3df& getDirection() const override
 	{
 		return baseEmitter->getDirection();
 	}
 
-	u32 getMinParticlesPerSecond() const
+	u32 getMinParticlesPerSecond() const override
 	{
 		return baseEmitter->getMinParticlesPerSecond();
 	}
 
-	u32 getMaxParticlesPerSecond() const
+	u32 getMaxParticlesPerSecond() const override
 	{
 		return baseEmitter->getMaxParticlesPerSecond();
 	}
 
-	const video::SColor& getMinStartColor() const
+	const video::SColor& getMinStartColor() const override
 	{
 		return baseEmitter->getMinStartColor();
 	}
 
-	const video::SColor& getMaxStartColor() const
+	const video::SColor& getMaxStartColor() const override
 	{
 		return baseEmitter->getMaxStartColor();
 	}
 
-	const core::dimension2df& getMaxStartSize() const
+	const core::dimension2df& getMaxStartSize() const override
 	{
 		return baseEmitter->getMaxStartSize();
 	}
 
-	const core::dimension2df& getMinStartSize() const
+	const core::dimension2df& getMinStartSize() const override
 	{
 		return baseEmitter->getMinStartSize();
 	}
 
-	scene::E_PARTICLE_EMITTER_TYPE getType() const { return scene::EPET_POINT; }
+	scene::E_PARTICLE_EMITTER_TYPE getType() const override { return scene::EPET_POINT; }
 };
 
 void DefaultEvent::OnPause()
@@ -828,7 +828,7 @@ void LiftEvent::OnMapEvent(core::vector3di coord)
 		}
 
 		// Can move down if the square below lift is empty
-		bool moveDown = map->GetObject(liftCoord + core::vector3di(0,-1,0)) == NULL;
+		bool moveDown = map->GetObject(liftCoord + core::vector3di(0,-1,0)) == nullptr;
 
 		if (moveUp && moveDown)
 		{

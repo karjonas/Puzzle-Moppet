@@ -12,7 +12,7 @@ struct CollisionMaterialInteraction
 	CollisionMaterialInteraction()
 	{
 		friction = 100.f;
-		preparator = NULL;
+		preparator = nullptr;
 	}
 	
 	f32 friction;

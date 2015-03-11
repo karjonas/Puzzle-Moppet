@@ -10,8 +10,8 @@ struct ButtonStates
 	
 	void Clear()
 	{
-		for (u32 i = 0; i < KEY_KEY_CODES_COUNT; i ++)
-			states[i] = false;
+		for (auto & elem : states)
+			elem = false;
 	}
 	
 	bool &operator [](u32 index)

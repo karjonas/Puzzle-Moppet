@@ -34,10 +34,10 @@ struct Pass
 	
 	~Pass()
 	{
-		for (u32 i = 0; i < shaders.size(); i ++)
+		for (auto & elem : shaders)
 		{
-			if (shaders[i])
-				shaders[i]->drop();
+			if (elem)
+				elem->drop();
 		}
 	}
 	

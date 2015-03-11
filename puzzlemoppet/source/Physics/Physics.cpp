@@ -44,8 +44,8 @@ Physics::Physics(IWorld *lithaWorld)
 
 Physics::~Physics()
 {
-	for (u32 i = 0; i < materials.size(); i ++)
-		materials[i]->drop();
+	for (auto & elem : materials)
+		elem->drop();
 	
 	dSpaceDestroy		(space);
 	dWorldDestroy		(world);

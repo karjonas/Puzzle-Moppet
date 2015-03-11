@@ -15,6 +15,7 @@ using namespace irr;
 #include "utils/file.h"
 #include "utils/os.h"
 #include "utils/os/path.h"
+#include "utils/stl_utils.h"
 
 // Utility classes
 #include "utils/Set.h"

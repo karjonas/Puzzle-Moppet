@@ -105,7 +105,7 @@ public:
 	// Without a moveRelativeTo entity given, the character moves only along the X,Z axes.
 	virtual ICharacterController *CreateUserCharacterController(
 			int idButtonWalkForwards,int idButtonWalkBackwards, int idButtonWalkLeft, int idButtonWalkRight,
-			ITransformable *moveRelativeTo = NULL) = 0;
+			ITransformable *moveRelativeTo = nullptr) = 0;
 	
 	virtual IThirdPersonCameraController *CreateThirdPersonCameraController(f32 distance = 8.0, f32 heightOffset = 0.0,
 			f32 minPitch = -60.0, f32 maxPitch = 60.0, f32 turnSpeed = 120.0) = 0;

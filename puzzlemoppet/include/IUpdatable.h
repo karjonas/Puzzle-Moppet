@@ -26,13 +26,13 @@ class IUpdatable : public virtual IReferenceCounted, public virtual IPausable
 	
 protected:
 
-	virtual void OnPause()
+	virtual void OnPause() override
 	{
 		pauseTime = engine->GetEngineTime();
 		GetUpdater().PauseAllUpdatables();
 	}
 	
-	virtual void OnResume()
+	virtual void OnResume() override
 	{
 		// account for the length of time we were paused for
 		startTime += engine->GetEngineTime() - pauseTime;
@@ -53,7 +53,7 @@ public:
 	virtual ~IUpdatable()
 	{
 		updater->drop();
-		updater = NULL;
+		updater = nullptr;
 	}
 	
 	f32 GetVirtualTime() const

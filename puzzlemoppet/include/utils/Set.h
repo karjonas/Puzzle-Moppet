@@ -4,6 +4,7 @@
 
 #include "litha_internal.h"
 #include <vector>
+#include <algorithm>
 
 namespace utils
 {
@@ -19,7 +20,7 @@ class Set
 public:
 	
 	// returns true if the set did not already contain the element
-	bool Insert(Type element)
+	inline bool Insert(Type element)
 	{
 		if (Contains(element))
 			return false;
@@ -29,33 +30,43 @@ public:
 	}
 	
 	// returns true if the set did contain the element
-	bool Remove(Type element)
+	inline bool Remove(const Type& element)
 	{
-		for (u32 i = 0; i < elements.size(); i ++)
+		auto it = std::find(elements.begin(), elements.end(), element);
+
+		if (it != elements.end())
 		{
-			if (elements[i] == element)
-			{
-				elements.erase(elements.begin()+i);
-				return true;
-			}
+			elements.erase(it);
+			return true;
+		}
+		return false;
+	}
+
+	// Removes the element by swapping it with the last one
+	// and popping the back to avoid unnecessary moving of elements.
+	inline bool SwapRemove(const Type& element)
+	{
+		auto it = std::find(elements.begin(), elements.end(), element);
+
+		if (it != elements.end())
+		{
+			swap_erase(elements, it);
+			return true;
 		}
 		return false;
 	}
 	
-	bool Contains(Type element) const
+	inline bool Contains(const Type& element) const
 	{
-		for (u32 i = 0; i < elements.size(); i ++)
-		{
-			if (elements[i] == element)
-				return true;
-		}
-		return false;
+		auto it = std::find(elements.begin(), elements.end(), element);
+
+		return it != elements.end();
 	}
 	
 	// adds all elements from another set to this set, ensuring no duplicates.
 	// Returns true if this set changes as a result. (i.e. a new element
 	// has been added that wasn't already present)
-	bool Union(const Set<Type> &other)
+	inline bool Union(const Set<Type> &other)
 	{
 		bool changed = false;
 		
@@ -69,17 +80,17 @@ public:
 	}
 	
 	// Probably slow. Copies entire vector.
-	std::vector<Type> ToVector() const
+	inline std::vector<Type> ToVector() const
 	{
 		return elements;
 	}
 	
-	u32 size() const
+	inline u32 size() const
 	{
 		return elements.size();
 	}
 	
-	void clear()
+	inline void clear()
 	{
 		elements.clear();
 	}
@@ -91,7 +102,7 @@ public:
 		return elements[index];
 	}*/
 	
-	const Type &operator[](u32 index) const
+	inline const Type &operator[](u32 index) const
 	{
 		ASSERT(index < elements.size());
 		return elements[index];
@@ -99,11 +110,22 @@ public:
 	
 	// Useful when elements are removed one by one by some external code.
 	// Should ensure at least one element exists with size() before calling this.
-	const Type &GetAnyForRemoval() const
+	inline const Type &GetAnyForRemoval() const
 	{
 		ASSERT(elements.size());
 		// front will be found first by Remove method.
 		return elements.front();
+	}
+
+	// For range-based for loops
+	inline auto begin() -> decltype (elements.begin())
+	{
+		return elements.begin();
+	}
+
+	inline auto end() -> decltype (elements.end())
+	{
+		return elements.end();
 	}
 };
 

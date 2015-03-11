@@ -64,8 +64,8 @@ public:
 	StartScreen(MainState **mainStatePtrLoc);
 	~StartScreen();
 	
-	void Update(f32 dt);
-	void OnEvent(const Event &event);
+	void Update(f32 dt) override;
+	void OnEvent(const Event &event) override;
 };
 
 #endif
