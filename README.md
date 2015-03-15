@@ -28,8 +28,13 @@ Ubuntu:
 
 Arch Linux:
 
+To build and install automatically use the PKGBUILD available at https://aur.archlinux.org/packages/puzzlemoppet-git
+
+If you want to build it manually then install the dependencies:
+
     sudo pacman -S ode irrlicht openal cmake
-     
+
+
 Building the Game
 -----------------
 Open a terminal/console window, navigate to the project folder and change into the 
@@ -43,7 +48,7 @@ To "install" the game (i.e. use make install):
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_FOR_INSTALL=ON .
     make
     sudo make install
-    
+
 or
 
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/somewhere -DBUILD_FOR_INSTALL=ON .
