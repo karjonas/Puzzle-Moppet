@@ -213,11 +213,17 @@ ODEMeshData *ODECreateMeshData(scene::IMesh *mesh, core::vector3df scale = core:
 	
 	// Make geoms and stuff
 	dTriMeshDataID triMeshData = dGeomTriMeshDataCreate();
-	
+
+#if defined(dSINGLE)
 	dGeomTriMeshDataBuildSingle(triMeshData,
 		(const dReal *)vertices, 4*sizeof(dReal), vertexCountTotal,
 		indices, indexCountTotal, 3*sizeof(int));
-	
+#elif defined(dDOUBLE)
+	dGeomTriMeshDataBuildDouble(triMeshData,
+		(const dReal *)vertices, 4*sizeof(dReal), vertexCountTotal,
+		indices, indexCountTotal, 3*sizeof(int));
+#endif
+
 	ODEMeshData *md	= new ODEMeshData;
 	md->triMeshData	= triMeshData;
 	md->vertices	= vertices;
