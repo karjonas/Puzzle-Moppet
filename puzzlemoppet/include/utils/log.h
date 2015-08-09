@@ -54,6 +54,10 @@ public:
 }
 }
 
+#if defined ( WIN32 )
+#define __func__ __FUNCTION__
+#endif
+
 // Macros for logging.
 // Why are we using ugly macros? Because we want line numbers etc.
 #define NOTE utils::log::Logger(utils::log::ELL_NOTE, "", 0, "")

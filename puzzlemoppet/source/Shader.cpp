@@ -159,8 +159,8 @@ void Shader::OnSetConstants(video::IMaterialRendererServices *services, s32 user
 			// Each register has 4 components.
 			// This should have been enforced by LowLevelShaderRegisterMap class.
 			ASSERT( data.size() % 4 == 0 );
-			
-			services->setVertexShaderConstant(&(data[0]), 0, data.size() / 4);
+			if (!data.empty())
+				services->setVertexShaderConstant(&(data[0]), 0, data.size() / 4);
 		}
 		
 		// pixel shaders (using pixelRegisterMap)
@@ -198,8 +198,8 @@ void Shader::OnSetConstants(video::IMaterialRendererServices *services, s32 user
 			// Each register has 4 components.
 			// This should have been enforced by LowLevelShaderRegisterMap class.
 			ASSERT( data.size() % 4 == 0 );
-			
-			services->setPixelShaderConstant(&(data[0]), 0, data.size() / 4);
+			if (!data.empty())
+				services->setPixelShaderConstant(&(data[0]), 0, data.size() / 4);
 		}
 	}
 }

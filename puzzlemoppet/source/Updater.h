@@ -112,8 +112,8 @@ public:
 	
 	void RemoveAllUpdatablesRecursive() override
 	{
-		for (auto & elem : updatables)
-			elem.ptr->GetUpdater().RemoveAllUpdatablesRecursive();
+		for (size_t i = 0; i < updatables.size(); i++)
+			updatables[i].ptr->GetUpdater().RemoveAllUpdatablesRecursive();
 		
 		RemoveAllUpdatables();
 	}

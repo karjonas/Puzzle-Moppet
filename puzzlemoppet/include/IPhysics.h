@@ -26,11 +26,6 @@ public:
 	// This is used internally by the engine.
 	virtual void Step(f32 dt) = 0;
 	
-	// Set the maximum number of contact points to be generated when colliding two objects.
-	// Setting this is a tradeoff between speed and accuracy. (more contacts = slower, but more accurate)
-	// Default is 12.
-	virtual void SetMaxContacts(s32 amount) = 0;
-	
 	virtual void SetGravity(const core::vector3df &grav) = 0;
 	
 	virtual ICollisionMaterial *AddCollisionMaterial() = 0;

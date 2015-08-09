@@ -8,6 +8,8 @@
 #include <map>
 #include "CollisionMaterialInteraction.h"
 
+#define MAX_CONTACTS_PER_COLLISION 12
+
 class IWorld;
 
 class Physics : public IPhysics
@@ -17,8 +19,6 @@ public:
 	~Physics();
 	
 	void Step(f32 dt) override;
-	
-	void SetMaxContacts(s32 amount) override;
 	
 	void SetGravity(const core::vector3df &grav) override;
 	
@@ -68,8 +68,6 @@ private:
 	dWorldID		world;
 	dSpaceID		space; // root space
 	dJointGroupID	perStepContactJointGroup;
-	
-	s32 maxContactsPerCollision;
 	
 	std::vector<ICollisionMaterial *> materials;
 	

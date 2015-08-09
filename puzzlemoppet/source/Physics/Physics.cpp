@@ -29,8 +29,6 @@ Physics::Physics(IWorld *lithaWorld)
 	dWorldSetAutoDisableSteps(world, 10);
 	dWorldSetAutoDisableTime(world, 0);
 	
-	SetMaxContacts(12);
-	
 	SetGravity( core::vector3df(0.0,-9.8,0.0) );
 	
 	// Create default material and an interaction with itself
@@ -59,11 +57,6 @@ void Physics::Step(f32 dt)
 	dSpaceCollide(space, this, ODE_Callback);
 	dWorldQuickStep(world, dt);
 	dJointGroupEmpty(perStepContactJointGroup);
-}
-
-void Physics::SetMaxContacts(s32 amount)
-{
-	maxContactsPerCollision = amount;
 }
 
 void Physics::SetGravity(const core::vector3df &grav)
@@ -269,9 +262,9 @@ void Physics::ODE_GeomCollide(dGeomID o1, dGeomID o2)
 	//if (b1 && b2 && dAreConnectedExcluding(b1, b2, dJointTypeContact)) return;
 	
 	// setup an array of available contact points
-	dContact contact[maxContactsPerCollision];
+	dContact contact[MAX_CONTACTS_PER_COLLISION];
 	
-	s32 numc = dCollide(o1, o2, maxContactsPerCollision, &contact[0].geom, sizeof(dContact));
+	s32 numc = dCollide(o1, o2, MAX_CONTACTS_PER_COLLISION, &contact[0].geom, sizeof(dContact));
 	
 	if (numc == 0)
 		return;
