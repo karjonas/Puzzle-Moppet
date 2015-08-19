@@ -93,7 +93,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
 		}
 	}
 	
-	levelTitles = file::loadsettings(PROJECT_DIR"/Puzzle/level_names.ini");
+	levelTitles = file::loadsettings(PROJECT_DIR"/Puzzle/levels/level_names.ini");
 	
 	
 	// ensure a furthest level file exists (e.g. from old version that didn't have one)
@@ -429,7 +429,7 @@ void StartScreen::CreateLevelSelectButtons()
 				core::stringc count;
 				count += s32(levelFileNames.size());
 				
-				file::put(PROJECT_DIR"/Puzzle/levelcount.ini", count);
+				file::put(PROJECT_DIR"/Puzzle/levels/levelcount.ini", count);
 
 				str += count;
 				

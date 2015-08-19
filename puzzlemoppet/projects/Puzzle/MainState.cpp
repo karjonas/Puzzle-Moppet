@@ -268,7 +268,7 @@ MainState::MainState(MainState **mainStatePtrLoc)
 	levelFileNames = find_levels();
 
 	// New: read some descriptive level titles.
-	levelTitles = file::loadsettings(PROJECT_DIR"/Puzzle/level_names.ini");
+	levelTitles = file::loadsettings(PROJECT_DIR"/Puzzle/levels/level_names.ini");
 
 	// general events
 	engine->RegisterEventInterest(this, "ButtonDown");
