@@ -1,7 +1,3 @@
-#ifndef PROJECT_DIR
-#define PROJECT_DIR "../projects"
-#endif
-
 #ifndef LITHA_H
 #define LITHA_H
 

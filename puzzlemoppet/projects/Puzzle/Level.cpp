@@ -9,6 +9,7 @@
 #include "GridBasedCharacterController.h"
 #include "RotateToAnimator.h"
 
+#include "GlobalDefines.h"
 #include <algorithm>
 
 std::map<core::stringc, f32> lowestPointCache;
@@ -1202,7 +1203,7 @@ void Level::CreateObject(core::vector3di mapCoord, E_OBJECT_TYPE type)
 			mesh->AddChild(soundSource);
 			soundSource->GetSound()->SetIsLooped(true);
 			soundSource->GetSound()->SetVolume(0.5);
-			soundSource->GetSound()->Play(PROJECT_DIR"/Puzzle/media/sfx/buttonflutter_micro.ogg");
+			soundSource->GetSound()->Play(SFX_DIR"/buttonflutter_micro.ogg");
 			soundSource->ApplyTransformNow();
 			
 			
@@ -1227,9 +1228,9 @@ void Level::CreateObject(core::vector3di mapCoord, E_OBJECT_TYPE type)
 			
 			IMotionSensor *motionSensor = world->AddSoundMotionSensor(
 					// I need a search path manager thing.
-					PROJECT_DIR"/Puzzle/media/sfx/hithard.ogg",
-					PROJECT_DIR"/Puzzle/media/sfx/hithard.ogg",
-					PROJECT_DIR"/Puzzle/media/sfx/liftrun.ogg");
+					SFX_DIR"/hithard.ogg",
+					SFX_DIR"/hithard.ogg",
+					SFX_DIR"/liftrun.ogg");
 			motionSensor->EnableInitialEvents(false);
 			motionSensor->SetAveragingCount(5);
 			mesh->AddChild(motionSensor);
@@ -1352,9 +1353,9 @@ void Level::PlayerPushed(core::vector3di mapCoord, core::vector3di pushVec)
 		sound->SetPosition(GetPosFromCoord(mapCoord));
 		
 		if (isBalloon)
-			sound->Play(PROJECT_DIR"/Puzzle/media/sfx/balloonpush.ogg");
+			sound->Play(SFX_DIR"/balloonpush.ogg");
 		else
-			sound->Play(PROJECT_DIR"/Puzzle/media/sfx/slide.ogg");
+			sound->Play(SFX_DIR"/slide.ogg");
 		
 		core::vector3di below = mapCoord + core::vector3di(0,-1,0);
 		
@@ -1596,7 +1597,7 @@ void Level::CreatePlayer(core::vector3di mapCoord)
 			// I need a search path manager thing.
 			NULL,
 			NULL,
-			PROJECT_DIR"/Puzzle/media/sfx/step.ogg");
+			SFX_DIR"/step.ogg");
 	motionSensor->EnableInitialEvents(false);
 	motionSensor->SetAveragingCount(5);
 	motionSensor->SetMinTranslateSpeed(0.01);
@@ -1821,9 +1822,9 @@ Level::Level(MainState *mainState, core::stringc fileName, std::deque<UndoState>
 		// Then load tutorial texts.
 		
 #ifdef __APPLE__
-		io::path tutorialFileName = PROJECT_DIR"/Puzzle/tutorialtexts_mac/";
+		io::path tutorialFileName = DATA_DIR"/tutorialtexts_mac/";
 #else
-		io::path tutorialFileName = PROJECT_DIR"/Puzzle/tutorialtexts/";
+		io::path tutorialFileName = DATA_DIR"/tutorialtexts/";
 #endif
 		tutorialFileName += os::path::splitext(GetShortName())[0];
 		tutorialFileName += ".ini";
@@ -2336,9 +2337,9 @@ void Level::OnEvent(const Event &event)
 			sound->SetPosition(GetPosFromCoord(pushStartLoc));
 			
 			if (isBalloon)
-				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/balloonpush.ogg");
+				sound->Play(SFX_DIR"/balloonpush.ogg");
 			else
-				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/slide.ogg");
+				sound->Play(SFX_DIR"/slide.ogg");
 		}
 		else
 		{
@@ -2798,7 +2799,7 @@ void Level::TouchedEndLevelPortal(ITransformable *portal)
 	
 	// sound
 	sound->SetPosition(portal->GetAbsolutePosition());
-	sound->Play(PROJECT_DIR"/Puzzle/media/sfx/bell.ogg");
+	sound->Play(SFX_DIR"/bell.ogg");
 	
 	// Player teleport effect
 	for (u32 i = 0; i < 40; i ++)
@@ -3136,7 +3137,7 @@ void Level::Update(f32 dt)
 			if (world->GetCameraController())
 			{
 				//sound->SetPosition(playerPos);
-				//sound->Play(PROJECT_DIR"/Puzzle/media/sfx/fall.ogg");
+				//sound->Play(SFX_DIR"/fall.ogg");
 				
 				//GetPlayer()->SetRotation(core::vector3df(-90,180,0));
 				GetPlayer()->SetAnimations(ANIM_FALL, -1);
@@ -3324,9 +3325,9 @@ void Level::Update(f32 dt)
 		if (!footStepSound->IsPlaying() || changedFootStepSoundType)
 		{
 			if (objectBelowPlayer == EOT_BALLOON)
-				footStepSound->Play(PROJECT_DIR"/Puzzle/media/sfx/stepballoon.ogg");
+				footStepSound->Play(SFX_DIR"/stepballoon.ogg");
 			else
-				footStepSound->Play(PROJECT_DIR"/Puzzle/media/sfx/step.ogg");
+				footStepSound->Play(SFX_DIR"/step.ogg");
 		}
 	}
 	else
@@ -3479,9 +3480,9 @@ void Level::Update(f32 dt)
 			sound->SetPosition(GetPosFromCoord(pushStartLoc));
 			
 			if (isBalloon)
-				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/balloonpush.ogg");
+				sound->Play(SFX_DIR"/balloonpush.ogg");
 			else
-				sound->Play(PROJECT_DIR"/Puzzle/media/sfx/slide.ogg");
+				sound->Play(SFX_DIR"/slide.ogg");
 			
 			
 			// To fix a glitch.

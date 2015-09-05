@@ -1,7 +1,7 @@
-
 #include "Events.h"
 #include "Level.h"
 #include "Map.h"
+#include "GlobalDefines.h"
 
 IMapEventOwner::IMapEventOwner(Level *level)
 {
@@ -343,7 +343,7 @@ void DefaultEvent::OnMapLeaveEvent(core::vector3di coord, core::vector3di newCoo
 
 			core::vector3df fallblockPos3d = level->GetPosFromCoord(below);
 			fallblockSounds[fallblockSoundSlot]->SetPosition( fallblockPos3d );
-			fallblockSounds[fallblockSoundSlot]->Play(PROJECT_DIR"/Puzzle/media/sfx/fallblock.ogg");
+			fallblockSounds[fallblockSoundSlot]->Play(SFX_DIR"/fallblock.ogg");
 
 			// circular slots
 			// since we may want several fallblock sounds at once

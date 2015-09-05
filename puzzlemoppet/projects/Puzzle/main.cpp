@@ -2,7 +2,7 @@
 #include "MainState.h"
 #include "StartScreen.h"
 #include "volume.h"
-
+#include "GlobalDefines.h"
 
 // oh no another global
 ISound *bgAmbientSound = nullptr;
@@ -106,7 +106,7 @@ int main(int argc, const char **argv)
 	
 	
 	
-	engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(PROJECT_DIR"/Puzzle/media/");
+	engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(MEDIA_DIR);
 	
 	
 	IWorld *world = engine->GetWorld();
@@ -303,30 +303,30 @@ int main(int argc, const char **argv)
 	// Sounds
 	{
 		ISoundSystem *soundSystem = engine->GetSoundSystem();
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/sea.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/beep.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/fallblock.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/buttonflutter_micro.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/hithard.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/liftrun.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/balloonpush.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/slide.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/windy.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/speedcore.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/bell.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/stepballoon.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/step.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/sea.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/beep.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/fallblock.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/buttonflutter_micro.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/hithard.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/liftrun.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/balloonpush.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/slide.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/windy.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/speedcore.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/bell.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/stepballoon.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/step.ogg");
 		
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/appear.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/appear.ogg");
 		
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/laugh.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/fair.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/good.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/excellent.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/perfect.ogg");
-		soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/sfx/extraordinary.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/laugh.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/fair.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/good.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/excellent.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/perfect.ogg");
+		soundSystem->PreloadSound(SFX_DIR"/extraordinary.ogg");
 		
-		//soundSystem->PreloadSound(PROJECT_DIR"/Puzzle/media/music.ogg");
+		//soundSystem->PreloadSound(MEDIA_DIR"/music.ogg");
 	}
 	
 	// Shaders!?
@@ -370,8 +370,8 @@ int main(int argc, const char **argv)
 	// Load sfx volume
 	set_volumes_from_settings(engine->GetCreationSettings());
 	
-	bgAmbientSound->Play(PROJECT_DIR"/Puzzle/media/sfx/windy.ogg");
-	bgMusic->Play(PROJECT_DIR"/Puzzle/media/sfx/speedcore.ogg");
+	bgAmbientSound->Play(SFX_DIR"/windy.ogg");
+	bgMusic->Play(SFX_DIR"/speedcore.ogg");
 	
 	// load default movement type
 	{
