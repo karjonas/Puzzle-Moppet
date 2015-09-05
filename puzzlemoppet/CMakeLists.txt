@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
 set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in install path")
 
 if (BUILD_FOR_INSTALL)
-	add_definitions(-DPROJECT_DIR="${CMAKE_INSTALL_PREFIX}/share/puzzlemoppet")
+	add_definitions(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/share/puzzlemoppet")
 endif (BUILD_FOR_INSTALL)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -125,14 +125,8 @@ add_subdirectory(projects)
 
 ########### INSTALLATION DESTINATION ############
 install(DIRECTORY 
-  ${PROJECT_SOURCE_DIR}/projects/Puzzle/media 
-  ${PROJECT_SOURCE_DIR}/projects/Puzzle/levels 
-  ${PROJECT_SOURCE_DIR}/projects/Puzzle/tutorialtexts
-  ${PROJECT_SOURCE_DIR}/projects/Puzzle/perfectscores
+  ${PROJECT_SOURCE_DIR}/projects/Puzzle/data
   DESTINATION share/puzzlemoppet/Puzzle)
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  install(DIRECTORY ${PROJECT_SOURCE_DIR}/projects/Puzzle/tutorialtexts_mac DESTINATION share/puzzlemoppet/Puzzle/)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/licenses/ DESTINATION share/licences/puzzlemoppet)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/icons DESTINATION share/puzzlemoppet)
 
