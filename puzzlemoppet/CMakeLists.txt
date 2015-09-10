@@ -7,11 +7,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS)
 # find-pkg is used to select -DdSINGLE or -DdDOUBLE for ODE
 INCLUDE(FindPkgConfig)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0 -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
 
 set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in install path")
+
+if (MSVC)
+	add_definitions(-DDATA_DIR="../../data")
+endif(MSVC)
 
 if (BUILD_FOR_INSTALL)
 	add_definitions(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/share/puzzlemoppet")

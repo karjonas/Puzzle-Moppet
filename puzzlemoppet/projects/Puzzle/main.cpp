@@ -296,8 +296,8 @@ int main(int argc, const char **argv)
 	// Fonts
 	{
 		gui::IGUIEnvironment *guienv = engine->GetIrrlichtDevice()->getGUIEnvironment();
-		guienv->getFont("font2.xml");
-		guienv->getFont("fontlarge2.xml");
+		guienv->getFont(FONT_DIR"font2.xml");
+		guienv->getFont(FONT_DIR"fontlarge2.xml");
 	}
 	
 	// Sounds

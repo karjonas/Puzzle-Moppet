@@ -2,7 +2,7 @@
 #define GLOBAL_DEFINES_H
 
 #ifndef DATA_DIR
-#define DATA_DIR "../projects/Puzzle/data"
+#define DATA_DIR "../data"
 #endif
 
 #define MEDIA_DIR	DATA_DIR"/media"
