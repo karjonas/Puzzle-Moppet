@@ -33,7 +33,7 @@ add_library(Litha STATIC ${lithaSources} ${lithaSourcesC})
 target_link_libraries(Litha ${IRRLICHT_LIBRARIES})
 
 if (WIN32)
-	target_link_libraries(Litha ode_single OpenAL32)
+	target_link_libraries(Litha ode OpenAL32)
 endif (WIN32)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")

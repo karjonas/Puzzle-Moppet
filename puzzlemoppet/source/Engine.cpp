@@ -369,9 +369,6 @@ Engine::~Engine()
 	
 	NOTE << "Litha Engine appears to have shut down successfully.";
 	
-	if (onExitWebPage.size())
-		os::openwebpage(onExitWebPage);
-	
 	if (restartOnExit)
 	{
 		NOTE << "Application restart requested...";
@@ -446,12 +443,9 @@ void Engine::Run()
 	kernel->Run();
 }
 
-void Engine::Exit(const core::stringc &pageURL)
+void Engine::Exit()
 {
 	kernel->Exit();
-	
-	if (pageURL.size())
-		onExitWebPage = pageURL;
 }
 
 void Engine::Restart()

@@ -66,7 +66,7 @@ public:
 	
 	// Shut down the engine.
 	// Optionally a web page may be given which will be opened on exit.
-	virtual void Exit(const core::stringc &pageURL = "") = 0;
+	virtual void Exit() = 0;
 	
 	// Shut down the engine, and then re-launch the application.
 	// Will attempt to use any command line arguments originally passed to CreateEngine.

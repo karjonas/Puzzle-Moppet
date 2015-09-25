@@ -17,9 +17,7 @@ enum E_MENU_ITEM
 {
 	EMI_PLAY,
 	EMI_EXIT,
-	EMI_VISIT_WEBSITE,
 	EMI_NEW_GAME,
-	EMI_BUY,
 	EMI_OPTIONS,
 	
 	// New Game confirmation prompt
@@ -214,7 +212,6 @@ void StartScreen::CreateFirstMenu()
 		menu->AddItem("Start Game", EMI_PLAY);
 	}
 
-	menu->AddItem("Website", EMI_VISIT_WEBSITE);
 	menu->AddItem("Options", EMI_OPTIONS);
 	menu->AddItem("Exit", EMI_EXIT);
 	menu->SetMouseOverSound(SFX_DIR"/beep.ogg");
@@ -731,16 +728,6 @@ void StartScreen::OnEvent(const Event &event)
 			{
 				NOTE << "Exiting from start screen... (exit clicked)";
 				engine->Exit();
-			}
-			else if (event["button"] == EMI_BUY)
-			{
-				NOTE << "Buy clicked...";
-				engine->Exit("http://www.garnetgames.com/puzzlemoppet/buy/");
-			}
-			else if (event["button"] == EMI_VISIT_WEBSITE)
-			{
-				NOTE << "visiting website";
-				engine->Exit("http://garnetgames.com");
 			}
 			else if (event["button"] == EMI_OPTIONS)
 			{

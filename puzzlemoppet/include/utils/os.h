@@ -71,15 +71,6 @@ bool run(const io::path &appPath, const std::vector<io::path> &args = std::vecto
 // Unlike normal Linux behaviour, this will search the current directory first of all.
 // Returns an empty string if not found.
 io::path searchpath(const io::path &appName);
-
-// Open a web page in the user's default browser.
-// This is not 100% guaranteed to succeed. (especially, it may fail on Linux)
-void openwebpage(const io::path &url);
-
-// Open a web page if one has not already been opened.
-// (so if this is called multiple times, only the first will succeed, subsequent calls will be ignored)
-void maybeopenwebpage(const io::path &url);
-
 }
 }
 

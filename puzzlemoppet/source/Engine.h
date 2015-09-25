@@ -53,9 +53,6 @@ class Engine : public IEngine, public IEventReceiver
 	// event queue
 	std::vector<Event> eventQueue;
 	
-	// A web page to open when the engine has completely shut down.
-	core::stringc onExitWebPage;
-	
 	// Should the engine re-launch the application on exiting?
 	bool restartOnExit;
 	
@@ -95,7 +92,7 @@ public:
 	f32 GetLogicInterpolationAlpha() override;
 	
 	void Run() override;
-	void Exit(const core::stringc &pageURL) override;
+	void Exit() override;
 	void Restart() override;
 	bool WillRestart() override;
 	
