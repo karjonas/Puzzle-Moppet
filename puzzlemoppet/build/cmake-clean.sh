@@ -1,3 +1,0 @@
-
-cd Linux
-rm -R *
