@@ -12,10 +12,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
 
 set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in install path")
-
-if (MSVC)
-	add_definitions(-DDATA_DIR="../../data")
-endif(MSVC)
+set(DATA_DIR ${PROJECT_SOURCE_DIR}/data CACHE PATH "Directory for game data")
+add_definitions(-DDATA_DIR="${DATA_DIR}")
 
 if (BUILD_FOR_INSTALL)
 	add_definitions(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/share/puzzlemoppet")
@@ -95,7 +93,7 @@ add_subdirectory(source)
 ########### PROJECTS CONFIG ############
 
 # Project executable output path
-set(EXECUTABLE_OUTPUT_PATH ${rootDir}/bin)
+set(EXECUTABLE_OUTPUT_PATH bin)
 
 # Link to Litha Engine
 link_directories(${rootDir}/lib/${lithaTargetName})
@@ -129,7 +127,7 @@ add_subdirectory(projects)
 
 ########### INSTALLATION DESTINATION ############
 install(DIRECTORY 
-  ${PROJECT_SOURCE_DIR}/projects/Puzzle/data
+  ${PROJECT_SOURCE_DIR}/data
   DESTINATION share/puzzlemoppet/Puzzle)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/licenses/ DESTINATION share/licences/puzzlemoppet)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/icons DESTINATION share/puzzlemoppet)
