@@ -9,21 +9,22 @@ class ITransformable;
 
 class UserCharacterController : public ICharacterController
 {
-	IWorld *world;
-	
-	int idButtonWalkForwards;
-	int idButtonWalkBackwards;
-	int idButtonWalkLeft;
-	int idButtonWalkRight;
-	
-	ITransformable *moveRelativeTo;
-	
+    IWorld *world;
+
+    int idButtonWalkForwards;
+    int idButtonWalkBackwards;
+    int idButtonWalkLeft;
+    int idButtonWalkRight;
+
+    ITransformable *moveRelativeTo;
+
 public:
-	UserCharacterController(IWorld *world,
-			int idButtonWalkForwards,int idButtonWalkBackwards, int idButtonWalkLeft, int idButtonWalkRight,
-			ITransformable *moveRelativeTo);
-	
-	void Update(ICharacter *character) override;
+    UserCharacterController(IWorld *world, int idButtonWalkForwards,
+                            int idButtonWalkBackwards, int idButtonWalkLeft,
+                            int idButtonWalkRight,
+                            ITransformable *moveRelativeTo);
+
+    void Update(ICharacter *character) override;
 };
 
 #endif

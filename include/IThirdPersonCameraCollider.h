@@ -7,11 +7,11 @@
 class IThirdPersonCameraCollider : public ICameraCollider
 {
 public:
-	virtual ~IThirdPersonCameraCollider(){}
-	
-	// Set the distance the camera is set away from the surface it touches.
-	// Default 0.5
-	virtual void SetCorrectionDistance(f32 distance) = 0;
+    virtual ~IThirdPersonCameraCollider() {}
+
+    // Set the distance the camera is set away from the surface it touches.
+    // Default 0.5
+    virtual void SetCorrectionDistance(f32 distance) = 0;
 };
 
 #endif

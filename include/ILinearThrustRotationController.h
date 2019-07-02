@@ -4,10 +4,11 @@
 
 #include "IRotationController.h"
 
-class ILinearThrustRotationController : public IRotationController // or just IController?
+class ILinearThrustRotationController
+    : public IRotationController // or just IController?
 {
 public:
-	virtual ~ILinearThrustRotationController(){}
+    virtual ~ILinearThrustRotationController() {}
 };
 
 #endif

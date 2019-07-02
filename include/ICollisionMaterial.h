@@ -7,7 +7,7 @@
 class ICollisionMaterial : public virtual IReferenceCounted
 {
 public:
-	virtual ~ICollisionMaterial(){}
+    virtual ~ICollisionMaterial() {}
 };
 
 #endif

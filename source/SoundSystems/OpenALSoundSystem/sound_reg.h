@@ -19,4 +19,3 @@ void register_sound3d(OpenALSound3D *sound);
 void unregister_sound3d(OpenALSound3D *sound);
 
 #endif
-

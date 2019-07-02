@@ -5,17 +5,18 @@
 #include "ISphereCollisionGeometry.h"
 #include "CollisionGeometry.h"
 
-class SphereCollisionGeometry : public ISphereCollisionGeometry, public CollisionGeometry
+class SphereCollisionGeometry : public ISphereCollisionGeometry,
+                                public CollisionGeometry
 {
-	f32 radius;
-	
+    f32 radius;
+
 public:
-	SphereCollisionGeometry(dSpaceID space, f32 radius);
-	~SphereCollisionGeometry();
-	
-	core::vector3df GetSize() override;
-	
-	f32 GetRadius() override;
+    SphereCollisionGeometry(dSpaceID space, f32 radius);
+    ~SphereCollisionGeometry();
+
+    core::vector3df GetSize() override;
+
+    f32 GetRadius() override;
 };
 
 #endif

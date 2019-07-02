@@ -9,9 +9,9 @@ class Event;
 class IWantEvents
 {
 public:
-	virtual ~IWantEvents(){}
-	
-	virtual void OnEvent(const Event &event) = 0;
+    virtual ~IWantEvents() {}
+
+    virtual void OnEvent(const Event &event) = 0;
 };
 
 #endif

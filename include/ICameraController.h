@@ -10,9 +10,9 @@ class ICamera;
 class ICameraController : public virtual IReferenceCounted
 {
 public:
-	virtual ~ICameraController(){}
-	
-	virtual void Update(ICamera *camera, f32 dt) = 0;
+    virtual ~ICameraController() {}
+
+    virtual void Update(ICamera *camera, f32 dt) = 0;
 };
 
 #endif

@@ -3,14 +3,12 @@
 
 class RotationAnimator : public IMotionAnimator
 {
-	core::vector3df speedRadians;
-	
+    core::vector3df speedRadians;
+
 public:
-	// Degrees / second
-	RotationAnimator(core::vector3df speed);
-	
-	void Init(ITransformable *target) override{}
-	void Animate(ITransformable *target, f32 dt) override;
+    // Degrees / second
+    RotationAnimator(core::vector3df speed);
+
+    void Init(ITransformable *target) override {}
+    void Animate(ITransformable *target, f32 dt) override;
 };
-
-

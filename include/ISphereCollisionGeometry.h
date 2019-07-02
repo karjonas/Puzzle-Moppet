@@ -7,9 +7,9 @@
 class ISphereCollisionGeometry : public virtual ICollisionGeometry
 {
 public:
-	virtual ~ISphereCollisionGeometry(){}
-	
-	virtual f32 GetRadius() = 0;
+    virtual ~ISphereCollisionGeometry() {}
+
+    virtual f32 GetRadius() = 0;
 };
 
 #endif

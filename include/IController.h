@@ -7,7 +7,7 @@
 class IController : public virtual IReferenceCounted
 {
 public:
-	virtual ~IController(){}
+    virtual ~IController() {}
 };
 
 #endif

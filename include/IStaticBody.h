@@ -7,7 +7,7 @@
 class IStaticBody : public IBody
 {
 public:
-	virtual ~IStaticBody(){}
+    virtual ~IStaticBody() {}
 };
 
 #endif

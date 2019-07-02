@@ -7,7 +7,7 @@
 class IAngularThruster : public IThruster
 {
 public:
-	virtual ~IAngularThruster(){}
+    virtual ~IAngularThruster() {}
 };
 
 #endif

@@ -7,7 +7,7 @@
 class CollisionMaterial : public ICollisionMaterial
 {
 public:
-	CollisionMaterial();
+    CollisionMaterial();
 };
 
 #endif

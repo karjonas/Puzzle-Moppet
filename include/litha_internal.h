@@ -25,32 +25,34 @@ using namespace irr;
 using namespace utils;
 
 #define SET_REF_COUNTED_POINTER(oldPointer, newPointer) \
-		if (newPointer != oldPointer) \
-		{ \
-			if (newPointer) \
-				newPointer->grab(); \
-			if (oldPointer) \
-				oldPointer->drop(); \
-			oldPointer = newPointer; \
-		} \
+    if (newPointer != oldPointer)                       \
+    {                                                   \
+        if (newPointer)                                 \
+            newPointer->grab();                         \
+        if (oldPointer)                                 \
+            oldPointer->drop();                         \
+        oldPointer = newPointer;                        \
+    }
 
 enum E_AXIS
 {
-	AXIS_X = (1<<0),
-	AXIS_Y = (1<<1),
-	AXIS_Z = (1<<2)
+    AXIS_X = (1 << 0),
+    AXIS_Y = (1 << 1),
+    AXIS_Z = (1 << 2)
 };
 
-#define ALL_AXES	(AXIS_X|AXIS_Y|AXIS_Z)
+#define ALL_AXES (AXIS_X | AXIS_Y | AXIS_Z)
 
-template<class T> const T &min(const T &a, const T &b)
+template <class T>
+const T &min(const T &a, const T &b)
 {
-	return (a < b) ? a : b;
+    return (a < b) ? a : b;
 }
 
-template<class T> const T &max(const T &a, const T &b)
+template <class T>
+const T &max(const T &a, const T &b)
 {
-	return (a > b) ? a : b;
+    return (a > b) ? a : b;
 }
 
 #endif

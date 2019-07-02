@@ -1,7 +1,4 @@
 
 #include "CollisionMaterial.h"
 
-CollisionMaterial::CollisionMaterial()
-{
-}
-
+CollisionMaterial::CollisionMaterial() {}

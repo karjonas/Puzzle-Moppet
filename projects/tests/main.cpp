@@ -7,14 +7,13 @@
 
 int main(int argc, const char **argv)
 {
-	utils::log::setfile("tests.log");
-	NOTE("RUNNING TESTS...");
-	
+    utils::log::setfile("tests.log");
+    NOTE("RUNNING TESTS...");
+
 #include "test_str.h"
 #include "test_Variant.h"
-	
-	NOTE("All tests passed!");
-	
-	return 0;
-}
 
+    NOTE("All tests passed!");
+
+    return 0;
+}

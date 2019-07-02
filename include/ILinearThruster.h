@@ -7,7 +7,7 @@
 class ILinearThruster : public IThruster
 {
 public:
-	virtual ~ILinearThruster(){}
+    virtual ~ILinearThruster() {}
 };
 
 #endif

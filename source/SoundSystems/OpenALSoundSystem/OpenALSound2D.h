@@ -5,8 +5,8 @@
 class OpenALSound2D : public OpenALSound, public ISound2D
 {
 public:
-	OpenALSound2D(OpenALSoundSystem *soundSystem);
-	~OpenALSound2D();
-	
-	void SetPan(f32 panning) override;
+    OpenALSound2D(OpenALSoundSystem *soundSystem);
+    ~OpenALSound2D();
+
+    void SetPan(f32 panning) override;
 };

@@ -7,7 +7,7 @@
 class IPositionController : public IController
 {
 public:
-	virtual ~IPositionController(){}
+    virtual ~IPositionController() {}
 };
 
 #endif

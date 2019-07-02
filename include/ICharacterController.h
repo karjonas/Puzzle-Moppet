@@ -9,9 +9,9 @@ class ICharacter;
 class ICharacterController : public virtual IReferenceCounted
 {
 public:
-	virtual ~ICharacterController(){}
-	
-	virtual void Update(ICharacter *character) = 0;
+    virtual ~ICharacterController() {}
+
+    virtual void Update(ICharacter *character) = 0;
 };
 
 #endif

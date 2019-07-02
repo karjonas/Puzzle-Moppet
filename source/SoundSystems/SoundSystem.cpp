@@ -4,6 +4,5 @@
 
 ISoundQueue *SoundSystem::CreateSoundQueue()
 {
-	return new SoundQueue(this);
+    return new SoundQueue(this);
 }
-

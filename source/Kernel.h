@@ -7,24 +7,23 @@ class Task;
 
 class Kernel : public IReferenceCounted
 {
-	IEngine *engine;
-	IrrlichtDevice *device;
-	
-	std::vector<Task *> tasks;
-	
-	bool readyToExit;
+    IEngine *engine;
+    IrrlichtDevice *device;
+
+    std::vector<Task *> tasks;
+
+    bool readyToExit;
 
     u32 screenWidth, screenHeight;
-	
-public:
-	Kernel();
-	~Kernel();
-	
-	// only add a task once, this does no checks.
-	// tasks should only be added at engine start, as they must all be in sync.
-	void AddTask(Task *task);
-	
-	void Run();
-	void Exit();
-};
 
+public:
+    Kernel();
+    ~Kernel();
+
+    // only add a task once, this does no checks.
+    // tasks should only be added at engine start, as they must all be in sync.
+    void AddTask(Task *task);
+
+    void Run();
+    void Exit();
+};

@@ -5,15 +5,16 @@
 #include "IBoxCollisionGeometry.h"
 #include "CollisionGeometry.h"
 
-class BoxCollisionGeometry : public IBoxCollisionGeometry, public CollisionGeometry
+class BoxCollisionGeometry : public IBoxCollisionGeometry,
+                             public CollisionGeometry
 {
-	core::vector3df size;
-	
+    core::vector3df size;
+
 public:
-	BoxCollisionGeometry(dSpaceID space, const core::vector3df &size);
-	~BoxCollisionGeometry();
-	
-	core::vector3df GetSize() override;
+    BoxCollisionGeometry(dSpaceID space, const core::vector3df &size);
+    ~BoxCollisionGeometry();
+
+    core::vector3df GetSize() override;
 };
 
 #endif

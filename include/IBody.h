@@ -9,11 +9,11 @@ class ICollisionGeometry;
 class IBody : public ITransformable
 {
 public:
-	virtual ~IBody(){}
-	
-	virtual void AddCollisionGeometry(ICollisionGeometry *geom) = 0;
-	
-	virtual Set<ICollisionGeometry *> GetCollisionGeometries() = 0;
+    virtual ~IBody() {}
+
+    virtual void AddCollisionGeometry(ICollisionGeometry *geom) = 0;
+
+    virtual Set<ICollisionGeometry *> GetCollisionGeometries() = 0;
 };
 
 #endif

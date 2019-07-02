@@ -7,7 +7,7 @@
 class IBoxCollisionGeometry : public virtual ICollisionGeometry
 {
 public:
-	virtual ~IBoxCollisionGeometry(){}
+    virtual ~IBoxCollisionGeometry() {}
 };
 
 #endif

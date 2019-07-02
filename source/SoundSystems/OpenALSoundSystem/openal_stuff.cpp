@@ -9,19 +9,19 @@ u32 errorCount = 0;
 
 bool check_openal_error()
 {
-	int alError = alGetError();
-	
-	if (alError != AL_NO_ERROR)
-	{
-		errorCount ++;
-		
-		if (errorCount < MAX_OPENAL_ERROR_REPORTS)
-			NOTE << "OpenALSoundSystem error: AL error code " << alError;
-		else if (errorCount == MAX_OPENAL_ERROR_REPORTS)
-			WARN << "Too many OpenAL errors, will disable reporting.";
-		
-		return true;
-	}
-	
-	return false;
+    int alError = alGetError();
+
+    if (alError != AL_NO_ERROR)
+    {
+        errorCount++;
+
+        if (errorCount < MAX_OPENAL_ERROR_REPORTS)
+            NOTE << "OpenALSoundSystem error: AL error code " << alError;
+        else if (errorCount == MAX_OPENAL_ERROR_REPORTS)
+            WARN << "Too many OpenAL errors, will disable reporting.";
+
+        return true;
+    }
+
+    return false;
 }

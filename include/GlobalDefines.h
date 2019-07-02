@@ -5,9 +5,9 @@
 #define DATA_DIR "../data"
 #endif
 
-#define MEDIA_DIR	DATA_DIR"/media"
-#define MODELS_DIR	DATA_DIR"/media/models"
-#define SFX_DIR		DATA_DIR"/media/sfx"
-#define FONT_DIR	DATA_DIR"/media/font"
+#define MEDIA_DIR DATA_DIR "/media"
+#define MODELS_DIR DATA_DIR "/media/models"
+#define SFX_DIR DATA_DIR "/media/sfx"
+#define FONT_DIR DATA_DIR "/media/font"
 
 #endif

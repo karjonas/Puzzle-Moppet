@@ -8,15 +8,16 @@
 
 class IMesh;
 
-class MeshCollisionGeometry : public IMeshCollisionGeometry, public CollisionGeometry
+class MeshCollisionGeometry : public IMeshCollisionGeometry,
+                              public CollisionGeometry
 {
-	ODEMeshData *meshData;
-	
+    ODEMeshData *meshData;
+
 public:
-	MeshCollisionGeometry(dSpaceID space, IMesh *mesh);
-	~MeshCollisionGeometry();
-	
-	core::vector3df GetSize() override;
+    MeshCollisionGeometry(dSpaceID space, IMesh *mesh);
+    ~MeshCollisionGeometry();
+
+    core::vector3df GetSize() override;
 };
 
 #endif

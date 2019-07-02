@@ -7,9 +7,9 @@
 class ISound2D : public virtual ISound
 {
 public:
-	virtual ~ISound2D(){}
-	
-	virtual void SetPan(f32 panning) = 0;
+    virtual ~ISound2D() {}
+
+    virtual void SetPan(f32 panning) = 0;
 };
 
 #endif

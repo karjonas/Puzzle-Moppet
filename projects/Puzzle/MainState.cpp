@@ -19,992 +19,1032 @@ extern core::vector3df sunDirection;
 
 #define GAME_SAVE_FILENAME "puzzlegame.save"
 
-#define TEXT_COL			video::SColor(150, 255,255,255)
-#define TEXT_COL_MOUSEOVER	video::SColor(100, 200,200,200)
+#define TEXT_COL video::SColor(150, 255, 255, 255)
+#define TEXT_COL_MOUSEOVER video::SColor(100, 200, 200, 200)
 
-#define LEVEL_LIST_FILE DATA_DIR"/levels/levels.list"
-#define LEVEL_BASE_PATH DATA_DIR"/levels/levels"
+#define LEVEL_LIST_FILE DATA_DIR "/levels/levels.list"
+#define LEVEL_BASE_PATH DATA_DIR "/levels/levels"
 
 // gets the full path to a level file, relative to the executable's directory
 core::stringc level_path_rel_exe(core::stringc levelFile)
 {
-	core::stringc result = core::stringc(LEVEL_BASE_PATH"/") + levelFile;
+    core::stringc result = core::stringc(LEVEL_BASE_PATH "/") + levelFile;
 
-	/*
+    /*
 
-	// THIS DISABLED SINCE IT MESSES UP SAVING.
-	// (game progress gets lost...)
+    // THIS DISABLED SINCE IT MESSES UP SAVING.
+    // (game progress gets lost...)
 
-	// if doesn't exist in normal level location, we also check the original starting directory...
-	// and also just try it as an absolute path (might have been passed as a parameter)
-	if (!os::path::exists(result))
-	{
-		NOTE << "Level did not exist in normal location: " << result;
+    // if doesn't exist in normal level location, we also check the original
+    starting directory...
+    // and also just try it as an absolute path (might have been passed as a
+    parameter) if (!os::path::exists(result))
+    {
+        NOTE << "Level did not exist in normal location: " << result;
 
-		core::stringc otherResult = os::path::concat(GetEngine()->GetStartingDirectory(), levelFile);
+        core::stringc otherResult =
+    os::path::concat(GetEngine()->GetStartingDirectory(), levelFile);
 
-		if (os::path::exists(levelFile))
-		{
-			NOTE << "Level appears to be an absolute path, so will load: " << levelFile;
-			result = levelFile;
-		}
-		else if (os::path::exists(otherResult))
-		{
-			NOTE << "Level was found in starting location: " << otherResult;
-			result = otherResult;
-		}
-	}
-	*/
+        if (os::path::exists(levelFile))
+        {
+            NOTE << "Level appears to be an absolute path, so will load: " <<
+    levelFile; result = levelFile;
+        }
+        else if (os::path::exists(otherResult))
+        {
+            NOTE << "Level was found in starting location: " << otherResult;
+            result = otherResult;
+        }
+    }
+    */
 
-	return result;
+    return result;
 }
 
 // Get the full path to the save file.
 io::path get_full_save_path()
 {
-	io::path ret = os::path::concat( GetEngine()->GetLocalSettingsDir(), GAME_SAVE_FILENAME );
-	NOTE << "save path: " << ret;
-	return ret;
+    io::path ret = os::path::concat(GetEngine()->GetLocalSettingsDir(),
+                                    GAME_SAVE_FILENAME);
+    NOTE << "save path: " << ret;
+    return ret;
 }
 
 io::path get_full_save_path_furthest()
 {
-	io::path ret = os::path::concat( GetEngine()->GetLocalSettingsDir(), io::path(GAME_SAVE_FILENAME)
-			+ io::path(".furthest") );
-	NOTE << "furthest save path: " << ret;
-	return ret;
+    io::path ret =
+        os::path::concat(GetEngine()->GetLocalSettingsDir(),
+                         io::path(GAME_SAVE_FILENAME) + io::path(".furthest"));
+    NOTE << "furthest save path: " << ret;
+    return ret;
 }
 
 void delete_game_saves()
 {
-	if (!os::path::ensure_delete(get_full_save_path().c_str()))
-		WARN << "Could not delete save file to restart game.";
+    if (!os::path::ensure_delete(get_full_save_path().c_str()))
+        WARN << "Could not delete save file to restart game.";
 
-	if (!os::path::ensure_delete(get_full_save_path_furthest().c_str()))
-		WARN << "Could not delete furthest save record.";
+    if (!os::path::ensure_delete(get_full_save_path_furthest().c_str()))
+        WARN << "Could not delete furthest save record.";
 
+    // and delete score files.
 
-	// and delete score files.
+    io::path scoreDir = getsavescoredir();
 
-	io::path scoreDir = getsavescoredir();
+    NOTE << "Deleting score files: " << scoreDir;
 
-	NOTE << "Deleting score files: " << scoreDir;
+    std::vector<io::path> scoreFiles = os::listfiles(scoreDir);
 
-	std::vector<io::path> scoreFiles = os::listfiles(scoreDir);
-
-	for (auto & scoreFile : scoreFiles)
-		os::path::ensure_delete( os::path::concat(scoreDir,scoreFile) );
+    for (auto &scoreFile : scoreFiles)
+        os::path::ensure_delete(os::path::concat(scoreDir, scoreFile));
 }
 
 std::vector<core::stringc> find_levels()
 {
-	std::vector<core::stringc> levelFileNames;
+    std::vector<core::stringc> levelFileNames;
 
-	std::vector<core::stringc> lines = get_lines(LEVEL_LIST_FILE);
+    std::vector<core::stringc> lines = get_lines(LEVEL_LIST_FILE);
 
-	for (auto & line : lines)
-	{
-		if (line == "###END###")
-		{
-			// This causes parsing to stop
-			// This is useful when I want to test the game ending.
-			// I can just insert this in the level list to cause the game
-			// to end at that point.
-			break;
-		}
+    for (auto &line : lines)
+    {
+        if (line == "###END###")
+        {
+            // This causes parsing to stop
+            // This is useful when I want to test the game ending.
+            // I can just insert this in the level list to cause the game
+            // to end at that point.
+            break;
+        }
 
-		if (line.size())
-		{
-			levelFileNames.push_back(line);
-			NOTE << "Identified level: " << line;
-		}
-	}
+        if (line.size())
+        {
+            levelFileNames.push_back(line);
+            NOTE << "Identified level: " << line;
+        }
+    }
 
-	return levelFileNames;
+    return levelFileNames;
 }
 
-// Uses the game save (the last completed level), then finds the next level in the list after that,
-// which is the level to continue playing at.
-// If there is no next level (e.g. end of trial version), will just return the last completed level.
+// Uses the game save (the last completed level), then finds the next level in
+// the list after that, which is the level to continue playing at. If there is
+// no next level (e.g. end of trial version), will just return the last
+// completed level.
 core::stringc find_next_level(bool fromFurthest)
 {
-	core::stringc nextLevel;
+    core::stringc nextLevel;
 
-	std::vector<core::stringc> levelFileNames = find_levels();
+    std::vector<core::stringc> levelFileNames = find_levels();
 
-	//FILE *fp = fopen(get_full_save_path().c_str(), "rb");
+    // FILE *fp = fopen(get_full_save_path().c_str(), "rb");
 
-	FILE *fp;
+    FILE *fp;
 
-	if (!fromFurthest)
-		fp = fopen(get_full_save_path().c_str(), "rb");
-	else
-		fp = fopen(get_full_save_path_furthest().c_str(), "rb");
+    if (!fromFurthest)
+        fp = fopen(get_full_save_path().c_str(), "rb");
+    else
+        fp = fopen(get_full_save_path_furthest().c_str(), "rb");
 
-	if (fp)
-	{
-		char line[256];
+    if (fp)
+    {
+        char line[256];
 
-		if (fgets(line, 256, fp))
-		{
-			if (strlen(line) > 0)
-			{
-				// Game was changed to save the last level *completed*, not the current level.
-				// Therefore, the new level to continue at is the _next_ level from
-				// the one saved.
+        if (fgets(line, 256, fp))
+        {
+            if (strlen(line) > 0)
+            {
+                // Game was changed to save the last level *completed*, not the
+                // current level. Therefore, the new level to continue at is the
+                // _next_ level from the one saved.
 
-				// So find the next level in the list...
+                // So find the next level in the list...
 
-				// find it in the level list
-				u32 i = 0;
-				for (; i < levelFileNames.size(); i ++)
-				{
-					if (levelFileNames[i] == line)
-						break;
-				}
+                // find it in the level list
+                u32 i = 0;
+                for (; i < levelFileNames.size(); i++)
+                {
+                    if (levelFileNames[i] == line)
+                        break;
+                }
 
-				// not found?
-				if (i >= levelFileNames.size())
-				{
-					WARN << "Saved level not found (" << i << ") [" << line << "]";
-				}
-				else
-				{
-					// found old level... but is there a next level?
-					if (i+1 < levelFileNames.size())
-					{
-						NOTE << "Found a valid next level...";
-						NOTE << "(have completed level " << line << " so will continue on next level, "
-								<< levelFileNames[i+1] << ")";
+                // not found?
+                if (i >= levelFileNames.size())
+                {
+                    WARN << "Saved level not found (" << i << ") [" << line
+                         << "]";
+                }
+                else
+                {
+                    // found old level... but is there a next level?
+                    if (i + 1 < levelFileNames.size())
+                    {
+                        NOTE << "Found a valid next level...";
+                        NOTE << "(have completed level " << line
+                             << " so will continue on next level, "
+                             << levelFileNames[i + 1] << ")";
 
-						nextLevel = levelFileNames[i+1];
-					}
-					else
-					{
-						// last level is over! Quit the game I guess?
-						// should not get here in full version since last level is an exception from saving...
-						NOTE << "Cannot continue game, have completed the last level: " << i << ", " << line;
+                        nextLevel = levelFileNames[i + 1];
+                    }
+                    else
+                    {
+                        // last level is over! Quit the game I guess?
+                        // should not get here in full version since last level
+                        // is an exception from saving...
+                        NOTE << "Cannot continue game, have completed the last "
+                                "level: "
+                             << i << ", " << line;
 
-						// problem: when finishing trial, alittlebridge will be saved.
-						// so in that case we restart that level already completed...
-						// saving does not occur until a level is completed, so this is ok.
+                        // problem: when finishing trial, alittlebridge will be
+                        // saved. so in that case we restart that level already
+                        // completed... saving does not occur until a level is
+                        // completed, so this is ok.
 
-						// Actually, this is an acceptable fallback for the full version too.
-						// So we'll do this whatever happens.
+                        // Actually, this is an acceptable fallback for the full
+                        // version too. So we'll do this whatever happens.
 
-						NOTE << "Will replay previously completed level: " << line;
+                        NOTE << "Will replay previously completed level: "
+                             << line;
 
-						nextLevel = line;
-					}
-				}
-			}
-		}
+                        nextLevel = line;
+                    }
+                }
+            }
+        }
 
-		fclose(fp);
-	}
+        fclose(fp);
+    }
 
-	return nextLevel;
+    return nextLevel;
 }
 
 gui::IGUIStaticText *add_static_text(const wchar_t *str)
 {
-	gui::IGUIEnvironment *guienv = GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
-	u32 screenWidth = GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize().Width;
+    gui::IGUIEnvironment *guienv =
+        GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
+    u32 screenWidth = GetEngine()
+                          ->GetIrrlichtDevice()
+                          ->getVideoDriver()
+                          ->getScreenSize()
+                          .Width;
 
-	gui::IGUIFont *font = guienv->getFont(FONT_DIR"/font2.xml");
+    gui::IGUIFont *font = guienv->getFont(FONT_DIR "/font2.xml");
 
-	core::dimension2du dim = font->getDimension(str);
-	
-	u32 nbLines = 1 + dim.Width/screenWidth;
-	if (dim.Width > screenWidth) {
-		dim.Width = screenWidth;
-	}
+    core::dimension2du dim = font->getDimension(str);
 
-	gui::IGUIStaticText *textElement = guienv->addStaticText(str, core::recti((nbLines>1?10:0),0,dim.Width,dim.Height*nbLines), false,true);
-	textElement->setOverrideFont( guienv->getFont(FONT_DIR"/font2.xml") );
-	textElement->setOverrideColor( TEXT_COL );
-	return textElement;
+    u32 nbLines = 1 + dim.Width / screenWidth;
+    if (dim.Width > screenWidth)
+    {
+        dim.Width = screenWidth;
+    }
+
+    gui::IGUIStaticText *textElement =
+        guienv->addStaticText(str,
+                              core::recti((nbLines > 1 ? 10 : 0), 0, dim.Width,
+                                          dim.Height * nbLines),
+                              false, true);
+    textElement->setOverrideFont(guienv->getFont(FONT_DIR "/font2.xml"));
+    textElement->setOverrideColor(TEXT_COL);
+    return textElement;
 }
 
 gui::IGUIStaticText *add_static_text2(const wchar_t *str)
 {
-	gui::IGUIEnvironment *guienv = GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
+    gui::IGUIEnvironment *guienv =
+        GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
 
-	gui::IGUIFont *font = guienv->getFont(FONT_DIR"/fontlarge2.xml");
+    gui::IGUIFont *font = guienv->getFont(FONT_DIR "/fontlarge2.xml");
 
-	core::dimension2du dim = font->getDimension(str);
+    core::dimension2du dim = font->getDimension(str);
 
-	gui::IGUIStaticText *textElement = guienv->addStaticText(str, core::recti(0,0,dim.Width,dim.Height), false,false);
-	textElement->setOverrideFont( guienv->getFont(FONT_DIR"/fontlarge2.xml") );
-	textElement->setOverrideColor( TEXT_COL );
-	return textElement;
+    gui::IGUIStaticText *textElement =
+        guienv->addStaticText(str, core::recti(0, 0, dim.Width, dim.Height),
+                              false, false);
+    textElement->setOverrideFont(guienv->getFont(FONT_DIR "/fontlarge2.xml"));
+    textElement->setOverrideColor(TEXT_COL);
+    return textElement;
 }
 
 MainState::MainState(MainState **mainStatePtrLoc)
 {
-	NOTE << "MainState constructing...";
+    NOTE << "MainState constructing...";
 
-	this->mainStatePtrLoc = mainStatePtrLoc;
+    this->mainStatePtrLoc = mainStatePtrLoc;
 
-	startLevelTime = -1.0;
+    startLevelTime = -1.0;
 
-	engine = GetEngine();
-	world = engine->GetWorld();
-	renderSystem = engine->GetRenderSystem();
+    engine = GetEngine();
+    world = engine->GetWorld();
+    renderSystem = engine->GetRenderSystem();
 
-	device = engine->GetIrrlichtDevice();
+    device = engine->GetIrrlichtDevice();
 
-	level = nullptr;
-	editor = nullptr;
+    level = nullptr;
+    editor = nullptr;
 
-	engine->GetLogicUpdater().AddUpdatable(this, false);
+    engine->GetLogicUpdater().AddUpdatable(this, false);
 
-	nextLevel = false;
-	isPaused = false;
-	inFinalScene = false;
+    nextLevel = false;
+    isPaused = false;
+    inFinalScene = false;
 
-	// Read level names
-	levelFileNames = find_levels();
+    // Read level names
+    levelFileNames = find_levels();
 
-	// New: read some descriptive level titles.
-	levelTitles = file::loadsettings(LEVEL_BASE_PATH"/level_names.ini");
+    // New: read some descriptive level titles.
+    levelTitles = file::loadsettings(LEVEL_BASE_PATH "/level_names.ini");
 
-	// general events
-	engine->RegisterEventInterest(this, "ButtonDown");
-	engine->RegisterEventInterest(this, "AxisMoved");
-	engine->RegisterEventInterest(this, "RestartLevel");
+    // general events
+    engine->RegisterEventInterest(this, "ButtonDown");
+    engine->RegisterEventInterest(this, "AxisMoved");
+    engine->RegisterEventInterest(this, "RestartLevel");
 
-	// sound
-	menuSound = engine->GetSoundSystem()->CreateSound2D();
-	menuSound->SetVolume(0.5);
+    // sound
+    menuSound = engine->GetSoundSystem()->CreateSound2D();
+    menuSound->SetVolume(0.5);
 
-	// Nullify final scene stuff
-	finalSceneSea = nullptr;
+    // Nullify final scene stuff
+    finalSceneSea = nullptr;
 
-	// pause menu
-	video::IVideoDriver *driver = device->getVideoDriver();
-	u32 halfScreenHeight = driver->getScreenSize().Height / 2;
-	pauseMenuPositioner = new RowPositioner(device->getVideoDriver(), halfScreenHeight, 50);
-	levelSelectMenuPositioner = new RowPositioner(device->getVideoDriver(), halfScreenHeight+100, 25);
-	levelConfirmMenuPositioner = new RowPositioner(device->getVideoDriver(), halfScreenHeight+150, 25);
+    // pause menu
+    video::IVideoDriver *driver = device->getVideoDriver();
+    u32 halfScreenHeight = driver->getScreenSize().Height / 2;
+    pauseMenuPositioner =
+        new RowPositioner(device->getVideoDriver(), halfScreenHeight, 50);
+    levelSelectMenuPositioner =
+        new RowPositioner(device->getVideoDriver(), halfScreenHeight + 100, 25);
+    levelConfirmMenuPositioner =
+        new RowPositioner(device->getVideoDriver(), halfScreenHeight + 150, 25);
 
-	gameEnded = false;
+    gameEnded = false;
 
-	ShowInitTexts();
+    ShowInitTexts();
 }
 
 MainState::~MainState()
 {
-	NOTE << "MainState destructing...";
+    NOTE << "MainState destructing...";
 
-	if (finalSceneSea)
-		finalSceneSea->drop();
+    if (finalSceneSea)
+        finalSceneSea->drop();
 
-	menuSound->drop();
-	delete pauseMenuPositioner;
-	delete levelSelectMenuPositioner;
-	delete levelConfirmMenuPositioner;
+    menuSound->drop();
+    delete pauseMenuPositioner;
+    delete levelSelectMenuPositioner;
+    delete levelConfirmMenuPositioner;
 
-	engine->UnregisterAllEventInterest(this);
+    engine->UnregisterAllEventInterest(this);
 
-	engine->GetLogicUpdater().RemoveUpdatable(this);
+    engine->GetLogicUpdater().RemoveUpdatable(this);
 
-	NOTE << "MainState destructed!";
+    NOTE << "MainState destructed!";
 }
 
 void MainState::ShowInitTexts()
 {
-	// not set until StartLevel
-	initFirstLevelTime = -1.0;
+    // not set until StartLevel
+    initFirstLevelTime = -1.0;
 
-	// Game name and company name splash text
-	// This is shown every time the game starts.
+    // Game name and company name splash text
+    // This is shown every time the game starts.
 
+    // DISABLED THIS SINCE WE ADDED THE START SCREEN.
+    // Start screen gives any info like this.
+    /*
+    {
+        gui::IGUIStaticText *text = add_static_text2(L"Puzzle Moppet");
+        core::rect<s32> rect = text->getRelativePosition();
+        rect += core::vector2di( 25, screenHeight - 110 );
+        text->setRelativePosition(rect);
+        introTexts.push_back(text);
+    }
 
-	// DISABLED THIS SINCE WE ADDED THE START SCREEN.
-	// Start screen gives any info like this.
-	/*
-	{
-		gui::IGUIStaticText *text = add_static_text2(L"Puzzle Moppet");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( 25, screenHeight - 110 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
+    {
+        gui::IGUIStaticText *text = add_static_text(L"by Garnet Games");
+        core::rect<s32> rect = text->getRelativePosition();
+        rect += core::vector2di( 25, screenHeight - 70 );
+        text->setRelativePosition(rect);
+        introTexts.push_back(text);
+    }
 
-	{
-		gui::IGUIStaticText *text = add_static_text(L"by Garnet Games");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( 25, screenHeight - 70 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
-
-	{
-		gui::IGUIStaticText *text = add_static_text(L"www.garnetgames.com");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( 25, screenHeight - 40 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
-	*/
+    {
+        gui::IGUIStaticText *text = add_static_text(L"www.garnetgames.com");
+        core::rect<s32> rect = text->getRelativePosition();
+        rect += core::vector2di( 25, screenHeight - 40 );
+        text->setRelativePosition(rect);
+        introTexts.push_back(text);
+    }
+    */
 }
 
 void MainState::RemoveInitTexts()
 {
-	for (auto & elem : introTexts)
-		elem->remove();
+    for (auto &elem : introTexts)
+        elem->remove();
 
-	introTexts.clear();
+    introTexts.clear();
 }
 
 void MainState::RemoveStartLevelTexts()
 {
-	for (auto & elem : startLevelTexts)
-		elem->remove();
+    for (auto &elem : startLevelTexts)
+        elem->remove();
 
-	startLevelTexts.clear();
+    startLevelTexts.clear();
 }
 
 void MainState::ShowEndTexts()
 {
-	video::IVideoDriver *driver = device->getVideoDriver();
-	initFirstLevelTime = engine->GetEngineTime();
+    video::IVideoDriver *driver = device->getVideoDriver();
+    initFirstLevelTime = engine->GetEngineTime();
 
-	s32 screenHeight = driver->getScreenSize().Height;
-	s32 screenWidth = driver->getScreenSize().Width;
+    s32 screenHeight = driver->getScreenSize().Height;
+    s32 screenWidth = driver->getScreenSize().Width;
 
-	{
-		gui::IGUIStaticText *text = add_static_text2(L"The End");
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( screenWidth/2 - rect.getWidth()/2, screenHeight/2 );
-		text->setRelativePosition(rect);
-		introTexts.push_back(text);
-	}
-
+    {
+        gui::IGUIStaticText *text = add_static_text2(L"The End");
+        core::rect<s32> rect = text->getRelativePosition();
+        rect += core::vector2di(screenWidth / 2 - rect.getWidth() / 2,
+                                screenHeight / 2);
+        text->setRelativePosition(rect);
+        introTexts.push_back(text);
+    }
 }
 
 core::stringc MainState::GetCurrentLevelName()
 {
-	ASSERT(level);
+    ASSERT(level);
 
-	// get base name of current level
-	return engine->GetIrrlichtDevice()->getFileSystem()->getFileBasename(level->GetFileName());
+    // get base name of current level
+    return engine->GetIrrlichtDevice()->getFileSystem()->getFileBasename(
+        level->GetFileName());
 }
 
 void MainState::RemoveLevelAndEditor()
 {
-	if (editor)
-	{
-		NOTE << "Removing editor.";
-		world->GetUpdater().RemoveUpdatable(editor);
-		editor = nullptr;
-	}
+    if (editor)
+    {
+        NOTE << "Removing editor.";
+        world->GetUpdater().RemoveUpdatable(editor);
+        editor = nullptr;
+    }
 
-	if (level)
-	{
-		NOTE << "Removing level.";
-		world->GetUpdater().RemoveUpdatable(level);
-		level = nullptr;
-	}
+    if (level)
+    {
+        NOTE << "Removing level.";
+        world->GetUpdater().RemoveUpdatable(level);
+        level = nullptr;
+    }
 }
 
 /*void MainState::PreviewLevel(core::stringc levelFileName)
 {
-	RemoveLevelAndEditor();
+    RemoveLevelAndEditor();
 
-	NOTE("Creating new level preview.");
+    NOTE("Creating new level preview.");
 
-	level = new Level( this, level_path_rel_exe(levelFileName) );
-	engine->GetLogicUpdater().AddUpdatable(level);
-	level->drop();
+    level = new Level( this, level_path_rel_exe(levelFileName) );
+    engine->GetLogicUpdater().AddUpdatable(level);
+    level->drop();
 
-	// Remove input from level.
-	world->SetInputProfile(NULL);
+    // Remove input from level.
+    world->SetInputProfile(NULL);
 }*/
 
-void MainState::StartLevel(core::stringc levelFileName, bool startEditor, std::deque<UndoState> *undoHistory)
+void MainState::StartLevel(core::stringc levelFileName, bool startEditor,
+                           std::deque<UndoState> *undoHistory)
 {
-	startLevelTime = engine->GetEngineTime();
+    startLevelTime = engine->GetEngineTime();
+
+    RemoveLevelAndEditor();
+
+    NOTE << "Loading level... (" << levelFileName << ")";
+
+    ASSERT(levelFileName.size());
+
+    // IS IN FINAL SCENE?
+    if ((levelFileName == "finalscene1.lev" ||
+         levelFileName == "finalscene2.lev") &&
+        !startEditor) // Don't want this stuff when editing the level
+    {
+        inFinalScene = true;
+    }
+
+    RemoveInitTexts();
+    RemoveStartLevelTexts();
+
+    // SAVE CURRENT GAME PROGRESS
+    // provided not in intro or second part of final scene...
+    // (want the last save point to be where the player has control on the
+    // beach)
+
+    // GAME SAVING HAS BEEN MOVE TO NextLevel.
+    // So that saving across trial -> full version works properly.
+
+    /*
+    if (levelFileName != "intro.lev" && !inFinalScene)//levelFileName !=
+    "finalscene2.lev")
+    {
+        FILE *fp = fopen(get_full_save_path().c_str(), "wb");
 
-	RemoveLevelAndEditor();
-
-	NOTE << "Loading level... (" << levelFileName << ")";
-
-	ASSERT(levelFileName.size());
-
-
-	// IS IN FINAL SCENE?
-	if ((levelFileName == "finalscene1.lev" || levelFileName == "finalscene2.lev")
-			&& !startEditor) // Don't want this stuff when editing the level
-	{
-		inFinalScene = true;
-	}
-
-	RemoveInitTexts();
-	RemoveStartLevelTexts();
-
-
-	// SAVE CURRENT GAME PROGRESS
-	// provided not in intro or second part of final scene...
-	// (want the last save point to be where the player has control on the beach)
-
-	// GAME SAVING HAS BEEN MOVE TO NextLevel.
-	// So that saving across trial -> full version works properly.
-
-	/*
-	if (levelFileName != "intro.lev" && !inFinalScene)//levelFileName != "finalscene2.lev")
-	{
-		FILE *fp = fopen(get_full_save_path().c_str(), "wb");
-
-		if (fp)
-		{
-			if (fputs(levelFileName.c_str(), fp) == EOF)
-				WARN << "Could not save game (" << levelFileName << ")";
-			else
-				NOTE << "Saved game successfully (" << levelFileName << ")";
-
-			fclose(fp);
-		}
-	}
-	*/
-
-
-	level = new Level(this, level_path_rel_exe(levelFileName), undoHistory);
-	world->GetUpdater().AddUpdatable(level);
-	level->Start();
-	level->drop();
-
-
-	if (startEditor)
-	{
-		editor = new Editor(level);
-		world->GetUpdater().AddUpdatable(editor);
-		editor->drop();
-	}
-
-	if (initFirstLevelTime < 0.0)
-		initFirstLevelTime = engine->GetEngineTime();
-
-
-	// New thing.
-	// Let's see if there is a level name!
-	if (levelTitles.count(levelFileName)
-			&& !undoHistory)
-	{
-		video::IVideoDriver *driver = device->getVideoDriver();
-
-		s32 screenWidth = driver->getScreenSize().Width;
-
-		core::stringc levelTitle = levelTitles[levelFileName].To<core::stringc>();
-		core::stringw levelTitleW = levelTitle.c_str();
-
-		gui::IGUIStaticText *text = add_static_text2( levelTitleW.c_str() );
-		core::rect<s32> rect = text->getRelativePosition();
-		rect += core::vector2di( screenWidth/2-rect.getWidth()/2, 50 );
-		text->setRelativePosition(rect);
-		startLevelTexts.push_back(text);
-	}
-
-
-
-	// FINAL SCENE STUFF
-	// This is the non-player controlled final scene as the character walks off into the sunset...
-
-	if (inFinalScene)
-	{
-		// Different ambience
-
-		if (bgAmbientSound)
-			bgAmbientSound->Stop();
-
-		// Stop any music.
-
-		if (bgMusic)
-			bgMusic->Stop();
-
-		if (!finalSceneSea)
-		{
-			finalSceneSea = engine->GetSoundSystem()->CreateSound3D();
-			finalSceneSea->SetIsLooped(true);
-			finalSceneSea->SetVolume(15.0);
-			finalSceneSea->SetPosition(core::vector3df(-50,0,0));
-			finalSceneSea->Play(SFX_DIR"/sea.ogg");
-		}
-
-		// Different sky box
-		core::stringc skyDir = "skies/Set 26/final_";
-		core::stringc skyExt = "png";
-
-		world->SetSkyBox(
-				skyDir+"6."+skyExt,
-				skyDir+"5."+skyExt,
-				skyDir+"1."+skyExt,
-				skyDir+"3."+skyExt,
-				skyDir+"2."+skyExt,
-				skyDir+"4."+skyExt
-				);
-
-		// NOTE: All transformables added here are removed when Level destructs by
-		// the call to RemoveAllTransformables(). That's why no references are kept by MainState.
-
-
-		// different sun position (for sky box brightness)
-		sunDirection = core::vector3df(0,1,0);
-
-		// actually, we'll disable the shader completely...
-		world->SetSkyBoxShader(nullptr);
-
-
-		// Create the sandy beach
-
-		IPhysics *physics = world->GetPhysics();
-
-		IBody *groundBody = physics->AddStaticBody();
-
-		IMesh *groundMesh = world->AddMesh("land.irrmesh");
-		level->ApplyLandShaders(groundMesh);
-		groundBody->AddChild(groundMesh);
-
-		// new. grass layer on cliff.
-		// NEED TO ONLY ADD THIS IF SHADERS ARE AVAILABLE.
-		// (since we need a shader to render it. Blender will not let me paint vertex alpha,
-		// so I will use vertex colours and a special shader to use colours as transparency values)
-		if (renderSystem->ShadersAreAvailable())
-		{
-			//IMesh *cliffGrassMesh = world->AddMesh("cliffgrass.irrmesh");
-			//level->ApplyCliffGrassShaders(cliffGrassMesh);
-			//groundBody->AddChild(cliffGrassMesh);
-		}
-
-		IMesh *cliffMesh = world->AddMesh("cliff.irrmesh");
-		level->ApplyLandShaders(cliffMesh);
-		groundBody->AddChild(cliffMesh);
-
-		/*
-		//for (u32 i = 0; i < groundMesh->GetMaterialCount(); i ++)
-		u32 i = 1;
-		{
-			video::SMaterial &material = groundMesh->GetMaterial(i);
-			material.MaterialType = video::EMT_LIGHTMAP;
-			material.setTexture(1, device->getVideoDriver()->getTexture("cliff_lightmap.jpg"));
-
-			core::matrix4 mat;
-			mat.setTextureScale(0.25,0.25);
-			material.setTextureMatrix(1, mat);
-		}
-		*/
-
-		ICollisionGeometry *groundGeom = physics->CreateMeshCollisionGeometry(groundMesh);
-		groundBody->AddCollisionGeometry(groundGeom);
-		groundGeom->drop();
-
-		ICollisionGeometry *cliffGeom = physics->CreateMeshCollisionGeometry(cliffMesh);
-		groundBody->AddCollisionGeometry(cliffGeom);
-		cliffGeom->drop();
-
-		// Don't want regular falling as it interferes with physics terrain collision
-		level->SetLogicEnabled(false);
-
-
-		// A an invisible barrier to stop player walking out to sea
-		IBody *barrierBody = physics->AddStaticBody();
-		ICollisionGeometry *barrierGeom = physics->CreateBoxCollisionGeometry(core::vector3df(0.5,3.0,50.0));
-		barrierBody->AddCollisionGeometry(barrierGeom);
-		barrierGeom->drop();
-		barrierBody->SetPosition(core::vector3df(-12,0,0));
-
-
-		// Following stuff is a rather hackish way to prevent the camera going below sea level.
-		// This was (perhaps foolishly...) deemed to be quicker than the "proper" solution, which
-		// would have been to simply allow the camera to go below sea + set some kind of blue
-		// underwater effect on the screen.
-
-
-		// A collision geometry for the sea.
-		// This is only used to prevent the camera intersecting the sea, other objects like the player
-		// should NOT collide with it.
-		IBody *seaBody = physics->AddStaticBody();
-		ICollisionGeometry *seaGeom = physics->CreateBoxCollisionGeometry(core::vector3df(50.0,0.5,50.0));
-		seaGeom->SetCollisionLayer(1);
-		seaBody->AddCollisionGeometry(seaGeom);
-		seaGeom->drop();
-		seaBody->SetPosition(core::vector3df(0,-0.5,0));
-
-		// Disable collisions between the sea's geometry and all objects in the default layer.
-		// So the only thing that will collide with the sea is the camera which is in layer 2.
-		physics->SetLayerCollisions(0,1, false);
-
-
-		// Use a simple third person collider rather than the special one.
-		// (the special one can't cope with trimesh geometry)
-		// But we have one change: we add a child to the player and watch the child.
-		// The child is the special transformable FinalScenePlayerProxy which will
-		// not go lower than a certain height (i.e. does not go below the sea)
-
-		FinalScenePlayerProxy *proxy = new FinalScenePlayerProxy();
-		world->AddTransformable(proxy);
-		level->GetPlayer()->AddChild(proxy);
-
-		ICameraCollider *collider = level->GetCamera()->CreateThirdPersonCameraCollider();
-		collider->SetCollisionLayer(2);
-		level->GetCamera()->Follow(proxy);
-		level->GetCamera()->SetCollider(collider);
-		//level->GetCamera()->SetZoomLimits(1.5, 8.0);
-		// still want to exclude player's collision geometries
-		collider->ExcludeGeometry( level->GetPlayer()->GetBody()->GetCollisionGeometries() );
-		// exclude the invisible barrier from collisions
-		collider->ExcludeGeometry(barrierBody->GetCollisionGeometries());
-		collider->drop();
-
-
-		// Create a regular block as decoration
-		core::vector3di woodBlockPos(4,0,2);
-		level->CreateObject(woodBlockPos, EOT_MOVABLE_BLOCK);
-		level->GetMap()->GetObject(woodBlockPos)->SetRotation(core::vector3df(22,42,11));
-
-
-		// needed as there will be no blocks under player on final scene.
-		level->ForceFootsteps(true);
-
-
-		if (levelFileName == "finalscene1.lev")
-		{
-			// Stuff peculiar to first part of final scene
-			// (player controlled walk on the beach)
-
-			ICharacter *player = level->GetPlayer();
-			player->SetRotation( core::vector3df(0, -90, 0) );
-		}
-		else
-		{
-			// Stuff for second part of final scene
-			// (the walk off into distance)
-
-			ICharacter *player = level->GetPlayer();
-
-			// set player position to end of the beach
-			player->SetPosition( core::vector3df(-4,0.241472,
-					walkedLeft ? 20 : -20) );
-
-			// set player rotation
-			player->SetRotation( core::vector3df(0, walkedLeft ? 0 : 180, 0) );
-
-			// disabled user control
-			player->SetController(nullptr);
-
-			// walk off by itself
-			player->SetMoveVec( core::vector2df(0.2, walkedLeft ? 1.0 : -1.0) );
-			player->SetMedialMotion(1);
-
-			// walk slower...
-			player->SetMoveSpeed(0.2);
-
-			// turn off footstep sound...
-			ISoundSource *footStepSoundSource = player->GetFirstChildOfType<ISoundSource>();
-
-			if (footStepSoundSource)
-				footStepSoundSource->GetSound()->SetVolume(0.0);
-
-			// Fixed camera
-			world->SetCameraController(nullptr);
-			ICamera *camera = world->GetCamera();
-			camera->SetPosition(core::vector3df(-6,2,walkedLeft ? 15 : -15));
-			camera->SetTarget(core::vector3df(-6,1,walkedLeft ? 20 : -20));
-		}
-
-
-
-
-		// *********** The sea! **********
-
-
-		scene::ISceneManager *smgr = device->getSceneManager();
-		scene::IAnimatedMesh *meshWater = smgr->getMesh("sea.b3d");
-		scene::IMesh *staticMeshWater = meshWater->getMesh(0);
-
-		// clear materials to default
-
-		video::SMaterial defaultMaterial;
-
-		for (u32 i = 0; i < meshWater->getMeshBufferCount(); i ++)
-		{
-			meshWater->getMeshBuffer(i)->getMaterial() = defaultMaterial;
-		}
-
-		for (u32 i = 0; i < staticMeshWater->getMeshBufferCount(); i ++)
-		{
-			staticMeshWater->getMeshBuffer(i)->getMaterial() = defaultMaterial;
-		}
-
-		smgr->getMeshManipulator()->setVertexColors(staticMeshWater, video::SColor(255,255,255,255));
-
-		{
-			const f32 waveHeight = 0.1;
-			const f32 waveSpeed = 1000.0;
-			const f32 waveLength = 2.5;
-
-			smgr->getMeshManipulator()->setVertexColorAlpha(staticMeshWater, 200);
-
-			scene::ISceneNode *nodeWater = smgr->addWaterSurfaceSceneNode(staticMeshWater,
-					waveHeight, waveSpeed, waveLength);
-
-			//nodeWater->setMaterialFlag(video::EMF_LIGHTING, false);
-			nodeWater->setMaterialTexture(0, device->getVideoDriver()->getTexture("watersand.png"));
-			nodeWater->setMaterialTexture(1, device->getVideoDriver()->getTexture("water.png"));
-			//nodeWater->setMaterialType(video::EMT_REFLECTION_2_LAYER);
-			nodeWater->setMaterialType(video::EMT_TRANSPARENT_REFLECTION_2_LAYER);
-
-			nodeWater->setPosition(core::vector3df(0,-0.25,0));
-			finalSceneNodes.push_back(nodeWater);
-		}
-
-
-		{
-			const f32 waveHeight = 0.1;
-			const f32 waveSpeed = 1000.0;
-			const f32 waveLength = 2.5;
-
-			scene::ISceneNode *nodeWater = smgr->addWaterSurfaceSceneNode(staticMeshWater,
-					waveHeight, waveSpeed, waveLength);
-
-			nodeWater->setMaterialFlag(video::EMF_LIGHTING, false);
-			nodeWater->setMaterialTexture(0, device->getVideoDriver()->getTexture("watersand_add.png"));
-			nodeWater->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
-
-			nodeWater->setPosition(core::vector3df(0,0,0));
-			finalSceneNodes.push_back(nodeWater);
-		}
-
-
-	}
+        if (fp)
+        {
+            if (fputs(levelFileName.c_str(), fp) == EOF)
+                WARN << "Could not save game (" << levelFileName << ")";
+            else
+                NOTE << "Saved game successfully (" << levelFileName << ")";
+
+            fclose(fp);
+        }
+    }
+    */
+
+    level = new Level(this, level_path_rel_exe(levelFileName), undoHistory);
+    world->GetUpdater().AddUpdatable(level);
+    level->Start();
+    level->drop();
+
+    if (startEditor)
+    {
+        editor = new Editor(level);
+        world->GetUpdater().AddUpdatable(editor);
+        editor->drop();
+    }
+
+    if (initFirstLevelTime < 0.0)
+        initFirstLevelTime = engine->GetEngineTime();
+
+    // New thing.
+    // Let's see if there is a level name!
+    if (levelTitles.count(levelFileName) && !undoHistory)
+    {
+        video::IVideoDriver *driver = device->getVideoDriver();
+
+        s32 screenWidth = driver->getScreenSize().Width;
+
+        core::stringc levelTitle =
+            levelTitles[levelFileName].To<core::stringc>();
+        core::stringw levelTitleW = levelTitle.c_str();
+
+        gui::IGUIStaticText *text = add_static_text2(levelTitleW.c_str());
+        core::rect<s32> rect = text->getRelativePosition();
+        rect += core::vector2di(screenWidth / 2 - rect.getWidth() / 2, 50);
+        text->setRelativePosition(rect);
+        startLevelTexts.push_back(text);
+    }
+
+    // FINAL SCENE STUFF
+    // This is the non-player controlled final scene as the character walks off
+    // into the sunset...
+
+    if (inFinalScene)
+    {
+        // Different ambience
+
+        if (bgAmbientSound)
+            bgAmbientSound->Stop();
+
+        // Stop any music.
+
+        if (bgMusic)
+            bgMusic->Stop();
+
+        if (!finalSceneSea)
+        {
+            finalSceneSea = engine->GetSoundSystem()->CreateSound3D();
+            finalSceneSea->SetIsLooped(true);
+            finalSceneSea->SetVolume(15.0);
+            finalSceneSea->SetPosition(core::vector3df(-50, 0, 0));
+            finalSceneSea->Play(SFX_DIR "/sea.ogg");
+        }
+
+        // Different sky box
+        core::stringc skyDir = "skies/Set 26/final_";
+        core::stringc skyExt = "png";
+
+        world->SetSkyBox(skyDir + "6." + skyExt, skyDir + "5." + skyExt,
+                         skyDir + "1." + skyExt, skyDir + "3." + skyExt,
+                         skyDir + "2." + skyExt, skyDir + "4." + skyExt);
+
+        // NOTE: All transformables added here are removed when Level destructs
+        // by the call to RemoveAllTransformables(). That's why no references
+        // are kept by MainState.
+
+        // different sun position (for sky box brightness)
+        sunDirection = core::vector3df(0, 1, 0);
+
+        // actually, we'll disable the shader completely...
+        world->SetSkyBoxShader(nullptr);
+
+        // Create the sandy beach
+
+        IPhysics *physics = world->GetPhysics();
+
+        IBody *groundBody = physics->AddStaticBody();
+
+        IMesh *groundMesh = world->AddMesh("land.irrmesh");
+        level->ApplyLandShaders(groundMesh);
+        groundBody->AddChild(groundMesh);
+
+        // new. grass layer on cliff.
+        // NEED TO ONLY ADD THIS IF SHADERS ARE AVAILABLE.
+        // (since we need a shader to render it. Blender will not let me paint
+        // vertex alpha, so I will use vertex colours and a special shader to
+        // use colours as transparency values)
+        if (renderSystem->ShadersAreAvailable())
+        {
+            // IMesh *cliffGrassMesh = world->AddMesh("cliffgrass.irrmesh");
+            // level->ApplyCliffGrassShaders(cliffGrassMesh);
+            // groundBody->AddChild(cliffGrassMesh);
+        }
+
+        IMesh *cliffMesh = world->AddMesh("cliff.irrmesh");
+        level->ApplyLandShaders(cliffMesh);
+        groundBody->AddChild(cliffMesh);
+
+        /*
+        //for (u32 i = 0; i < groundMesh->GetMaterialCount(); i ++)
+        u32 i = 1;
+        {
+            video::SMaterial &material = groundMesh->GetMaterial(i);
+            material.MaterialType = video::EMT_LIGHTMAP;
+            material.setTexture(1,
+        device->getVideoDriver()->getTexture("cliff_lightmap.jpg"));
+
+            core::matrix4 mat;
+            mat.setTextureScale(0.25,0.25);
+            material.setTextureMatrix(1, mat);
+        }
+        */
+
+        ICollisionGeometry *groundGeom =
+            physics->CreateMeshCollisionGeometry(groundMesh);
+        groundBody->AddCollisionGeometry(groundGeom);
+        groundGeom->drop();
+
+        ICollisionGeometry *cliffGeom =
+            physics->CreateMeshCollisionGeometry(cliffMesh);
+        groundBody->AddCollisionGeometry(cliffGeom);
+        cliffGeom->drop();
+
+        // Don't want regular falling as it interferes with physics terrain
+        // collision
+        level->SetLogicEnabled(false);
+
+        // A an invisible barrier to stop player walking out to sea
+        IBody *barrierBody = physics->AddStaticBody();
+        ICollisionGeometry *barrierGeom = physics->CreateBoxCollisionGeometry(
+            core::vector3df(0.5, 3.0, 50.0));
+        barrierBody->AddCollisionGeometry(barrierGeom);
+        barrierGeom->drop();
+        barrierBody->SetPosition(core::vector3df(-12, 0, 0));
+
+        // Following stuff is a rather hackish way to prevent the camera going
+        // below sea level. This was (perhaps foolishly...) deemed to be quicker
+        // than the "proper" solution, which would have been to simply allow the
+        // camera to go below sea + set some kind of blue underwater effect on
+        // the screen.
+
+        // A collision geometry for the sea.
+        // This is only used to prevent the camera intersecting the sea, other
+        // objects like the player should NOT collide with it.
+        IBody *seaBody = physics->AddStaticBody();
+        ICollisionGeometry *seaGeom = physics->CreateBoxCollisionGeometry(
+            core::vector3df(50.0, 0.5, 50.0));
+        seaGeom->SetCollisionLayer(1);
+        seaBody->AddCollisionGeometry(seaGeom);
+        seaGeom->drop();
+        seaBody->SetPosition(core::vector3df(0, -0.5, 0));
+
+        // Disable collisions between the sea's geometry and all objects in the
+        // default layer. So the only thing that will collide with the sea is
+        // the camera which is in layer 2.
+        physics->SetLayerCollisions(0, 1, false);
+
+        // Use a simple third person collider rather than the special one.
+        // (the special one can't cope with trimesh geometry)
+        // But we have one change: we add a child to the player and watch the
+        // child. The child is the special transformable FinalScenePlayerProxy
+        // which will not go lower than a certain height (i.e. does not go below
+        // the sea)
+
+        FinalScenePlayerProxy *proxy = new FinalScenePlayerProxy();
+        world->AddTransformable(proxy);
+        level->GetPlayer()->AddChild(proxy);
+
+        ICameraCollider *collider =
+            level->GetCamera()->CreateThirdPersonCameraCollider();
+        collider->SetCollisionLayer(2);
+        level->GetCamera()->Follow(proxy);
+        level->GetCamera()->SetCollider(collider);
+        // level->GetCamera()->SetZoomLimits(1.5, 8.0);
+        // still want to exclude player's collision geometries
+        collider->ExcludeGeometry(
+            level->GetPlayer()->GetBody()->GetCollisionGeometries());
+        // exclude the invisible barrier from collisions
+        collider->ExcludeGeometry(barrierBody->GetCollisionGeometries());
+        collider->drop();
+
+        // Create a regular block as decoration
+        core::vector3di woodBlockPos(4, 0, 2);
+        level->CreateObject(woodBlockPos, EOT_MOVABLE_BLOCK);
+        level->GetMap()
+            ->GetObject(woodBlockPos)
+            ->SetRotation(core::vector3df(22, 42, 11));
+
+        // needed as there will be no blocks under player on final scene.
+        level->ForceFootsteps(true);
+
+        if (levelFileName == "finalscene1.lev")
+        {
+            // Stuff peculiar to first part of final scene
+            // (player controlled walk on the beach)
+
+            ICharacter *player = level->GetPlayer();
+            player->SetRotation(core::vector3df(0, -90, 0));
+        }
+        else
+        {
+            // Stuff for second part of final scene
+            // (the walk off into distance)
+
+            ICharacter *player = level->GetPlayer();
+
+            // set player position to end of the beach
+            player->SetPosition(
+                core::vector3df(-4, 0.241472, walkedLeft ? 20 : -20));
+
+            // set player rotation
+            player->SetRotation(core::vector3df(0, walkedLeft ? 0 : 180, 0));
+
+            // disabled user control
+            player->SetController(nullptr);
+
+            // walk off by itself
+            player->SetMoveVec(core::vector2df(0.2, walkedLeft ? 1.0 : -1.0));
+            player->SetMedialMotion(1);
+
+            // walk slower...
+            player->SetMoveSpeed(0.2);
+
+            // turn off footstep sound...
+            ISoundSource *footStepSoundSource =
+                player->GetFirstChildOfType<ISoundSource>();
+
+            if (footStepSoundSource)
+                footStepSoundSource->GetSound()->SetVolume(0.0);
+
+            // Fixed camera
+            world->SetCameraController(nullptr);
+            ICamera *camera = world->GetCamera();
+            camera->SetPosition(core::vector3df(-6, 2, walkedLeft ? 15 : -15));
+            camera->SetTarget(core::vector3df(-6, 1, walkedLeft ? 20 : -20));
+        }
+
+        // *********** The sea! **********
+
+        scene::ISceneManager *smgr = device->getSceneManager();
+        scene::IAnimatedMesh *meshWater = smgr->getMesh("sea.b3d");
+        scene::IMesh *staticMeshWater = meshWater->getMesh(0);
+
+        // clear materials to default
+
+        video::SMaterial defaultMaterial;
+
+        for (u32 i = 0; i < meshWater->getMeshBufferCount(); i++)
+        {
+            meshWater->getMeshBuffer(i)->getMaterial() = defaultMaterial;
+        }
+
+        for (u32 i = 0; i < staticMeshWater->getMeshBufferCount(); i++)
+        {
+            staticMeshWater->getMeshBuffer(i)->getMaterial() = defaultMaterial;
+        }
+
+        smgr->getMeshManipulator()->setVertexColors(staticMeshWater,
+                                                    video::SColor(255, 255, 255,
+                                                                  255));
+
+        {
+            const f32 waveHeight = 0.1;
+            const f32 waveSpeed = 1000.0;
+            const f32 waveLength = 2.5;
+
+            smgr->getMeshManipulator()->setVertexColorAlpha(staticMeshWater,
+                                                            200);
+
+            scene::ISceneNode *nodeWater =
+                smgr->addWaterSurfaceSceneNode(staticMeshWater, waveHeight,
+                                               waveSpeed, waveLength);
+
+            // nodeWater->setMaterialFlag(video::EMF_LIGHTING, false);
+            nodeWater->setMaterialTexture(0,
+                                          device->getVideoDriver()->getTexture(
+                                              "watersand.png"));
+            nodeWater->setMaterialTexture(1,
+                                          device->getVideoDriver()->getTexture(
+                                              "water.png"));
+            // nodeWater->setMaterialType(video::EMT_REFLECTION_2_LAYER);
+            nodeWater->setMaterialType(
+                video::EMT_TRANSPARENT_REFLECTION_2_LAYER);
+
+            nodeWater->setPosition(core::vector3df(0, -0.25, 0));
+            finalSceneNodes.push_back(nodeWater);
+        }
+
+        {
+            const f32 waveHeight = 0.1;
+            const f32 waveSpeed = 1000.0;
+            const f32 waveLength = 2.5;
+
+            scene::ISceneNode *nodeWater =
+                smgr->addWaterSurfaceSceneNode(staticMeshWater, waveHeight,
+                                               waveSpeed, waveLength);
+
+            nodeWater->setMaterialFlag(video::EMF_LIGHTING, false);
+            nodeWater->setMaterialTexture(0,
+                                          device->getVideoDriver()->getTexture(
+                                              "watersand_add.png"));
+            nodeWater->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+
+            nodeWater->setPosition(core::vector3df(0, 0, 0));
+            finalSceneNodes.push_back(nodeWater);
+        }
+    }
 }
 
 /*void MainState::StartFromPreview()
 {
-	NOTE("StartFromPreview...");
-	RestartLevel();
+    NOTE("StartFromPreview...");
+    RestartLevel();
 }*/
 
 void MainState::StartFirstLevel()
 {
-	if (levelFileNames.size())
-	{
-		core::stringc continueLevel = find_next_level();
+    if (levelFileNames.size())
+    {
+        core::stringc continueLevel = find_next_level();
 
-		if (continueLevel.size())
-		{
-			NOTE << "Continuing level... " << continueLevel;
-			StartLevel(continueLevel);
-			return;
-		}
+        if (continueLevel.size())
+        {
+            NOTE << "Continuing level... " << continueLevel;
+            StartLevel(continueLevel);
+            return;
+        }
 
-		// No level to continue from.
-		// So start the first level.
+        // No level to continue from.
+        // So start the first level.
 
-		NOTE << "Starting first level (" << levelFileNames[0] << ")";
-		StartLevel(levelFileNames[0]);
+        NOTE << "Starting first level (" << levelFileNames[0] << ")";
+        StartLevel(levelFileNames[0]);
 
-		// First level is the falling intro, so we want some special modifications...
+        // First level is the falling intro, so we want some special
+        // modifications...
 
-		world->SetCameraController(nullptr);
-		level->GetPlayer()->SetController(nullptr);
+        world->SetCameraController(nullptr);
+        level->GetPlayer()->SetController(nullptr);
 
-		ICamera *camera = world->GetCamera();
-		camera->SetPosition(core::vector3df(0,0,6));
-		camera->SetTarget(core::vector3df(0,0,0));
+        ICamera *camera = world->GetCamera();
+        camera->SetPosition(core::vector3df(0, 0, 6));
+        camera->SetTarget(core::vector3df(0, 0, 0));
 
-		//level->GetPlayer()->SetRotation(core::vector3df(0,0,0));
+        // level->GetPlayer()->SetRotation(core::vector3df(0,0,0));
 
-		level->GetPlayer()->SetRotation(core::vector3df(-90,0,0));
-		level->GetPlayer()->SetAnimations(ANIM_FALL, -1);
+        level->GetPlayer()->SetRotation(core::vector3df(-90, 0, 0));
+        level->GetPlayer()->SetAnimations(ANIM_FALL, -1);
 
-		// Rotation disabled, I'll probably just have a "flail arms" animation instead...
-		/*
-		IMotionAnimator *anim = world->CreateRotationAnimator( core::vector3df(0,0,100) );
-		level->GetPlayer()->GetMesh()->AddAnimator(anim);
-		anim->drop();
-		*/
-	}
-	else
-	{
-		WARN << "No levels found.";
-	}
+        // Rotation disabled, I'll probably just have a "flail arms" animation
+        // instead...
+        /*
+        IMotionAnimator *anim = world->CreateRotationAnimator(
+        core::vector3df(0,0,100) );
+        level->GetPlayer()->GetMesh()->AddAnimator(anim);
+        anim->drop();
+        */
+    }
+    else
+    {
+        WARN << "No levels found.";
+    }
 }
 
 void MainState::NextLevel(bool wait)
 {
-	if (wait)
-	{
-		// if wait flag is set, NextLevel will be called next frame.
-		nextLevel = true;
-	}
-	else
-	{
+    if (wait)
+    {
+        // if wait flag is set, NextLevel will be called next frame.
+        nextLevel = true;
+    }
+    else
+    {
+        // Clear anything left over from the intro
 
-		// Clear anything left over from the intro
+        RemoveInitTexts();
+        RemoveStartLevelTexts();
 
-		RemoveInitTexts();
-		RemoveStartLevelTexts();
+        // Clear any irrlicht scene nodes.
+        // This removes water between the two parts of end game cutscene.
+        for (auto &elem : finalSceneNodes)
+            elem->remove();
 
-		// Clear any irrlicht scene nodes.
-		// This removes water between the two parts of end game cutscene.
-		for (auto & elem : finalSceneNodes)
-			elem->remove();
+        finalSceneNodes.clear();
 
-		finalSceneNodes.clear();
+        // Perhaps we need to wait a frame before processing this call.
 
+        ASSERT(level);
 
-		// Perhaps we need to wait a frame before processing this call.
+        // current level file name
+        core::stringc currentLevelFileName = GetCurrentLevelName();
 
-		ASSERT(level);
+        // SAVE LEVEL THAT WE JUST FINISHED
+        // we exclude pyramid_mining, the last level, since we don't want to
+        // continue the game in the final scene. (since the menu does not appear
+        // in final scene, so wouldn't be able to restart the game)
+        if (currentLevelFileName != "pyramid_mining.lev" &&
+            currentLevelFileName != "finalscene1.lev" &&
+            currentLevelFileName != "finalscene2.lev"
+            // Also, let's exclude the first level
+            && currentLevelFileName != "intro.lev")
+        {
+            FILE *fp = fopen(get_full_save_path().c_str(), "wb");
 
-		// current level file name
-		core::stringc currentLevelFileName = GetCurrentLevelName();
+            if (fp)
+            {
+                if (fputs(currentLevelFileName.c_str(), fp) == EOF)
+                    WARN << "Could not save game (" << currentLevelFileName
+                         << ")";
+                else
+                    NOTE << "Saved game successfully (" << currentLevelFileName
+                         << ")";
 
+                fclose(fp);
+            }
 
-		// SAVE LEVEL THAT WE JUST FINISHED
-		// we exclude pyramid_mining, the last level, since we don't want to continue the game in the final scene.
-		// (since the menu does not appear in final scene, so wouldn't be able to restart the game)
-		if (currentLevelFileName != "pyramid_mining.lev" && currentLevelFileName != "finalscene1.lev"
-				&& currentLevelFileName != "finalscene2.lev"
-				// Also, let's exclude the first level
-				&& currentLevelFileName != "intro.lev")
-		{
-			FILE *fp = fopen(get_full_save_path().c_str(), "wb");
+            // EDIT. Hacked in. Save furthest reached.
+            // Read current contents of file
 
-			if (fp)
-			{
-				if (fputs(currentLevelFileName.c_str(), fp) == EOF)
-					WARN << "Could not save game (" << currentLevelFileName << ")";
-				else
-					NOTE << "Saved game successfully (" << currentLevelFileName << ")";
+            core::stringc currentFurthest =
+                file::get(get_full_save_path_furthest());
 
-				fclose(fp);
-			}
+            if (currentFurthest.size())
+            {
+                NOTE << "current furthest level: " << currentFurthest;
 
-			// EDIT. Hacked in. Save furthest reached.
-			// Read current contents of file
+                // Through levels, find *both*.
 
-			core::stringc currentFurthest = file::get(get_full_save_path_furthest());
+                s32 furthestPos = -1;
+                s32 currentPos = -1;
 
-			if (currentFurthest.size())
-			{
-				NOTE << "current furthest level: " << currentFurthest;
+                for (u32 i = 0; i < levelFileNames.size(); i++)
+                {
+                    if (levelFileNames[i] == currentFurthest)
+                        furthestPos = i;
 
-				// Through levels, find *both*.
+                    if (levelFileNames[i] == currentLevelFileName)
+                        currentPos = i;
+                }
 
-				s32 furthestPos = -1;
-				s32 currentPos = -1;
+                // Update if current pos is new furthest
+                if (currentPos > furthestPos)
+                {
+                    NOTE << "Current level is furthest, will write new "
+                            "furthest...";
 
-				for (u32 i = 0; i < levelFileNames.size(); i ++)
-				{
-					if (levelFileNames[i] == currentFurthest)
-						furthestPos = i;
+                    if (!file::put(get_full_save_path_furthest(),
+                                   currentLevelFileName))
+                        WARN << "writing failed";
+                }
+                else
+                {
+                    NOTE << "(will not update furthest: " << currentPos << ","
+                         << furthestPos << ")";
+                }
+            }
+            else
+            {
+                NOTE << "(no current furthest level set)";
+                NOTE << "will write current level as furthest: "
+                     << currentLevelFileName;
 
-					if (levelFileNames[i] == currentLevelFileName)
-						currentPos = i;
-				}
+                if (!file::put(get_full_save_path_furthest(),
+                               currentLevelFileName))
+                    WARN << "writing failed";
+            }
+        }
 
-				// Update if current pos is new furthest
-				if (currentPos > furthestPos)
-				{
-					NOTE << "Current level is furthest, will write new furthest...";
+        // find it in the level list
+        u32 i = 0;
+        for (; i < levelFileNames.size(); i++)
+        {
+            if (levelFileNames[i] == currentLevelFileName)
+                break;
+        }
 
-					if (!file::put(get_full_save_path_furthest(), currentLevelFileName))
-						WARN << "writing failed";
-				}
-				else
-				{
-					NOTE << "(will not update furthest: " << currentPos << "," << furthestPos << ")";
-				}
-			}
-			else
-			{
-				NOTE << "(no current furthest level set)";
-				NOTE << "will write current level as furthest: " << currentLevelFileName;
+        // not found?
+        if (i >= levelFileNames.size())
+        {
+            WARN << "Current level not found (" << i << ")";
+            engine->Exit();
+        }
 
-				if (!file::put(get_full_save_path_furthest(), currentLevelFileName))
-					WARN << "writing failed";
-			}
-		}
+        // found old level... but is there a next level?
+        if (i + 1 < levelFileNames.size())
+        {
+            // next level
+            StartLevel(levelFileNames[i + 1]);
+        }
+        else
+        {
+            // last level is over! Quit the game I guess?
+            NOTE << "All levels finished!";
 
-
-
-		// find it in the level list
-		u32 i = 0;
-		for (; i < levelFileNames.size(); i ++)
-		{
-			if (levelFileNames[i] == currentLevelFileName)
-				break;
-		}
-
-		// not found?
-		if (i >= levelFileNames.size())
-		{
-			WARN << "Current level not found (" << i << ")";
-			engine->Exit();
-		}
-
-		// found old level... but is there a next level?
-		if (i+1 < levelFileNames.size())
-		{
-			// next level
-			StartLevel(levelFileNames[i+1]);
-		}
-		else
-		{
-			// last level is over! Quit the game I guess?
-			NOTE << "All levels finished!";
-
-			// Show some end texts...
-			// Actual stuff shown varies depending on whether this is just
-			// the end of the trial, or the end of the full game.
-			RemoveLevelAndEditor();
-			ShowEndTexts();
-			world->ClearSkyBox();
-			renderSystem->ScreenFade(1.0, 2, true);
-			gameEnded = true;
-		}
-	}
+            // Show some end texts...
+            // Actual stuff shown varies depending on whether this is just
+            // the end of the trial, or the end of the full game.
+            RemoveLevelAndEditor();
+            ShowEndTexts();
+            world->ClearSkyBox();
+            renderSystem->ScreenFade(1.0, 2, true);
+            gameEnded = true;
+        }
+    }
 }
 
 void MainState::RestartLevel(std::deque<UndoState> *undoHistory)
 {
-	// Ignore a call to restart if in intro
-	if ( (level && GetCurrentLevelName() == "intro.lev") || inFinalScene)
-		return;
+    // Ignore a call to restart if in intro
+    if ((level && GetCurrentLevelName() == "intro.lev") || inFinalScene)
+        return;
 
-	NOTE << "Restarting current level...";
+    NOTE << "Restarting current level...";
 
-	if (!level)
-		WARN << "No level currently started.";
+    if (!level)
+        WARN << "No level currently started.";
 
-	ASSERT(level);
+    ASSERT(level);
 
-	std::deque<UndoState> undoHistoryCopy;
-	// we copy undo state in case the pointer becomes invalid
-	// (due to Level getting deleted, and level may have called this)
-	// possibly this is not needed. my low level knowledge is not good.
-	if (undoHistory)
-		undoHistoryCopy = *undoHistory;
+    std::deque<UndoState> undoHistoryCopy;
+    // we copy undo state in case the pointer becomes invalid
+    // (due to Level getting deleted, and level may have called this)
+    // possibly this is not needed. my low level knowledge is not good.
+    if (undoHistory)
+        undoHistoryCopy = *undoHistory;
 
-	// this is already relative to exe
-	core::stringc fileName = GetCurrentLevelName();
+    // this is already relative to exe
+    core::stringc fileName = GetCurrentLevelName();
 
-	RemoveLevelAndEditor();
+    RemoveLevelAndEditor();
 
-	StartLevel( fileName, false, undoHistory ? &undoHistoryCopy : nullptr );
+    StartLevel(fileName, false, undoHistory ? &undoHistoryCopy : nullptr);
 
-
-	// Hacked in.
-	// Set camera if undoing.
-	if (undoHistory && !undoHistoryCopy.empty())
-	{
-		level->GetCamera()->SetAngles( undoHistoryCopy.back().cameraAngle );
-		level->GetCamera()->SetZoom( undoHistoryCopy.back().cameraZoom );
-		level->GetPlayer()->SetRotation( core::vector3df(0,undoHistoryCopy.back().playerAngle,0) );
-	}
+    // Hacked in.
+    // Set camera if undoing.
+    if (undoHistory && !undoHistoryCopy.empty())
+    {
+        level->GetCamera()->SetAngles(undoHistoryCopy.back().cameraAngle);
+        level->GetCamera()->SetZoom(undoHistoryCopy.back().cameraZoom);
+        level->GetPlayer()->SetRotation(
+            core::vector3df(0, undoHistoryCopy.back().playerAngle, 0));
+    }
 }
 
 // These two methods are called by Level when level is OnPaused/OnResumed.
@@ -1014,393 +1054,410 @@ void MainState::RestartLevel(std::deque<UndoState> *undoHistory)
 // that is owned by World...
 void MainState::OnPause()
 {
-	if (finalSceneSea)
-		finalSceneSea->Pause();
+    if (finalSceneSea)
+        finalSceneSea->Pause();
 }
 void MainState::OnResume()
 {
-	if (finalSceneSea)
-		finalSceneSea->Resume();
+    if (finalSceneSea)
+        finalSceneSea->Resume();
 }
 
 void MainState::Update(f32 dt)
 {
-	IUpdatable::Update(dt);
+    IUpdatable::Update(dt);
 
-	if (nextLevel)
-	{
-		NextLevel();
-		nextLevel = false;
-	}
+    if (nextLevel)
+    {
+        NextLevel();
+        nextLevel = false;
+    }
 
-	f32 introTextLife = 9.0;
-	f32 introTextFadeOffTime = 2.0;
+    f32 introTextLife = 9.0;
+    f32 introTextFadeOffTime = 2.0;
 
-	// StartLevel should have been called before any updates...
-	// (so this will assert if StartLevel was not called)
-	ASSERT(initFirstLevelTime >= 0.0);
+    // StartLevel should have been called before any updates...
+    // (so this will assert if StartLevel was not called)
+    ASSERT(initFirstLevelTime >= 0.0);
 
-	if ( (engine->GetEngineTime() > initFirstLevelTime + introTextLife)
-			&& !gameEnded // Don't fade off the end of game text.
-			)
-	{
-		// 2 seconds fade off
-		f32 alpha = (initFirstLevelTime+introTextLife+introTextFadeOffTime - engine->GetEngineTime())/introTextFadeOffTime;
+    if ((engine->GetEngineTime() > initFirstLevelTime + introTextLife) &&
+        !gameEnded // Don't fade off the end of game text.
+    )
+    {
+        // 2 seconds fade off
+        f32 alpha = (initFirstLevelTime + introTextLife + introTextFadeOffTime -
+                     engine->GetEngineTime()) /
+                    introTextFadeOffTime;
 
-		// Delete text?
-		if (engine->GetEngineTime() > initFirstLevelTime + introTextLife + introTextFadeOffTime)
-			RemoveInitTexts();
+        // Delete text?
+        if (engine->GetEngineTime() >
+            initFirstLevelTime + introTextLife + introTextFadeOffTime)
+            RemoveInitTexts();
 
-		// fade text?
+        // fade text?
 
-		for (auto & elem : introTexts)
-		{
-			elem->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
-		}
-	}
+        for (auto &elem : introTexts)
+        {
+            elem->setOverrideColor(
+                TEXT_COL.getInterpolated(video::SColor(0, 255, 255, 255),
+                                         alpha));
+        }
+    }
 
-	introTextLife = 5.0;
-	introTextFadeOffTime = 2.0;
+    introTextLife = 5.0;
+    introTextFadeOffTime = 2.0;
 
-	// And fade off start level texts (i.e. level name)
-	// using same lifetime variables as intro text
-	if ( (engine->GetEngineTime() > startLevelTime + introTextLife)
-			&& !gameEnded // Don't fade off the end of game text.
-			)
-	{
-		// 2 seconds fade off
-		f32 alpha = (startLevelTime+introTextLife+introTextFadeOffTime - engine->GetEngineTime())/introTextFadeOffTime;
+    // And fade off start level texts (i.e. level name)
+    // using same lifetime variables as intro text
+    if ((engine->GetEngineTime() > startLevelTime + introTextLife) &&
+        !gameEnded // Don't fade off the end of game text.
+    )
+    {
+        // 2 seconds fade off
+        f32 alpha = (startLevelTime + introTextLife + introTextFadeOffTime -
+                     engine->GetEngineTime()) /
+                    introTextFadeOffTime;
 
-		// Delete text?
-		if (engine->GetEngineTime() > startLevelTime + introTextLife + introTextFadeOffTime)
-			RemoveStartLevelTexts();
+        // Delete text?
+        if (engine->GetEngineTime() >
+            startLevelTime + introTextLife + introTextFadeOffTime)
+            RemoveStartLevelTexts();
 
-		// fade text?
+        // fade text?
 
-		for (auto & elem : startLevelTexts)
-		{
-			elem->setOverrideColor( TEXT_COL.getInterpolated(video::SColor(0, 255,255,255), alpha) );
-		}
-	}
+        for (auto &elem : startLevelTexts)
+        {
+            elem->setOverrideColor(
+                TEXT_COL.getInterpolated(video::SColor(0, 255, 255, 255),
+                                         alpha));
+        }
+    }
 
-	// Special logic for when in final scene
-	if (level)
-	{
-		if (inFinalScene && !level->IsEnding())
-		{
-			if (GetCurrentLevelName() == "finalscene1.lev")
-			{
-				// LOGIC FOR DETECTING END OF FIRST PART OF END CUTSCENE
-				// (where player has control on the beach)
-				if (level->GetPlayer()->GetPosition().getLength() > 25.0)
-				{
-					if (level->GetPlayer()->GetPosition().Z > 0)
-						walkedLeft = true;
-					else
-						walkedLeft = false;
+    // Special logic for when in final scene
+    if (level)
+    {
+        if (inFinalScene && !level->IsEnding())
+        {
+            if (GetCurrentLevelName() == "finalscene1.lev")
+            {
+                // LOGIC FOR DETECTING END OF FIRST PART OF END CUTSCENE
+                // (where player has control on the beach)
+                if (level->GetPlayer()->GetPosition().getLength() > 25.0)
+                {
+                    if (level->GetPlayer()->GetPosition().Z > 0)
+                        walkedLeft = true;
+                    else
+                        walkedLeft = false;
 
-					level->StartNextLevelTransition(false);
-				}
-			}
-			else
-			{
-				// Logic for detecting end of final scene, where character walks off.
-				// Then the game exits (after fading out)
-				if (level->GetPlayer()->GetPosition().getLength() > 50.0)
-				{
-					level->StartNextLevelTransition(false);
-				}
-			}
-		}
-	}
+                    level->StartNextLevelTransition(false);
+                }
+            }
+            else
+            {
+                // Logic for detecting end of final scene, where character walks
+                // off. Then the game exits (after fading out)
+                if (level->GetPlayer()->GetPosition().getLength() > 50.0)
+                {
+                    level->StartNextLevelTransition(false);
+                }
+            }
+        }
+    }
 }
 
 void MainState::OnEvent(const Event &event)
 {
-	if (gameEnded)
-	{
-		// Exit on any button press.
-		if (event.IsType("ButtonDown"))
-		{
-			engine->Exit();
-		}
+    if (gameEnded)
+    {
+        // Exit on any button press.
+        if (event.IsType("ButtonDown"))
+        {
+            engine->Exit();
+        }
 
-		return;
-	}
+        return;
+    }
 
-	// No events if in "intro" level
-	// (ignore all input, no pause menu or restarting this level)
-	if (level && GetCurrentLevelName() == "intro.lev")
-	{
-		// EXCEPT:
-		// If any button is pressed, we make the character fall immediately,
-		// (assuming he has not already appeared)
+    // No events if in "intro" level
+    // (ignore all input, no pause menu or restarting this level)
+    if (level && GetCurrentLevelName() == "intro.lev")
+    {
+        // EXCEPT:
+        // If any button is pressed, we make the character fall immediately,
+        // (assuming he has not already appeared)
 
-		if (event.IsType("ButtonDown"))
-		{
-			core::vector3df pos = level->GetPlayer()->GetPosition();
+        if (event.IsType("ButtonDown"))
+        {
+            core::vector3df pos = level->GetPlayer()->GetPosition();
 
-			if (pos.Y > 7.f)
-			{
-				NOTE << "Skipping intro, player at Y: " << pos.Y;
+            if (pos.Y > 7.f)
+            {
+                NOTE << "Skipping intro, player at Y: " << pos.Y;
 
-				// problem, is in a MapObjectMove, due to gravity,
-				// which will immediately reset the position...
-				// so, HACK!
-				// We access the mapObjectMove list and finish the move...
-				level->ClearPlayerMapObjectMove();
+                // problem, is in a MapObjectMove, due to gravity,
+                // which will immediately reset the position...
+                // so, HACK!
+                // We access the mapObjectMove list and finish the move...
+                level->ClearPlayerMapObjectMove();
 
-				pos.Y = 7.f;
-				level->GetPlayer()->SetPosition(pos);
-			}
-		}
+                pos.Y = 7.f;
+                level->GetPlayer()->SetPosition(pos);
+            }
+        }
 
-		return;
-	}
+        return;
+    }
 
-	// If in final scene, the only thing we check for is ESC key
-	if (inFinalScene)
-	{
-		if (event.IsType("ButtonDown") &&
-				// this line copy and pasted from just below
-				event["button"] == KEY_ESCAPE && level && !renderSystem->IsFading() && !level->IsEnding()
-				)
-		{
-			//engine->Exit();
+    // If in final scene, the only thing we check for is ESC key
+    if (inFinalScene)
+    {
+        if (event.IsType("ButtonDown") &&
+            // this line copy and pasted from just below
+            event["button"] == KEY_ESCAPE && level &&
+            !renderSystem->IsFading() && !level->IsEnding())
+        {
+            // engine->Exit();
 
-			// changed.
-			// we don't exit, just jump to the next level.
-			if (level)
-			{
-				if (GetCurrentLevelName() == "finalscene1.lev")
-				{
-					walkedLeft = true;
-					level->StartNextLevelTransition(false);
-				}
-				else
-				{
-					level->StartNextLevelTransition(false);
-				}
-			}
-		}
-		return;
-	}
+            // changed.
+            // we don't exit, just jump to the next level.
+            if (level)
+            {
+                if (GetCurrentLevelName() == "finalscene1.lev")
+                {
+                    walkedLeft = true;
+                    level->StartNextLevelTransition(false);
+                }
+                else
+                {
+                    level->StartNextLevelTransition(false);
+                }
+            }
+        }
+        return;
+    }
 
-	if (event.IsType("RestartLevel") && !level->IsEnding())
-	{
-		NOTE << "Restarting level due to RestartLevel event.";
-		RestartLevel();
-		return;
-	}
+    if (event.IsType("RestartLevel") && !level->IsEnding())
+    {
+        NOTE << "Restarting level due to RestartLevel event.";
+        RestartLevel();
+        return;
+    }
 
-	// We should only be receiving ButtonDown events for now.
+    // We should only be receiving ButtonDown events for now.
 
-	if (event.IsType("ButtonDown"))
-	{
-		if (event["button"] == KEY_ESCAPE && level && !renderSystem->IsFading() && !level->IsEnding())
-		{
-			if (isPaused)
-			{
-				isPaused = false;
+    if (event.IsType("ButtonDown"))
+    {
+        if (event["button"] == KEY_ESCAPE && level &&
+            !renderSystem->IsFading() && !level->IsEnding())
+        {
+            if (isPaused)
+            {
+                isPaused = false;
 
-				// Un pause
-				renderSystem->ScreenFade(1.0);
-				world->Resume();
-				device->getCursorControl()->setVisible(false);
+                // Un pause
+                renderSystem->ScreenFade(1.0);
+                world->Resume();
+                device->getCursorControl()->setVisible(false);
 
-				HidePauseMenu();
-			}
-			else
-			{
-				isPaused = true;
+                HidePauseMenu();
+            }
+            else
+            {
+                isPaused = true;
 
-				// Pause
-				renderSystem->ScreenFade(0.2);
-				world->Pause();
-				device->getCursorControl()->setVisible(true);
+                // Pause
+                renderSystem->ScreenFade(0.2);
+                world->Pause();
+                device->getCursorControl()->setVisible(true);
 
-				ShowPauseMenu();
-			}
-		}
-		else if (event["button"] == KEY_LBUTTON)
-		{
-			switch (pauseMenuPositioner->GetMouseOverId())
-			{
-			case EPM_EXIT:
-				//engine->Exit();
-				{
-					// Continue
-					HidePauseMenu();
+                ShowPauseMenu();
+            }
+        }
+        else if (event["button"] == KEY_LBUTTON)
+        {
+            switch (pauseMenuPositioner->GetMouseOverId())
+            {
+            case EPM_EXIT:
+                // engine->Exit();
+                {
+                    // Continue
+                    HidePauseMenu();
 
-					// resume... (especially, bgAmbient sfx paused in Level)
-					world->Resume();
+                    // resume... (especially, bgAmbient sfx paused in Level)
+                    world->Resume();
 
-					// ??
-					RemoveLevelAndEditor();
+                    // ??
+                    RemoveLevelAndEditor();
 
-					// clear main.cpp pointer
-					// this is all stupidly hacked in.
-					*mainStatePtrLoc = nullptr;
+                    // clear main.cpp pointer
+                    // this is all stupidly hacked in.
+                    *mainStatePtrLoc = nullptr;
 
-					StartScreen *startScreen = new StartScreen(mainStatePtrLoc);
-					engine->GetLogicUpdater().AddUpdatable(startScreen);
-					startScreen->drop();
+                    StartScreen *startScreen = new StartScreen(mainStatePtrLoc);
+                    engine->GetLogicUpdater().AddUpdatable(startScreen);
+                    startScreen->drop();
 
-					// remove this
-					// we don't use RemoveUpdatable as MainState wasn't grabbed
-					// by AddUpdatable... for some reason.
-					drop();
+                    // remove this
+                    // we don't use RemoveUpdatable as MainState wasn't grabbed
+                    // by AddUpdatable... for some reason.
+                    drop();
 
-					return;
-				}
-				break;
-			case EPM_NEW_GAME:
-				{
-					pauseMenuPositioner->Reset();
-					pauseMenuPositioner->SetTitle( add_static_text(L"This will completely clear your game progress. Are you sure?") );
-					pauseMenuPositioner->Add( add_static_text(L"Cancel"), EPM_NEW_GAME_NO );
-					pauseMenuPositioner->Add( add_static_text(L"Start New Game"), EPM_NEW_GAME_YES );
-					pauseMenuPositioner->Apply();
-				}
-				break;
-			case EPM_CHANGE_LEVEL:
-				NOTE << "Change level!?";
-				break;
-			case EPM_SKIP_LEVEL:
-				{
-					pauseMenuPositioner->Reset();
-					pauseMenuPositioner->SetTitle( add_static_text(L"Are you sure? You can replay this level from the main menu at any time.") );
-					pauseMenuPositioner->Add( add_static_text(L"Cancel"), EPM_SKIP_LEVEL_NO );
-					pauseMenuPositioner->Add( add_static_text(L"Skip Level"), EPM_SKIP_LEVEL_YES );
-					pauseMenuPositioner->Apply();
-				}
-				break;
-			case EPM_RESTART_LEVEL:
-				{
-					Event event("ButtonDown");
-					event["button"] = KEY_ESCAPE;
-					event.Send(this);
-					RestartLevel();
-				}
-				break;
-			case EPM_CONTINUE:
-				{
-					// Override the mouse button state.
-					// This is needed otherwise the GUI click in the menu causes zoom to occur when resuming the level.
-					engine->SetButtonState(KEY_LBUTTON, false);
+                    return;
+                }
+                break;
+            case EPM_NEW_GAME:
+            {
+                pauseMenuPositioner->Reset();
+                pauseMenuPositioner->SetTitle(
+                    add_static_text(L"This will completely clear your game "
+                                    L"progress. Are you sure?"));
+                pauseMenuPositioner->Add(add_static_text(L"Cancel"),
+                                         EPM_NEW_GAME_NO);
+                pauseMenuPositioner->Add(add_static_text(L"Start New Game"),
+                                         EPM_NEW_GAME_YES);
+                pauseMenuPositioner->Apply();
+            }
+            break;
+            case EPM_CHANGE_LEVEL:
+                NOTE << "Change level!?";
+                break;
+            case EPM_SKIP_LEVEL:
+            {
+                pauseMenuPositioner->Reset();
+                pauseMenuPositioner->SetTitle(
+                    add_static_text(L"Are you sure? You can replay this level "
+                                    L"from the main menu at any time."));
+                pauseMenuPositioner->Add(add_static_text(L"Cancel"),
+                                         EPM_SKIP_LEVEL_NO);
+                pauseMenuPositioner->Add(add_static_text(L"Skip Level"),
+                                         EPM_SKIP_LEVEL_YES);
+                pauseMenuPositioner->Apply();
+            }
+            break;
+            case EPM_RESTART_LEVEL:
+            {
+                Event event("ButtonDown");
+                event["button"] = KEY_ESCAPE;
+                event.Send(this);
+                RestartLevel();
+            }
+            break;
+            case EPM_CONTINUE:
+            {
+                // Override the mouse button state.
+                // This is needed otherwise the GUI click in the menu causes
+                // zoom to occur when resuming the level.
+                engine->SetButtonState(KEY_LBUTTON, false);
 
-					// Continue
-					Event event("ButtonDown");
-					event["button"] = KEY_ESCAPE;
-					event.Send(this);
-				}
-				break;
+                // Continue
+                Event event("ButtonDown");
+                event["button"] = KEY_ESCAPE;
+                event.Send(this);
+            }
+            break;
 
-			// New Game sub menu
-			case EPM_NEW_GAME_YES:
-				NOTE << "NEW GAME STARTED!";
-				{
-					Event event("ButtonDown");
-					event["button"] = KEY_ESCAPE;
-					event.Send(this);
+            // New Game sub menu
+            case EPM_NEW_GAME_YES:
+                NOTE << "NEW GAME STARTED!";
+                {
+                    Event event("ButtonDown");
+                    event["button"] = KEY_ESCAPE;
+                    event.Send(this);
 
-					// Remove the save file
-					delete_game_saves();
+                    // Remove the save file
+                    delete_game_saves();
 
-					ShowInitTexts();
-					StartFirstLevel();
-				}
-				return;
-			case EPM_NEW_GAME_NO:
-				ShowPauseMenu();
-				return;
+                    ShowInitTexts();
+                    StartFirstLevel();
+                }
+                return;
+            case EPM_NEW_GAME_NO:
+                ShowPauseMenu();
+                return;
 
+            // Skip Level sub menu
+            case EPM_SKIP_LEVEL_YES:
+                NOTE << "User decided to skip level...";
+                {
+                    Event event("ButtonDown");
+                    event["button"] = KEY_ESCAPE;
+                    event.Send(this);
 
-			// Skip Level sub menu
-			case EPM_SKIP_LEVEL_YES:
-				NOTE << "User decided to skip level...";
-				{
-					Event event("ButtonDown");
-					event["button"] = KEY_ESCAPE;
-					event.Send(this);
+                    NextLevel();
+                }
+                return;
+            case EPM_SKIP_LEVEL_NO:
+                ShowPauseMenu();
+                return;
+            };
+        }
+    }
+    else if (event.IsType("AxisMoved"))
+    {
+        if (event["axis"] == AXIS_MOUSE_X || event["axis"] == AXIS_MOUSE_Y)
+        {
+            gui::IGUIElement *mouseOverElement =
+                pauseMenuPositioner->GetMouseOverElement();
 
-					NextLevel();
-				}
-				return;
-			case EPM_SKIP_LEVEL_NO:
-				ShowPauseMenu();
-				return;
-			};
-		}
-	}
-	else if (event.IsType("AxisMoved"))
-	{
-		if (event["axis"] == AXIS_MOUSE_X || event["axis"] == AXIS_MOUSE_Y)
-		{
-			gui::IGUIElement *mouseOverElement = pauseMenuPositioner->GetMouseOverElement();
+            // Update all colours
 
-			// Update all colours
+            const std::vector<gui::IGUIElement *> &elements =
+                pauseMenuPositioner->GetElements();
 
-			const std::vector<gui::IGUIElement *> &elements = pauseMenuPositioner->GetElements();
+            for (auto &element : elements)
+            {
+                gui::IGUIStaticText *textElement =
+                    (gui::IGUIStaticText *)element;
 
-			for (auto & element : elements)
-			{
-				gui::IGUIStaticText *textElement = (gui::IGUIStaticText *)element;
+                if (element == mouseOverElement)
+                {
+                    if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
+                        menuSound->Play(SFX_DIR "/beep.ogg");
 
-				if (element == mouseOverElement)
-				{
-					if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
-						menuSound->Play(SFX_DIR"/beep.ogg");
-
-					textElement->setOverrideColor( TEXT_COL_MOUSEOVER );
-				}
-				else
-				{
-					textElement->setOverrideColor( TEXT_COL );
-				}
-			}
-		}
-	}
+                    textElement->setOverrideColor(TEXT_COL_MOUSEOVER);
+                }
+                else
+                {
+                    textElement->setOverrideColor(TEXT_COL);
+                }
+            }
+        }
+    }
 }
 
 void MainState::ShowPauseMenu()
 {
-	// Clears intro texts if we show pause menu
-	RemoveInitTexts();
-	RemoveStartLevelTexts();
+    // Clears intro texts if we show pause menu
+    RemoveInitTexts();
+    RemoveStartLevelTexts();
 
+    pauseMenuPositioner->Reset();
+    // pauseMenuPositioner->Add( add_static_text(L"Exit"), EPM_EXIT );
+    pauseMenuPositioner->Add(add_static_text(L"Quit to Menu"), EPM_EXIT);
+    // pauseMenuPositioner->Add( add_static_text(L"Change Level"),
+    // EPM_CHANGE_LEVEL ); pauseMenuPositioner->Add( add_static_text(L"New
+    // Game"), EPM_NEW_GAME );
+    pauseMenuPositioner->Add(add_static_text(L"Skip Level"), EPM_SKIP_LEVEL);
+    pauseMenuPositioner->Add(add_static_text(L"Restart Level"),
+                             EPM_RESTART_LEVEL);
+    pauseMenuPositioner->Add(add_static_text(L"Continue"), EPM_CONTINUE);
+    pauseMenuPositioner->Apply();
 
+    /*
+    levelSelectMenuPositioner->Reset();
+    levelSelectMenuPositioner->Add( add_static_text(L"<"), -1 );
+    levelSelectMenuPositioner->Add( add_static_text(L"1 / 32"), -1 );
+    levelSelectMenuPositioner->Add( add_static_text(L">"), -1 );
+    levelSelectMenuPositioner->Apply();
 
-	pauseMenuPositioner->Reset();
-	//pauseMenuPositioner->Add( add_static_text(L"Exit"), EPM_EXIT );
-	pauseMenuPositioner->Add( add_static_text(L"Quit to Menu"), EPM_EXIT );
-	//pauseMenuPositioner->Add( add_static_text(L"Change Level"), EPM_CHANGE_LEVEL );
-	//pauseMenuPositioner->Add( add_static_text(L"New Game"), EPM_NEW_GAME );
-	pauseMenuPositioner->Add( add_static_text(L"Skip Level"), EPM_SKIP_LEVEL);
-	pauseMenuPositioner->Add( add_static_text(L"Restart Level"), EPM_RESTART_LEVEL );
-	pauseMenuPositioner->Add( add_static_text(L"Continue"), EPM_CONTINUE );
-	pauseMenuPositioner->Apply();
-
-	/*
-	levelSelectMenuPositioner->Reset();
-	levelSelectMenuPositioner->Add( add_static_text(L"<"), -1 );
-	levelSelectMenuPositioner->Add( add_static_text(L"1 / 32"), -1 );
-	levelSelectMenuPositioner->Add( add_static_text(L">"), -1 );
-	levelSelectMenuPositioner->Apply();
-
-	levelConfirmMenuPositioner->Reset();
-	levelConfirmMenuPositioner->Add( add_static_text(L"Cancel"), -1 );
-	levelConfirmMenuPositioner->Add( add_static_text(L"OK"), -1 );
-	levelConfirmMenuPositioner->Apply();
-	*/
+    levelConfirmMenuPositioner->Reset();
+    levelConfirmMenuPositioner->Add( add_static_text(L"Cancel"), -1 );
+    levelConfirmMenuPositioner->Add( add_static_text(L"OK"), -1 );
+    levelConfirmMenuPositioner->Apply();
+    */
 }
 
 void MainState::HidePauseMenu()
 {
-	pauseMenuPositioner->Reset();
+    pauseMenuPositioner->Reset();
 }
-
-
-
-
-

@@ -51,4 +51,3 @@
 #include "CollisionMaterialInteraction.h"
 
 #endif
-

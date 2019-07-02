@@ -7,7 +7,7 @@
 class IThruster : public virtual IReferenceCounted
 {
 public:
-	virtual ~IThruster(){}
+    virtual ~IThruster() {}
 };
 
 #endif

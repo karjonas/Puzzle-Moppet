@@ -7,271 +7,280 @@
 
 OpenALSoundSystem::OpenALSoundSystem()
 {
-	device = alcOpenDevice(nullptr);
-	context = nullptr;
+    device = alcOpenDevice(nullptr);
+    context = nullptr;
 
-	if (!device)
-	{
-		WARN << "Failed to create OpenAL device.";
-	}
-	else
-	{
-		context = alcCreateContext(device, nullptr);
+    if (!device)
+    {
+        WARN << "Failed to create OpenAL device.";
+    }
+    else
+    {
+        context = alcCreateContext(device, nullptr);
 
-		if (!context)
-		{
-			alcCloseDevice(device);
-			device = nullptr;
-			WARN << "Failed to create OpenAL context.";
-		}
-		else
-		{
-			if (!alcMakeContextCurrent(context))
-			{
-				alcDestroyContext(context);
-				alcCloseDevice(device);
-				context = nullptr;
-				device = nullptr;
-				WARN << "Failed to make OpenAL context current.";
-			}
-		}
-	}
+        if (!context)
+        {
+            alcCloseDevice(device);
+            device = nullptr;
+            WARN << "Failed to create OpenAL context.";
+        }
+        else
+        {
+            if (!alcMakeContextCurrent(context))
+            {
+                alcDestroyContext(context);
+                alcCloseDevice(device);
+                context = nullptr;
+                device = nullptr;
+                WARN << "Failed to make OpenAL context current.";
+            }
+        }
+    }
 
-	globalVolume2D = 1.f;
-	globalVolume3D = 1.f;
+    globalVolume2D = 1.f;
+    globalVolume3D = 1.f;
 
-	SetGlobalVolume(1.0);
-	SetListenerPosition(core::vector3df(0,0,0));
-	SetListenerOrientation( core::vector3df(0,0,1), core::vector3df(0,1,0) );
-	SetListenerVelocity(core::vector3df(0,0,0));
+    SetGlobalVolume(1.0);
+    SetListenerPosition(core::vector3df(0, 0, 0));
+    SetListenerOrientation(core::vector3df(0, 0, 1), core::vector3df(0, 1, 0));
+    SetListenerVelocity(core::vector3df(0, 0, 0));
 }
 
 OpenALSoundSystem::~OpenALSoundSystem()
 {
-	// delete all OpenAL buffers
-	for (std::map<core::stringc, ALuint>::const_iterator i = buffers.begin(); i != buffers.end(); i ++)
-	{
-		alDeleteBuffers(1, &i->second);
-		check_openal_error();
-	}
+    // delete all OpenAL buffers
+    for (std::map<core::stringc, ALuint>::const_iterator i = buffers.begin();
+         i != buffers.end(); i++)
+    {
+        alDeleteBuffers(1, &i->second);
+        check_openal_error();
+    }
 
-	if (device && context)
-	{
-		check_openal_error();
+    if (device && context)
+    {
+        check_openal_error();
 
-		if (!alcMakeContextCurrent(nullptr))
-			WARN << "Failed to clear current OpenAL context.";
-		else
-		{
-			alcDestroyContext(context);
-			check_openal_error();
+        if (!alcMakeContextCurrent(nullptr))
+            WARN << "Failed to clear current OpenAL context.";
+        else
+        {
+            alcDestroyContext(context);
+            check_openal_error();
 
-			if (!alcCloseDevice(device))
-				WARN << "Could not close OpenAL device.";
-		}
-	}
+            if (!alcCloseDevice(device))
+                WARN << "Could not close OpenAL device.";
+        }
+    }
 }
 
-bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName, ALuint *buffer)
+bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName,
+                                        ALuint *buffer)
 {
-	// Does buffer already exist?
-	if (buffers.count(fileName))
-	{
-		*buffer = buffers[fileName];
-		return true;
-	}
+    // Does buffer already exist?
+    if (buffers.count(fileName))
+    {
+        *buffer = buffers[fileName];
+        return true;
+    }
 
-	// Otherwise we create buffer.
+    // Otherwise we create buffer.
 
-	// determine file type by extension
-	io::path fileExt = os::path::getext(fileName);
+    // determine file type by extension
+    io::path fileExt = os::path::getext(fileName);
 
-	if (fileExt == "wav")
-	{
-		// Load WAV files with ALUT.
+    if (fileExt == "wav")
+    {
+        // Load WAV files with ALUT.
 
-		return false;
+        return false;
 
-		/*
-		ALuint newbuffer = alutCreateBufferFromFile(fileName.c_str());
+        /*
+        ALuint newbuffer = alutCreateBufferFromFile(fileName.c_str());
 
-		if (newbuffer == AL_NONE)
-		{
-			WARN << "Could not create buffer from file (" << fileName << ")";
-			check_openal_error();
-		}
-		else
-		{
-			buffers[fileName] = newbuffer;
-			*buffer = newbuffer;
-			return true;
-		}
-		*/
-	}
-	else if (fileExt == "ogg")
-	{
-		// Try the Ogg loader.
-		// In future, ogg files should probably be streamed rather than entirely buffered in memory.
+        if (newbuffer == AL_NONE)
+        {
+            WARN << "Could not create buffer from file (" << fileName << ")";
+            check_openal_error();
+        }
+        else
+        {
+            buffers[fileName] = newbuffer;
+            *buffer = newbuffer;
+            return true;
+        }
+        */
+    }
+    else if (fileExt == "ogg")
+    {
+        // Try the Ogg loader.
+        // In future, ogg files should probably be streamed rather than entirely
+        // buffered in memory.
 
-		ALuint newbuffer = 0;
-		alGenBuffers(1, &newbuffer);
+        ALuint newbuffer = 0;
+        alGenBuffers(1, &newbuffer);
 
-		if (check_openal_error())
-			return false;
-		else
-		{
-			// First query to find frequency. (since the other function doesn't give it)
+        if (check_openal_error())
+            return false;
+        else
+        {
+            // First query to find frequency. (since the other function doesn't
+            // give it)
 
-			ALsizei frequency;
-			bool gotFrequency = false;
+            ALsizei frequency;
+            bool gotFrequency = false;
 
-			int error;
-			stb_vorbis *v = stb_vorbis_open_filename((char *)fileName.c_str(), &error, nullptr);
+            int error;
+            stb_vorbis *v = stb_vorbis_open_filename((char *)fileName.c_str(),
+                                                     &error, nullptr);
 
-			if (v)
-			{
-				stb_vorbis_info info = stb_vorbis_get_info(v);
+            if (v)
+            {
+                stb_vorbis_info info = stb_vorbis_get_info(v);
 
-				frequency = info.sample_rate;
+                frequency = info.sample_rate;
 
-				stb_vorbis_close(v);
+                stb_vorbis_close(v);
 
-				gotFrequency = true;
-			}
+                gotFrequency = true;
+            }
 
+            // Load the ogg
 
-			// Load the ogg
+            short *data = nullptr;
+            int channels, len, sample_rate;
 
-			short *data = nullptr;
-			int channels, len, sample_rate;
+            len = stb_vorbis_decode_filename((char *)fileName.c_str(),
+                                             &channels, &sample_rate, &data);
 
-			len = stb_vorbis_decode_filename((char *)fileName.c_str(), &channels, &sample_rate, &data);
+            if (len && gotFrequency)
+            {
+                // Fill buffer with loaded ogg file.
 
-			if (len && gotFrequency)
-			{
-				// Fill buffer with loaded ogg file.
+                if (channels == 1 || channels == 2)
+                {
+                    ALenum format;
 
-				if (channels == 1 || channels == 2)
-				{
-					ALenum format;
+                    if (channels == 1)
+                        format = AL_FORMAT_MONO16;
+                    else
+                        format = AL_FORMAT_STEREO16;
 
-					if (channels == 1)
-						format = AL_FORMAT_MONO16;
-					else
-						format = AL_FORMAT_STEREO16;
+                    alBufferData(newbuffer, format, data,
+                                 sizeof(short) * len * channels, frequency);
 
-					alBufferData(newbuffer, format, data, sizeof(short)*len*channels, frequency);
+                    if (!check_openal_error())
+                    {
+                        if (data)
+                            free(data);
 
-					if (!check_openal_error())
-					{
-						if (data)
-							free(data);
+                        buffers[fileName] = newbuffer;
+                        *buffer = newbuffer;
+                        return true;
+                    }
+                    else
+                    {
+                        WARN << "alBufferData failed for Ogg file, "
+                             << fileName;
+                    }
+                }
+                else
+                {
+                    WARN << "Ogg file has invalid number of channels: ("
+                         << channels << ") - " << fileName;
+                }
+            }
+            else
+            {
+                WARN << "Ogg loading failed: " << fileName;
+            }
 
-						buffers[fileName] = newbuffer;
-						*buffer = newbuffer;
-						return true;
-					}
-					else
-					{
-						WARN << "alBufferData failed for Ogg file, " << fileName;
-					}
-				}
-				else
-				{
-					WARN << "Ogg file has invalid number of channels: (" << channels << ") - " << fileName;
-				}
-			}
-			else
-			{
-				WARN << "Ogg loading failed: " << fileName;
-			}
+            if (data)
+                free(data);
 
-			if (data)
-				free(data);
+            alDeleteBuffers(1, &newbuffer);
+            check_openal_error(); // may not be an openal error if it was ogg
+                                  // loader that failed
 
-			alDeleteBuffers(1, &newbuffer);
-			check_openal_error(); // may not be an openal error if it was ogg loader that failed
+            return false;
+        }
+    }
 
-			return false;
-		}
-	}
-
-	return false;
+    return false;
 }
 
 void OpenALSoundSystem::PreloadSound(const c8 *soundFile)
 {
-	ALuint buffer;
+    ALuint buffer;
 
-	if (!GetOpenALBuffer(soundFile, &buffer))
-		WARN << "Could not get buffer (" << soundFile << ")";
+    if (!GetOpenALBuffer(soundFile, &buffer))
+        WARN << "Could not get buffer (" << soundFile << ")";
 }
 
 void OpenALSoundSystem::SetListenerPosition(core::vector3df pos)
 {
-	alListener3f(AL_POSITION, pos.X,pos.Y,-pos.Z);
-	check_openal_error();
+    alListener3f(AL_POSITION, pos.X, pos.Y, -pos.Z);
+    check_openal_error();
 }
 
-void OpenALSoundSystem::SetListenerOrientation(core::vector3df lookVec, core::vector3df upVec)
+void OpenALSoundSystem::SetListenerOrientation(core::vector3df lookVec,
+                                               core::vector3df upVec)
 {
-	ALfloat orientation[6];
-	orientation[0] = lookVec.X;
-	orientation[1] = lookVec.Y;
-	orientation[2] = -lookVec.Z;
-	orientation[3] = upVec.X;
-	orientation[4] = upVec.Y;
-	orientation[5] = -upVec.Z;
+    ALfloat orientation[6];
+    orientation[0] = lookVec.X;
+    orientation[1] = lookVec.Y;
+    orientation[2] = -lookVec.Z;
+    orientation[3] = upVec.X;
+    orientation[4] = upVec.Y;
+    orientation[5] = -upVec.Z;
 
-	alListenerfv(AL_ORIENTATION, orientation);
-	check_openal_error();
+    alListenerfv(AL_ORIENTATION, orientation);
+    check_openal_error();
 }
 
 void OpenALSoundSystem::SetListenerVelocity(core::vector3df vel)
 {
-	alListener3f(AL_VELOCITY, vel.X,vel.Y,-vel.Z);
-	check_openal_error();
+    alListener3f(AL_VELOCITY, vel.X, vel.Y, -vel.Z);
+    check_openal_error();
 }
 
 ISound2D *OpenALSoundSystem::CreateSound2D()
 {
-	OpenALSound2D *newSound = new OpenALSound2D(this);
-	newSound->SetSeparateVolume(globalVolume2D);
-	return newSound;
+    OpenALSound2D *newSound = new OpenALSound2D(this);
+    newSound->SetSeparateVolume(globalVolume2D);
+    return newSound;
 }
 
 ISound3D *OpenALSoundSystem::CreateSound3D()
 {
-	OpenALSound3D *newSound = new OpenALSound3D(this);
-	newSound->SetSeparateVolume(globalVolume3D);
-	return newSound;
+    OpenALSound3D *newSound = new OpenALSound3D(this);
+    newSound->SetSeparateVolume(globalVolume3D);
+    return newSound;
 }
 
 void OpenALSoundSystem::SetGlobalVolume(f32 volume)
 {
-	alListenerf(AL_GAIN, volume);
-	check_openal_error();
+    alListenerf(AL_GAIN, volume);
+    check_openal_error();
 }
 
 void OpenALSoundSystem::SetGlobalVolume2D(f32 volume)
 {
-	globalVolume2D = volume;
+    globalVolume2D = volume;
 
-	for (auto & elem : allSounds2D)
-		elem->SetSeparateVolume(volume);
+    for (auto &elem : allSounds2D)
+        elem->SetSeparateVolume(volume);
 }
 
 void OpenALSoundSystem::SetGlobalVolume3D(f32 volume)
 {
-	globalVolume3D = volume;
+    globalVolume3D = volume;
 
-	for (auto & elem : allSounds3D)
-		elem->SetSeparateVolume(volume);
+    for (auto &elem : allSounds3D)
+        elem->SetSeparateVolume(volume);
 }
 
 void OpenALSoundSystem::StopAllSounds()
 {
-	for (auto & allSound : allSounds)
-		allSound->Stop();
+    for (auto &allSound : allSounds)
+        allSound->Stop();
 }
-

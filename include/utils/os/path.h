@@ -10,7 +10,6 @@ namespace os
 {
 namespace path
 {
-
 #if defined(_IRR_WINDOWS_API_)
 const fschar_t sep = '\\';
 #else
@@ -35,16 +34,18 @@ bool is_executable(const io::path &path);
 // Ensure a directory exists.
 // returns true if success or the directory already exists.
 // returns false if the directory cannot be created.
-// In Unix this is created with only read/write/execute permissions set for the current user.
+// In Unix this is created with only read/write/execute permissions set for the
+// current user.
 bool ensure_dir(const io::path &path);
 
 // Delete a file or directory.
-// Returns true if the file is successfully deleted OR if it didn't already exist.
-// Returns false if the file does exist but could not be deleted.
+// Returns true if the file is successfully deleted OR if it didn't already
+// exist. Returns false if the file does exist but could not be deleted.
 bool ensure_delete(const io::path &path);
 
 // Add a subdirectory or file to a path string using the correct OS separator.
-// subDir should be a single directory or file name and not contain any separator characters.
+// subDir should be a single directory or file name and not contain any
+// separator characters.
 io::path concat(const io::path &rootPath, const io::path &subDir);
 
 // Remove any trailing slashes from a path
@@ -88,9 +89,8 @@ io::path correctsep(io::path path);
 // Will return 0 in case of error (e.g. file not accessible or does not exist)
 u32 size(const io::path &path);
 
-}
-}
-}
+} // namespace path
+} // namespace os
+} // namespace utils
 
 #endif
-

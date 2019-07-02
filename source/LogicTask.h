@@ -4,7 +4,7 @@
 class LogicTask : public Task
 {
 public:
-	LogicTask();
-	
-	void Update(f32 dt) override;
+    LogicTask();
+
+    void Update(f32 dt) override;
 };

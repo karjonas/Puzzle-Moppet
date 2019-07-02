@@ -7,7 +7,7 @@
 class IRotationController : public IController
 {
 public:
-	virtual ~IRotationController(){}
+    virtual ~IRotationController() {}
 };
 
 #endif
