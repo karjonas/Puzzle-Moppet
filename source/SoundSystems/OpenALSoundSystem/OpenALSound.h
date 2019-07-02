@@ -28,7 +28,7 @@ public:
     OpenALSound(OpenALSoundSystem *soundSystem);
     ~OpenALSound();
 
-    void Play(const c8 *soundFile) override;
+    void Play(const core::stringc &soundFile) override;
 
     void Stop() override;
     void SetIsLooped(bool loop) override;

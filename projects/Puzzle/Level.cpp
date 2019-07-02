@@ -9,7 +9,7 @@
 #include "GridBasedCharacterController.h"
 #include "RotateToAnimator.h"
 
-#include "GlobalDefines.h"
+#include "utils/paths.h"
 #include <algorithm>
 
 std::map<core::stringc, f32> lowestPointCache;
@@ -1253,7 +1253,8 @@ void Level::CreateObject(core::vector3di mapCoord, E_OBJECT_TYPE type)
         mesh->AddChild(soundSource);
         soundSource->GetSound()->SetIsLooped(true);
         soundSource->GetSound()->SetVolume(0.5);
-        soundSource->GetSound()->Play(SFX_DIR "/buttonflutter_micro.ogg");
+        soundSource->GetSound()->Play(
+            paths::get_sfx("buttonflutter_micro.ogg"));
         soundSource->ApplyTransformNow();
 
         // orb bob up and down..
@@ -1279,8 +1280,8 @@ void Level::CreateObject(core::vector3di mapCoord, E_OBJECT_TYPE type)
 
         IMotionSensor *motionSensor = world->AddSoundMotionSensor(
             // I need a search path manager thing.
-            SFX_DIR "/hithard.ogg", SFX_DIR "/hithard.ogg",
-            SFX_DIR "/liftrun.ogg");
+            paths::get_sfx("hithard.ogg"), paths::get_sfx("hithard.ogg"),
+            paths::get_sfx("liftrun.ogg"));
         motionSensor->EnableInitialEvents(false);
         motionSensor->SetAveragingCount(5);
         mesh->AddChild(motionSensor);
@@ -1405,9 +1406,9 @@ void Level::PlayerPushed(core::vector3di mapCoord, core::vector3di pushVec)
         sound->SetPosition(GetPosFromCoord(mapCoord));
 
         if (isBalloon)
-            sound->Play(SFX_DIR"/balloonpush.ogg");
+                    sound->Play(paths::get_sfx("balloonpush.ogg"));
         else
-            sound->Play(SFX_DIR"/slide.ogg");
+                    sound->Play(paths::get_sfx("slide.ogg"));
 
         core::vector3di below = mapCoord + core::vector3di(0,-1,0);
 
@@ -1655,7 +1656,7 @@ void Level::CreatePlayer(core::vector3di mapCoord)
             // I need a search path manager thing.
             NULL,
             NULL,
-            SFX_DIR"/step.ogg");
+                    paths::get_sfx("step.ogg"));
     motionSensor->EnableInitialEvents(false);
     motionSensor->SetAveragingCount(5);
     motionSensor->SetMinTranslateSpeed(0.01);
@@ -1885,12 +1886,8 @@ Level::Level(MainState *mainState, core::stringc fileName,
         Load();
 
         // Then load tutorial texts.
-
-#ifdef __APPLE__
-        io::path tutorialFileName = DATA_DIR "/tutorialtexts_mac/";
-#else
-        io::path tutorialFileName = DATA_DIR "/tutorialtexts/";
-#endif
+        io::path tutorialFileName = paths::get_tutorial_texts_dir();
+        tutorialFileName += "/";
         tutorialFileName += os::path::splitext(GetShortName())[0];
         tutorialFileName += ".ini";
 
@@ -2417,9 +2414,9 @@ void Level::OnEvent(const Event &event)
             sound->SetPosition(GetPosFromCoord(pushStartLoc));
 
             if (isBalloon)
-                sound->Play(SFX_DIR"/balloonpush.ogg");
-            else
-                sound->Play(SFX_DIR"/slide.ogg");
+                        sound->Play(paths::get_sfx("balloonpush.ogg"));
+                else
+                        sound->Play(paths::get_sfx("slide.ogg"));
         }
         else
         {
@@ -2885,7 +2882,7 @@ void Level::TouchedEndLevelPortal(ITransformable *portal)
 
     // sound
     sound->SetPosition(portal->GetAbsolutePosition());
-    sound->Play(SFX_DIR "/bell.ogg");
+    sound->Play(paths::get_sfx("bell.ogg"));
 
     // Player teleport effect
     for (u32 i = 0; i < 40; i++)
@@ -3246,7 +3243,7 @@ void Level::Update(f32 dt)
             if (world->GetCameraController())
             {
                 // sound->SetPosition(playerPos);
-                // sound->Play(SFX_DIR"/fall.ogg");
+                // sound->Play(paths::get_sfx("fall.ogg"));
 
                 // GetPlayer()->SetRotation(core::vector3df(-90,180,0));
                 GetPlayer()->SetAnimations(ANIM_FALL, -1);
@@ -3443,9 +3440,9 @@ void Level::Update(f32 dt)
         if (!footStepSound->IsPlaying() || changedFootStepSoundType)
         {
             if (objectBelowPlayer == EOT_BALLOON)
-                footStepSound->Play(SFX_DIR "/stepballoon.ogg");
+                footStepSound->Play(paths::get_sfx("stepballoon.ogg"));
             else
-                footStepSound->Play(SFX_DIR "/step.ogg");
+                footStepSound->Play(paths::get_sfx("step.ogg"));
         }
     }
     else
@@ -3611,9 +3608,9 @@ void Level::Update(f32 dt)
             sound->SetPosition(GetPosFromCoord(pushStartLoc));
 
             if (isBalloon)
-                sound->Play(SFX_DIR "/balloonpush.ogg");
+                sound->Play(paths::get_sfx("balloonpush.ogg"));
             else
-                sound->Play(SFX_DIR "/slide.ogg");
+                sound->Play(paths::get_sfx("slide.ogg"));
 
             // To fix a glitch.
             wasPlayerPush = true;

@@ -1,5 +1,5 @@
 #include "level_stats.h"
-#include "GlobalDefines.h"
+#include "utils/paths.h"
 
 const char *resultTexts[7] = {"Awful",   "Fair",           "Good", "Excellent",
                               "Perfect", "EXTRAORDINARY!", "???"};
@@ -71,11 +71,10 @@ VariantMap stats_to_map(const LevelStats &stats)
 
 E_SCORE_RESULT get_saved_score(const core::stringc &levelName)
 {
-    core::stringc shortScoreFile = os::path::splitext(levelName)[0] + ".ini";
-    core::stringc perfectScoreFile =
-        io::path(DATA_DIR "/perfectscores/") + shortScoreFile;
+    core::stringc perfectScoreFile = paths::get_perfect_score_file(levelName);
     core::stringc saveScoreFile =
-        os::path::concat(getsavescoredir(), shortScoreFile);
+        paths::get_save_score_file(GetEngine()->GetLocalSettingsDir(),
+                                   levelName);
 
     // Get perfect stats
 
@@ -94,17 +93,22 @@ E_SCORE_RESULT get_saved_score(const core::stringc &levelName)
     s32 perfectScore = get_score(perfectStats);
 
     // Get saved stats
-
     VariantMap savedStatsMap = file::loadsettings(saveScoreFile);
 
     if (savedStatsMap.size() != 0)
     {
+        NOTE << "Loaded saved scores from " << saveScoreFile;
+
         // was some saved stats
         LevelStats savedStats = map_to_stats(savedStatsMap);
 
         s32 savedScore = get_score(savedStats);
 
         return calc_score_result(savedScore, perfectScore);
+    }
+    else
+    {
+        WARN << "Failed to load savedscores from " << saveScoreFile;
     }
 
     return ESR_UNKNOWN;
@@ -122,7 +126,7 @@ E_SCORE_RESULT input_score(const core::stringc &levelName,
 
     core::stringc shortScoreFile = os::path::splitext(levelName)[0] + ".ini";
     core::stringc perfectScoreFile =
-        io::path(DATA_DIR "/perfectscores/") + shortScoreFile;
+        io::path(paths::get_data_dir() + "/perfectscores/") + shortScoreFile;
     core::stringc saveScoreFile =
         os::path::concat(saveScoreDir, shortScoreFile);
 

@@ -13,8 +13,10 @@ class SoundMotionCallback : public IMotionCallback
 
 public:
     // all sounds should be optional.
-    SoundMotionCallback(ISoundSource *soundSource, const c8 *startSound,
-                        const c8 *stopSound, const c8 *motionLoopSound)
+    SoundMotionCallback(ISoundSource *soundSource,
+                        const core::stringc &startSound,
+                        const core::stringc &stopSound,
+                        const core::stringc &motionLoopSound)
     {
         this->startSound = startSound;
         this->stopSound = stopSound;

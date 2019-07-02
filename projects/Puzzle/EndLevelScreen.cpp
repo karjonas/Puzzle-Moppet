@@ -1,8 +1,8 @@
 #include "EndLevelScreen.h"
-#include "GlobalDefines.h"
 #include "MainState.h"
 #include "Level.h"
 #include "GUIPane.h"
+#include "utils/paths.h"
 
 const f32 timeBeforeShowing = 2.f;
 
@@ -238,7 +238,7 @@ void EndLevelScreen::OnEvent(const Event &event)
             fade->drop();
             fade->OnPostRender(0);
 
-            sound->Play(SFX_DIR "/appear.ogg");
+            sound->Play(paths::get_sfx("appear.ogg"));
         }
     }
     else if (event.IsType("EndLevelScreenListItemFinalScore"))
@@ -296,27 +296,27 @@ void EndLevelScreen::OnEvent(const Event &event)
             switch (scoreResult)
             {
             case ESR_AWFUL:
-                sound->Play(SFX_DIR "/laugh.ogg");
+                sound->Play(paths::get_sfx("laugh.ogg"));
                 break;
             case ESR_FAIR:
                 sound->SetVolume(0.15);
-                sound->Play(SFX_DIR "/fair.ogg");
+                sound->Play(paths::get_sfx("fair.ogg"));
                 break;
             case ESR_GOOD:
                 sound->SetVolume(0.15);
-                sound->Play(SFX_DIR "/good.ogg");
+                sound->Play(paths::get_sfx("good.ogg"));
                 break;
             case ESR_EXCELLENT:
                 sound->SetVolume(0.15);
-                sound->Play(SFX_DIR "/excellent.ogg");
+                sound->Play(paths::get_sfx("excellent.ogg"));
                 break;
             case ESR_PERFECT:
                 sound->SetVolume(0.25);
-                sound->Play(SFX_DIR "/perfect.ogg");
+                sound->Play(paths::get_sfx("perfect.ogg"));
                 break;
             case ESR_EXTRAORDINARY:
                 sound->SetVolume(0.25);
-                sound->Play(SFX_DIR "/extraordinary.ogg");
+                sound->Play(paths::get_sfx("extraordinary.ogg"));
                 break;
             default:
                 WARN << "Unknown score result.";

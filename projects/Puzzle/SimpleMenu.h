@@ -54,7 +54,7 @@ public:
     // and calculates their positions.
     virtual void Finalise();
 
-    virtual void SetMouseOverSound(const c8 *sound);
+    virtual void SetMouseOverSound(const core::stringc &sound);
 
     // Return the ID given when this menu was created.
     s32 GetId();

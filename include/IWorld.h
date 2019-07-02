@@ -102,9 +102,9 @@ public:
     // Creates a motion sensor with a callback implementation that runs a sound
     // when in motion. startSound, stopSound - sound played once on start/stop
     // motionLoop - sound played looped while in motion.
-    virtual IMotionSensor *AddSoundMotionSensor(const c8 *startSound,
-                                                const c8 *stopSound,
-                                                const c8 *motionLoopSound) = 0;
+    virtual IMotionSensor *AddSoundMotionSensor(
+        const core::stringc &startSound, const core::stringc &stopSound,
+        const core::stringc &motionLoopSound) = 0;
 
     virtual IInputProfile *CreateInputProfile(int buttonCount,
                                               int axesCount) = 0; // maybe move

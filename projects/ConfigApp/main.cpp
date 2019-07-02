@@ -3,7 +3,7 @@
 // This application shows a GUI for adjusting Litha Engine settings.
 
 #include "Litha.h"
-#include "GlobalDefines.h"
+#include "utils/paths.h"
 #include <vector>
 
 // This should be changed to match the other Litha Engine project's hard coded
@@ -294,7 +294,8 @@ int main(int argc, const char **argv)
 
     // Filesystem...
     // Irrlicht needs this so it can load textures from same dir as font xml.
-    engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(DATA_DIR);
+    engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(
+        paths::get_data_dir());
 
     // Show the cursor
     device->getCursorControl()->setVisible(true);
@@ -313,7 +314,7 @@ int main(int argc, const char **argv)
     FindGUIElementPointers();
 
     // Default font
-    guienv->getSkin()->setFont(guienv->getFont(FONT_DIR "/lucida.xml"));
+    guienv->getSkin()->setFont(guienv->getFont(paths::get_font("lucida.xml")));
 
     // Change background colour...
     engine->GetRenderSystem()->SetBackgroundCol(

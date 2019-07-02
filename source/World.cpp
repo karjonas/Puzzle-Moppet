@@ -281,9 +281,9 @@ IMotionSensor *World::AddMotionSensor()
     return ms;
 }
 
-IMotionSensor *World::AddSoundMotionSensor(const c8 *startSound,
-                                           const c8 *stopSound,
-                                           const c8 *motionLoopSound)
+IMotionSensor *World::AddSoundMotionSensor(const core::stringc &startSound,
+                                           const core::stringc &stopSound,
+                                           const core::stringc &motionLoopSound)
 {
     // A motion sensor with a sound source as a child.
     IMotionSensor *ms = AddMotionSensor();

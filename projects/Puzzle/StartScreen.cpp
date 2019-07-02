@@ -3,7 +3,7 @@
 #include "MainState.h"
 #include "Level.h"
 #include "options.h"
-#include "GlobalDefines.h"
+#include "utils/paths.h"
 
 extern ISound *bgAmbientSound;
 extern core::stringc globalLogFurthestLevel;
@@ -92,7 +92,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
         }
     }
 
-    levelTitles = file::loadsettings(DATA_DIR "/levels/level_names.ini");
+    levelTitles = file::loadsettings(paths::get_levels_name_file());
 
     // ensure a furthest level file exists (e.g. from old version that didn't
     // have one)
@@ -210,7 +210,7 @@ void StartScreen::CreateFirstMenu()
 
     menu->AddItem("Options", EMI_OPTIONS);
     menu->AddItem("Exit", EMI_EXIT);
-    menu->SetMouseOverSound(SFX_DIR "/beep.ogg");
+    menu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     menu->Finalise();
 
     // level selector
@@ -265,7 +265,7 @@ void StartScreen::CreateLevelSelectButtons()
         }
 
         // menuLevelSelect->SetHeading(levelTitle);
-        menuLevelSelect->SetMouseOverSound(SFX_DIR "/beep.ogg");
+        menuLevelSelect->SetMouseOverSound(paths::get_sfx("beep.ogg"));
         menuLevelSelect->Finalise();
 
         // level name
@@ -487,7 +487,7 @@ StartScreen::~StartScreen()
 void StartScreen::AndSoItBegins()
 {
     // bgAmbientSound->SetVolume(0.035);
-    // bgAmbientSound->Play(SFX_DIR"/windy.ogg");
+    // bgAmbientSound->Play(paths::get_sfx("windy.ogg"));
 
     device->getCursorControl()->setVisible(false);
 
@@ -655,7 +655,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
                           (settings["musicVolume"] == 0 ? "Off" : "On"),
                       EMI_OPTIONS_MUSIC_VOLUME);
 
-    vertMenu->SetMouseOverSound(SFX_DIR "/beep.ogg");
+    vertMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     vertMenu->Finalise();
     optionsMenus.push_back(vertMenu);
 
@@ -699,7 +699,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
         25, false);
     horizMenu->AddItem("Cancel", EMI_OPTIONS_CANCEL);
     horizMenu->AddItem("Apply", EMI_OPTIONS_OK);
-    horizMenu->SetMouseOverSound(SFX_DIR "/beep.ogg");
+    horizMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     horizMenu->Finalise();
     optionsMenus.push_back(horizMenu);
 
@@ -831,7 +831,7 @@ void StartScreen::OnEvent(const Event &event)
                 menu = horizMenu;
                 menu->AddItem("Cancel", EMI_NEW_GAME_NO);
                 menu->AddItem("Start New Game", EMI_NEW_GAME_YES);
-                menu->SetMouseOverSound(SFX_DIR "/beep.ogg");
+                menu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
                 menu->Finalise();
             }
         }
@@ -985,7 +985,7 @@ void StartScreen::OnEvent(const Event &event)
                 mat.rotateVect(offset, dist);
 
                 sound->SetPosition(world->GetCamera()->GetPosition() + offset);
-                sound->Play(SFX_DIR "/balloonpush.ogg");
+                sound->Play(paths::get_sfx("balloonpush.ogg"));
             }
             else if (event["button"] == EMI_OPTIONS_MOVEMENT)
             {

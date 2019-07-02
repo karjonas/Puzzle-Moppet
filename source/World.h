@@ -82,9 +82,9 @@ public:
 
     IMotionSensor *AddMotionSensor() override;
 
-    IMotionSensor *AddSoundMotionSensor(const c8 *startSound,
-                                        const c8 *stopSound,
-                                        const c8 *motionLoopSound) override;
+    IMotionSensor *AddSoundMotionSensor(
+        const core::stringc &startSound, const core::stringc &stopSound,
+        const core::stringc &motionLoopSound) override;
 
     IInputProfile *CreateInputProfile(int buttonCount, int axesCount) override;
 

@@ -13,7 +13,7 @@ public:
     // Plays the specified sound file, starting at the beginning.
     // Note that this does not clear the pause state; if you previously paused
     // the sound you will need to call Resume before it will begin playing.
-    virtual void Play(const c8 *soundFile) = 0;
+    virtual void Play(const core::stringc& soundFile) = 0;
 
     // End playback of the sound.
     // Has no effect if the sound is not playing.

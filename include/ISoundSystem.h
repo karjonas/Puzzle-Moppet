@@ -23,7 +23,7 @@ public:
 
     // Preload a sound. So when later calling ISound.Play for this, there
     // shouldn't be any delay.
-    virtual void PreloadSound(const c8 *soundFile) = 0;
+    virtual void PreloadSound(const core::stringc &soundFile) = 0;
 
     // Used internally to set the listener position.
     virtual void SetListenerPosition(core::vector3df pos) = 0;

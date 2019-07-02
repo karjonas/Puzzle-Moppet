@@ -19,7 +19,7 @@ public:
 
     bool GetOpenALBuffer(const core::stringc &fileName, ALuint *buffer);
 
-    void PreloadSound(const c8 *soundFile) override;
+    void PreloadSound(const core::stringc &soundFile) override;
 
     void SetListenerPosition(core::vector3df pos) override;
     void SetListenerOrientation(core::vector3df lookVec,

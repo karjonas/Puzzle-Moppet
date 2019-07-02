@@ -208,12 +208,12 @@ bool OpenALSoundSystem::GetOpenALBuffer(const core::stringc &fileName,
     return false;
 }
 
-void OpenALSoundSystem::PreloadSound(const c8 *soundFile)
+void OpenALSoundSystem::PreloadSound(const core::stringc &soundFile)
 {
     ALuint buffer;
 
-    if (!GetOpenALBuffer(soundFile, &buffer))
-        WARN << "Could not get buffer (" << soundFile << ")";
+    if (!GetOpenALBuffer(soundFile.c_str(), &buffer))
+        WARN << "Could not get buffer (" << soundFile.c_str() << ")";
 }
 
 void OpenALSoundSystem::SetListenerPosition(core::vector3df pos)

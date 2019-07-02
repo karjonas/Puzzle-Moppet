@@ -36,7 +36,7 @@ OpenALSound::~OpenALSound()
     sourceCounter--;
 }
 
-void OpenALSound::Play(const c8 *soundFile)
+void OpenALSound::Play(const core::stringc& soundFile)
 {
     Stop();
 
@@ -44,9 +44,9 @@ void OpenALSound::Play(const c8 *soundFile)
 
     ALuint buffer;
 
-    if (!soundSystem->GetOpenALBuffer(soundFile, &buffer))
+    if (!soundSystem->GetOpenALBuffer(soundFile.c_str(), &buffer))
     {
-        WARN << "Could not get buffer (" << soundFile << ")";
+        WARN << "Could not get buffer (" << soundFile.c_str() << ")";
         return;
     }
 

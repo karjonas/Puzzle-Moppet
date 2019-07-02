@@ -82,7 +82,7 @@ void SimpleMenu::Finalise()
     engine->PostEvent(event);
 }
 
-void SimpleMenu::SetMouseOverSound(const c8 *sound)
+void SimpleMenu::SetMouseOverSound(const core::stringc &sound)
 {
     mouseOverSound = sound;
 }
@@ -144,7 +144,7 @@ void SimpleMenu::OnEvent(const Event &event)
                         {
                             if (mouseOverSound.size() &&
                                 !event.HasKey("SimpleMenu::Finalise"))
-                                menuSound->Play(mouseOverSound.c_str());
+                                menuSound->Play(mouseOverSound);
                         }
 
                         textElement->setOverrideColor(TEXT_COL_MOUSEOVER);
@@ -167,7 +167,7 @@ void SimpleMenu::OnEvent(const Event &event)
                         {
                             if (mouseOverSound.size() &&
                                 !event.HasKey("SimpleMenu::Finalise"))
-                                menuSound->Play(mouseOverSound.c_str());
+                                menuSound->Play(mouseOverSound);
                         }
 
                         imageElement->setColor(

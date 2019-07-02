@@ -7,7 +7,7 @@
 #include "FinalScenePlayerProxy.h"
 #include "StartScreen.h"
 #include "level_stats.h"
-#include "GlobalDefines.h"
+#include "utils/paths.h"
 
 extern ISound *bgAmbientSound;
 extern ISound *bgMusic;
@@ -22,13 +22,10 @@ extern core::vector3df sunDirection;
 #define TEXT_COL video::SColor(150, 255, 255, 255)
 #define TEXT_COL_MOUSEOVER video::SColor(100, 200, 200, 200)
 
-#define LEVEL_LIST_FILE DATA_DIR "/levels/levels.list"
-#define LEVEL_BASE_PATH DATA_DIR "/levels/levels"
-
 // gets the full path to a level file, relative to the executable's directory
 core::stringc level_path_rel_exe(core::stringc levelFile)
 {
-    core::stringc result = core::stringc(LEVEL_BASE_PATH "/") + levelFile;
+    core::stringc result = paths::get_level(levelFile);
 
     /*
 
@@ -103,7 +100,7 @@ std::vector<core::stringc> find_levels()
 {
     std::vector<core::stringc> levelFileNames;
 
-    std::vector<core::stringc> lines = get_lines(LEVEL_LIST_FILE);
+    std::vector<core::stringc> lines = get_lines(paths::get_levels_list_file());
 
     for (auto &line : lines)
     {
@@ -227,7 +224,7 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
                           ->getScreenSize()
                           .Width;
 
-    gui::IGUIFont *font = guienv->getFont(FONT_DIR "/font2.xml");
+    gui::IGUIFont *font = guienv->getFont(paths::get_font("font2.xml"));
 
     core::dimension2du dim = font->getDimension(str);
 
@@ -242,7 +239,7 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
                               core::recti((nbLines > 1 ? 10 : 0), 0, dim.Width,
                                           dim.Height * nbLines),
                               false, true);
-    textElement->setOverrideFont(guienv->getFont(FONT_DIR "/font2.xml"));
+    textElement->setOverrideFont(guienv->getFont(paths::get_font("font2.xml")));
     textElement->setOverrideColor(TEXT_COL);
     return textElement;
 }
@@ -252,14 +249,15 @@ gui::IGUIStaticText *add_static_text2(const wchar_t *str)
     gui::IGUIEnvironment *guienv =
         GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
 
-    gui::IGUIFont *font = guienv->getFont(FONT_DIR "/fontlarge2.xml");
+    gui::IGUIFont *font = guienv->getFont(paths::get_font("fontlarge2.xml"));
 
     core::dimension2du dim = font->getDimension(str);
 
     gui::IGUIStaticText *textElement =
         guienv->addStaticText(str, core::recti(0, 0, dim.Width, dim.Height),
                               false, false);
-    textElement->setOverrideFont(guienv->getFont(FONT_DIR "/fontlarge2.xml"));
+    textElement->setOverrideFont(
+        guienv->getFont(paths::get_font("fontlarge2.xml")));
     textElement->setOverrideColor(TEXT_COL);
     return textElement;
 }
@@ -291,7 +289,7 @@ MainState::MainState(MainState **mainStatePtrLoc)
     levelFileNames = find_levels();
 
     // New: read some descriptive level titles.
-    levelTitles = file::loadsettings(LEVEL_BASE_PATH "/level_names.ini");
+    levelTitles = file::loadsettings(paths::get_levels_name_file());
 
     // general events
     engine->RegisterEventInterest(this, "ButtonDown");
@@ -554,7 +552,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor,
             finalSceneSea->SetIsLooped(true);
             finalSceneSea->SetVolume(15.0);
             finalSceneSea->SetPosition(core::vector3df(-50, 0, 0));
-            finalSceneSea->Play(SFX_DIR "/sea.ogg");
+            finalSceneSea->Play(paths::get_sfx("sea.ogg"));
         }
 
         // Different sky box
@@ -1412,7 +1410,7 @@ void MainState::OnEvent(const Event &event)
                 if (element == mouseOverElement)
                 {
                     if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
-                        menuSound->Play(SFX_DIR "/beep.ogg");
+                        menuSound->Play(paths::get_sfx("beep.ogg"));
 
                     textElement->setOverrideColor(TEXT_COL_MOUSEOVER);
                 }

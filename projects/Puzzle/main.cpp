@@ -1,8 +1,8 @@
 #include "Litha.h"
 #include "MainState.h"
 #include "StartScreen.h"
+#include "utils/paths.h"
 #include "volume.h"
-#include "GlobalDefines.h"
 
 // oh no another global
 ISound *bgAmbientSound = nullptr;
@@ -109,7 +109,8 @@ int main(int argc, const char **argv)
 
     IEngine *engine = CreateEngine(argc, argv, &settings);
 
-    engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(MEDIA_DIR);
+    engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(
+        paths::get_media_dir());
 
     IWorld *world = engine->GetWorld();
     IRenderSystem *renderSystem = engine->GetRenderSystem();
@@ -303,37 +304,37 @@ int main(int argc, const char **argv)
     {
         gui::IGUIEnvironment *guienv =
             engine->GetIrrlichtDevice()->getGUIEnvironment();
-        guienv->getFont(FONT_DIR "font2.xml");
-        guienv->getFont(FONT_DIR "fontlarge2.xml");
+        guienv->getFont(paths::get_font("font2.xml"));
+        guienv->getFont(paths::get_font("fontlarge2.xml"));
     }
 
     // Sounds
     {
         ISoundSystem *soundSystem = engine->GetSoundSystem();
-        soundSystem->PreloadSound(SFX_DIR "/sea.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/beep.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/fallblock.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/buttonflutter_micro.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/hithard.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/liftrun.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/balloonpush.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/slide.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/windy.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/speedcore.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/bell.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/stepballoon.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/step.ogg");
+        soundSystem->PreloadSound(paths::get_sfx("sea.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("beep.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("fallblock.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("buttonflutter_micro.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("hithard.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("liftrun.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("balloonpush.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("slide.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("windy.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("speedcore.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("bell.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("stepballoon.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("step.ogg"));
 
-        soundSystem->PreloadSound(SFX_DIR "/appear.ogg");
+        soundSystem->PreloadSound(paths::get_sfx("appear.ogg"));
 
-        soundSystem->PreloadSound(SFX_DIR "/laugh.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/fair.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/good.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/excellent.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/perfect.ogg");
-        soundSystem->PreloadSound(SFX_DIR "/extraordinary.ogg");
+        soundSystem->PreloadSound(paths::get_sfx("laugh.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("fair.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("good.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("excellent.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("perfect.ogg"));
+        soundSystem->PreloadSound(paths::get_sfx("extraordinary.ogg"));
 
-        // soundSystem->PreloadSound(MEDIA_DIR"/music.ogg");
+        // soundSystem->PreloadSound(paths::get_sfx("music.ogg"));
     }
 
     // Shaders!?
@@ -375,8 +376,8 @@ int main(int argc, const char **argv)
     // Load sfx volume
     set_volumes_from_settings(engine->GetCreationSettings());
 
-    bgAmbientSound->Play(SFX_DIR "/windy.ogg");
-    bgMusic->Play(SFX_DIR "/speedcore.ogg");
+    bgAmbientSound->Play(paths::get_sfx("windy.ogg"));
+    bgMusic->Play(paths::get_sfx("speedcore.ogg"));
 
     // load default movement type
     {
