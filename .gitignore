@@ -10,6 +10,7 @@ CMakeFiles
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+build
 
 # Emacs files 
 #
@@ -31,3 +32,12 @@ puzzlemoppet/install_manifest.txt
 
 # Other IDE related files
 nbproject
+
+# QT Creator
+*.cflags
+*.config
+*.creator
+*.creator.user
+*.cxxflags
+*.files
+*.includes
