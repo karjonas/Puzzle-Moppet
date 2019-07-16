@@ -41,3 +41,8 @@ nbproject
 *.cxxflags
 *.files
 *.includes
+
+# AppImage
+*.AppImage
+
+
