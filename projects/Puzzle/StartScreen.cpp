@@ -651,10 +651,6 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     vertMenu->AddItem(core::stringw("Invert mouse: ") + mouseInvertStr,
                       EMI_OPTIONS_MOUSE_INVERT);
 
-    vertMenu->AddItem(core::stringw("Speedcore: ") +
-                          (settings["musicVolume"] == 0 ? "Off" : "On"),
-                      EMI_OPTIONS_MUSIC_VOLUME);
-
     vertMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     vertMenu->Finalise();
     optionsMenus.push_back(vertMenu);

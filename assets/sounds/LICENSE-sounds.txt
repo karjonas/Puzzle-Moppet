@@ -101,11 +101,6 @@ slide.flac
   source: http://www.freesound.org/people/UATaudio/sounds/31153/
   notes: edited by qubodup <qubodup@gmail.com>
 
-speedcore.flac
-  author:
-  license:
-  source: 
-
 stepballoon.flac
   author:hyo <http://www.freesound.org/people/hyo/>
   license: CCBY3

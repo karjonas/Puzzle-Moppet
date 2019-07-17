@@ -320,7 +320,6 @@ int main(int argc, const char **argv)
         soundSystem->PreloadSound(paths::get_sfx("balloonpush.ogg"));
         soundSystem->PreloadSound(paths::get_sfx("slide.ogg"));
         soundSystem->PreloadSound(paths::get_sfx("windy.ogg"));
-        soundSystem->PreloadSound(paths::get_sfx("speedcore.ogg"));
         soundSystem->PreloadSound(paths::get_sfx("bell.ogg"));
         soundSystem->PreloadSound(paths::get_sfx("stepballoon.ogg"));
         soundSystem->PreloadSound(paths::get_sfx("step.ogg"));
@@ -377,7 +376,6 @@ int main(int argc, const char **argv)
     set_volumes_from_settings(engine->GetCreationSettings());
 
     bgAmbientSound->Play(paths::get_sfx("windy.ogg"));
-    bgMusic->Play(paths::get_sfx("speedcore.ogg"));
 
     // load default movement type
     {
