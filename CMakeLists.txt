@@ -1,15 +1,15 @@
 project(LithaEngine)
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.1)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_EXPORT_COMPILE_COMMANDS)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # find-pkg is used to select -DdSINGLE or -DdDOUBLE for ODE
 INCLUDE(FindPkgConfig)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -std=c++11")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O0 -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O2")
 
 set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in install path")
 set(DATA_DIR ${PROJECT_SOURCE_DIR}/data CACHE PATH "Directory for game data")
