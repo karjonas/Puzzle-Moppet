@@ -68,16 +68,9 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # (actually some of these probably aren't required by both...)
 
 # Irrlicht
-find_package(Irrlicht REQUIRED)
+find_package(Irrlicht REQUIRED 1.7)
 message ("Using Irrlicht version " ${IRRLICHT_VERSION})
-if (${IRRLICHT_VERSION} MATCHES "1.6.1")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DIRRLICHT_VERSION=161")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DIRRLICHT_VERSION=161")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DIRRLICHT_VERSION=161")
-endif (${IRRLICHT_VERSION} MATCHES "1.6.1")
-
 include_directories(${rootDir} ${rootDir}/include ${IRRLICHT_INCLUDE_DIRS})
-
 
 ########## LITHA ENGINE CONFIG ########
 
@@ -87,8 +80,6 @@ set(LIBRARY_OUTPUT_PATH ${rootDir}/lib/${lithaTargetName})
 # Compile litha engine...
 # (specific libraries needed only by Litha engine are set in this directory's CMakeLists.txt)
 add_subdirectory(source)
-
-
 
 ########### PROJECTS CONFIG ############
 
