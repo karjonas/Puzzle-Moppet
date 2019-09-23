@@ -137,7 +137,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
     CreateFirstMenu();
 
     // bgAmbientSound->SetVolume(0.05);
-    // bgAmbientSound->Play(DATA_DIR"/media/music.ogg");
+    // bgAmbientSound->Play(paths::get_media_dir()+"/music.ogg");
 }
 
 void StartScreen::CreatePreviewLevel(core::stringc previewLevelName)
@@ -415,30 +415,9 @@ void StartScreen::CreateLevelSelectButtons()
             else // found!
             {
                 core::stringw str = L"Puzzle ";
-                /*
-                str += i+1;
-                str += L"/";
-                str += levelFileNames.size();
-                */
-
                 str += i + 1;
                 str += L" of ";
-
-                // If full version, we use the level file count from the level
-                // list. We also save it to disk. This keeps the count up to
-                // date for the trial version.
-                core::stringc count;
-                count += s32(levelFileNames.size());
-
-                file::put(DATA_DIR "/levels/levelcount.ini", count);
-
-                str += count;
-
-                /*
-                str += (f32(i+1) / f32(levelFileNames.size())) * 100.f;
-                str = str.subString(0,2);
-                str += "%";
-                */
+                str += levelFileNames.size();
 
                 levelFractionText = add_static_text(str.c_str());
 
