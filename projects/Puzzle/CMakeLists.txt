@@ -1,8 +1,4 @@
-# Only things that need changing here.
-
-set(projectName puzzlemoppet)
-
-set(sourceFiles
+add_executable(puzzlemoppet
 main.cpp
 Level.cpp
 Map.cpp
@@ -21,12 +17,6 @@ volume.cpp
 options.cpp
 )
 
+target_link_libraries(puzzlemoppet Litha)
 
-# No need to modify these lines.
-add_executable(${projectName} ${sourceFiles})
-if (projectProperties)
-	set_target_properties(${projectName} ${projectProperties})
-endif (projectProperties)
-target_link_libraries(${projectName} ${projectLibs})
-
-install(TARGETS ${projectName} RUNTIME DESTINATION bin)
+install(TARGETS puzzlemoppet RUNTIME DESTINATION bin)

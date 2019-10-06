@@ -1,3 +1,7 @@
+find_package(irrlicht CONFIG REQUIRED 1.7)
+find_package(OpenAL CONFIG REQUIRED)
+find_package(ode CONFIG REQUIRED)
+
 add_library(Litha STATIC
     # C++ files
     Animators/BobAnimator.cpp
@@ -52,26 +56,19 @@ add_library(Litha STATIC
     # C files
     SoundSystems/OpenALSoundSystem/stb_vorbis.c)
 
+target_link_libraries(Litha
+    Irrlicht
+    OpenAL::OpenAL
+    ODE::ODE
+    )
+
 target_include_directories(Litha PUBLIC
-    ./
+    ${CMAKE_SOURCE_DIR}/include
+    .
     Animators
     Physics
     SoundSystems
     SoundSystems/OpenALSoundSystem
     utils
-    utils/os)
-
-target_link_libraries(Litha ${IRRLICHT_LIBRARIES})
-
-if (WIN32)
-	target_link_libraries(Litha ode OpenAL32)
-endif (WIN32)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	target_link_libraries(Litha ode openal)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	target_link_libraries(Litha ode /System/Library/Frameworks/OpenAL.framework/OpenAL /System/Library/Frameworks/OpenGL.framework/OpenGL /System/Library/Frameworks/Cocoa.framework/Cocoa /System/Library/Frameworks/Carbon.framework/Carbon /System/Library/Frameworks/IOKit.framework/IOKit)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
+    utils/os
+    )

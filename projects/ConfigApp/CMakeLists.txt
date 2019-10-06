@@ -1,18 +1,5 @@
-
-# Only things that need changing here.
-
-set(projectName config)
-
-set(sourceFiles
+add_executable(config
 main.cpp
 )
 
-
-# No need to modify these lines.
-add_executable(${projectName} ${sourceFiles})
-if (projectProperties)
-	set_target_properties(${projectName} ${projectProperties})
-endif (projectProperties)
-target_link_libraries(${projectName} ${projectLibs})
-
-
+target_link_libraries(config Litha)
