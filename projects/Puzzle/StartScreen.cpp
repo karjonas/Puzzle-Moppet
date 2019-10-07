@@ -5,6 +5,8 @@
 #include "options.h"
 #include "utils/paths.h"
 
+#include <string>
+
 extern ISound *bgAmbientSound;
 extern core::stringc globalLogFurthestLevel;
 
@@ -414,11 +416,9 @@ void StartScreen::CreateLevelSelectButtons()
             }
             else // found!
             {
-                core::stringw str = L"Puzzle ";
-                str += i + 1;
-                str += L" of ";
-                str += levelFileNames.size();
-
+                const std::wstring str = L"Puzzle " + std::to_wstring(i + 1) +
+                                         L" of " +
+                                         std::to_wstring(levelFileNames.size());
                 levelFractionText = add_static_text(str.c_str());
 
                 s32 yGap = -2;
