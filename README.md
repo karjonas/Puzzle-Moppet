@@ -14,33 +14,39 @@ Requirements
 ------------
 
 - CMake
-- Irrlicht  http://irrlicht.sourceforge.net/downloads/
+- git
+- vcpkg, https://github.com/microsoft/vcpkg/
+- Irrlicht, http://irrlicht.sourceforge.net/downloads/
 - ODE, http://www.ode.org/
 - OpenAL, http://connect.creativelabs.com/openal/default.aspx
 
-If in GNU/Linux search for the required libraries using your package manager.
-
 Distribution specific instructions
 ----------------------------------
+
+
 Ubuntu:
 
-    sudo apt-get install build-essential cmake libode-dev libopenal-dev libxxf86vm-dev libirrlicht-dev
+    sudo apt-get install build-essential cmake libxxf86vm-dev
 
-Arch Linux:
 
-To build and install automatically use the PKGBUILD available at https://aur.archlinux.org/packages/puzzlemoppet-git
+Dependencies
+------------
 
-If you want to build it manually then install the dependencies:
+Install vcpkg and the dependencies:
 
-    sudo pacman -S ode irrlicht openal cmake
+    git clone https://github.com/microsoft/vcpkg.git
+    cd vcpkg
+    ./bootstrap-vcpkg.sh
+    ./vcpkg install irrlicht ode openal-soft
 
 
 Building the Game
 -----------------
-Open a terminal/console window, navigate to the project folder and change into the 
-/puzzlemoppet directory. Run CMake and then Make:
+Open a terminal/console window, navigate to the project folder. Replace <VCPKG_DIR> with the vcpkg path, then run CMake and then Make:
 
-    cmake .
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_TOOLCHAIN_FILE=<VCPKG_DIR>/scripts/buildsystems/vcpkg.cmake
     make
 
 To "install" the game (i.e. use make install):
@@ -74,15 +80,14 @@ Other cmake options
 Running the game
 ----------------
 
-    cd $BASEDIR/puzzlemoppet/bin/
-    ./puzzlemoppet
+    ./projects/Puzzle/bin/puzzlemoppet
 
 Running the editor
 ------------------
 
 Run the executable with command line parameter "-e" followed by a level name to invoke the editor:
 
-    ./puzzlemoppet -e level_name.lev
+    ./projects/Puzzle/bin/puzzlemoppet -e level_name.lev
 
 where level_name.lev is either one of the levels in the "projects\Puzzle\levels\levels" directory or a completely new name to create a new level).
 
@@ -97,7 +102,7 @@ Controls:
 
 To run a specific level omit the -e flag:
 
-    ./puzzlemoppet level_name.lev
+    ./projects/Puzzle/bin/puzzlemoppet level_name.lev
 
 License Information
 -------------------
