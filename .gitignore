@@ -44,5 +44,5 @@ nbproject
 
 # AppImage
 *.AppImage
-
+vcpkg
 
