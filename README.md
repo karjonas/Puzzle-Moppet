@@ -114,27 +114,3 @@ Please see specific license files in /puzzlemoppet/licenses.
 Except otherwise noted, source files are released under WTFPL, version 2.0. 
 Game assets are released under a free license, usually CCBYSA3 or GPLv3+. Asset 
 files created by Daniel Frith (original author) are released under WTFPL.
-
-Other Notes (from Daniel Frith)
--------------------------------
-
-Some minor patches were made to the Irrlicht 1.6.1 source code which have since 
-been *lost*. The ones I remember are:
-
-- An opengl tweak to fix the sea's transparency in the final scene of the game, 
-in COpenGLMaterialRenderer.h:
-
-    COpenGLMaterialRenderer_TRANSPARENT_REFLECTION_2_LAYER::OnSetMaterial
-    
-    change 
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR) 
-    to
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        
-
-- In GNU Linux, changing to use XRandR rather than XVidMode fixed an occasional 
-fullscreen freezing problem.
-
-- Some modifications to the OS X device, to do with it crashing at certain screen 
-sizes, see irrlicht.sourceforge.net/forum/viewtopic.php?t=40211#p254941
-
