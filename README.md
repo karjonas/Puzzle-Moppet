@@ -1,6 +1,8 @@
 Puzzle Moppet
 ===================
 
+![Screenshots](banner.png)
+
 A challenging 3D puzzle game where you must guide the Moppet through the vast 
 and eternal void of space by solving the various and beautiful puzzles thrown 
 at you.
