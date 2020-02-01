@@ -480,10 +480,8 @@ void Level::ApplyPlainAlphaShaders(IMesh *mesh, u8 alpha)
             mesh->SetShader(i, shader);
             shader->drop();
         }
-        else
-        {
-            material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
-        }
+
+        material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
     }
 }
 
