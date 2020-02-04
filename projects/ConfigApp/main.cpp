@@ -1,10 +1,15 @@
-
-// CONFIGURATION UTILITY
-// This application shows a GUI for adjusting Litha Engine settings.
-
 #include "Litha.h"
 #include "utils/paths.h"
-#include <vector>
+
+#include <irrlicht.h>
+
+using namespace irr;
+
+using namespace core;
+using namespace scene;
+using namespace video;
+using namespace io;
+using namespace gui;
 
 // This should be changed to match the other Litha Engine project's hard coded
 // default settings, those passed to CreateEngine.
@@ -12,9 +17,14 @@ VariantMap PROJECT_DEFAULT_SETTINGS()
 {
     VariantMap settings;
     settings["appName"] = "Puzzle Moppet";
-    settings["screenWidth"] = 1024;
-    settings["screenHeight"] = 768;
+    settings["screenWidth"] = 800;
+    settings["screenHeight"] = 600;
     settings["fullScreen"] = false;
+    settings["softwareMode"] = false;
+    settings["shadersEnabled"] = true;
+    settings["postProcessingEnabled"] = true;
+    settings["vsync"] = true;
+    settings["maxRenderFPS"] = 60;
     return settings;
 }
 
@@ -32,8 +42,8 @@ enum
 };
 
 // Should only be called after engine has been created.
-gui::IGUIElement *getElementFromID(s32 id,
-                                   gui::IGUIElement *startElement = nullptr)
+gui::IGUIElement* getElementFromID(s32 id,
+                                   gui::IGUIElement* startElement = nullptr)
 {
     if (startElement == nullptr)
         startElement = GetEngine()
@@ -44,14 +54,14 @@ gui::IGUIElement *getElementFromID(s32 id,
     if (startElement->getID() == id)
         return startElement;
 
-    core::list<gui::IGUIElement *>::ConstIterator begin =
+    core::list<gui::IGUIElement*>::ConstIterator begin =
         startElement->getChildren().begin();
-    core::list<gui::IGUIElement *>::ConstIterator end =
+    core::list<gui::IGUIElement*>::ConstIterator end =
         startElement->getChildren().end();
 
     for (; begin != end; begin++)
     {
-        if (gui::IGUIElement *found = getElementFromID(id, *begin))
+        if (gui::IGUIElement* found = getElementFromID(id, *begin))
             return found;
     }
 
@@ -59,23 +69,10 @@ gui::IGUIElement *getElementFromID(s32 id,
 }
 } // namespace gui_ids
 
-gui::IGUIComboBox *comboboxScreenRes;
-gui::IGUICheckBox *checkboxFullScreen;
-gui::IGUICheckBox *checkboxShaders;
-gui::IGUICheckBox *checkboxPostProcessing;
-
-// Find the pointers based on IDs from the xml file.
-void FindGUIElementPointers()
-{
-    comboboxScreenRes = (gui::IGUIComboBox *)gui_ids::getElementFromID(
-        gui_ids::COMBOBOX_SCREEN_RES);
-    checkboxFullScreen = (gui::IGUICheckBox *)gui_ids::getElementFromID(
-        gui_ids::CHECKBOX_FULL_SCREEN);
-    checkboxShaders = (gui::IGUICheckBox *)gui_ids::getElementFromID(
-        gui_ids::CHECKBOX_SHADERS);
-    checkboxPostProcessing = (gui::IGUICheckBox *)gui_ids::getElementFromID(
-        gui_ids::CHECKBOX_POST_PROCESSING);
-}
+gui::IGUIComboBox* comboboxScreenRes;
+gui::IGUICheckBox* checkboxFullScreen;
+gui::IGUICheckBox* checkboxShaders;
+gui::IGUICheckBox* checkboxPostProcessing;
 
 // Current state
 VariantMap projectSettings;
@@ -84,28 +81,8 @@ VariantMap projectSettings;
 Set<core::dimension2du> videoModes; // using a set avoids duplicates (different
                                     // bit depths)
 
-void InitSettings()
-{
-    // This is the same process used in Engine constructor
-    // to determine the final settings for an app.
-
-    // Find the other project's default settings.
-    // It's the default engine settings overridden by the default project
-    // settings.
-    projectSettings = GetEngine()->GetDefaultSettings();
-    override_variantmap(projectSettings, PROJECT_DEFAULT_SETTINGS());
-
-    // And then override by the settings from the config file...
-    VariantMap configFileSettings = file::loadsettings(
-        os::path::concat(os::getcustomappdata(projectSettings["appName"]),
-                         projectSettings["appName"] + ".ini"));
-
-    if (configFileSettings.size())
-        override_variantmap(projectSettings, configFileSettings);
-}
-
 // Should only be called after InitGUI has set up the videoMode list.
-bool selectVideoModeInComboBox(const core::dimension2du &dim)
+bool selectVideoModeInComboBox(const core::dimension2du& dim)
 {
     // Search for listed video mode in combo box that matches current settings.
     for (u32 i = 0; i < videoModes.size(); i++)
@@ -119,12 +96,29 @@ bool selectVideoModeInComboBox(const core::dimension2du &dim)
     return false;
 }
 
-void InitGUI()
+void InitSettings()
+{
+    // This is the same process used in Engine constructor
+    // to determine the final settings for an app.
+
+    // Find the other project's default settings.
+    // It's the default engine settings overridden by the default project
+    // settings.
+    projectSettings = PROJECT_DEFAULT_SETTINGS();
+
+    // And then override by the settings from the config file...
+    VariantMap configFileSettings = file::loadsettings(
+        os::path::concat(os::getcustomappdata(projectSettings["appName"]),
+                         projectSettings["appName"] + ".ini"));
+
+    if (configFileSettings.size())
+        override_variantmap(projectSettings, configFileSettings);
+}
+
+void InitGUI(IrrlichtDevice* device)
 {
     // Find available video modes.
-
-    video::IVideoModeList *vmList =
-        GetEngine()->GetIrrlichtDevice()->getVideoModeList();
+    video::IVideoModeList* vmList = device->getVideoModeList();
 
     // We ignore the bit depth, as the maximum available is always chosen.
     // (32 bits, when creating the Irrlicht device).
@@ -132,7 +126,7 @@ void InitGUI()
     for (s32 i = 0; i < vmList->getVideoModeCount(); i++)
         videoModes.Insert(vmList->getVideoModeResolution(i));
 
-    for (auto &videoMode : videoModes)
+    for (auto& videoMode : videoModes)
     {
         core::stringw resStr;
         resStr += videoMode.Width;
@@ -198,6 +192,16 @@ void InitGUI()
         projectSettings["postProcessingEnabled"]);
 }
 
+void setSkinTransparency(s32 alpha, irr::gui::IGUISkin* skin)
+{
+    for (s32 i = 0; i < irr::gui::EGDC_COUNT; ++i)
+    {
+        video::SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
+        col.setAlpha(alpha);
+        skin->setColor((EGUI_DEFAULT_COLOR)i, col);
+    }
+}
+
 void SaveSettings()
 {
     // First, we must update the old state (projectSettings) with newly set GUI
@@ -240,99 +244,167 @@ void SaveSettings()
     }
 }
 
-class EventReceiver : public IEventReceiver
+class MyEventReceiver : public IEventReceiver
 {
-    IEngine *engine;
-
 public:
-    EventReceiver(IEngine *engine) { this->engine = engine; }
-
-    bool OnGUIEvent(const SEvent::SGUIEvent &event)
+    MyEventReceiver(IrrlichtDevice& device)
+        : device(device)
     {
-        // Button clicks
-        if (event.EventType == gui::EGET_BUTTON_CLICKED)
+    }
+
+    virtual bool OnEvent(const SEvent& event)
+    {
+        if (event.EventType == EET_GUI_EVENT)
         {
-            switch (event.Caller->getID())
+            s32 id = event.GUIEvent.Caller->getID();
+            IGUIEnvironment* env = device.getGUIEnvironment();
+
+            switch (event.GUIEvent.EventType)
             {
-            case gui_ids::BUTTON_CANCEL:
-                engine->Exit();
-                return true;
-            case gui_ids::BUTTON_SAVE_AND_EXIT:
-                SaveSettings();
-                engine->Exit();
-                return true;
+            case EGET_SCROLL_BAR_CHANGED:
+                break;
+
+            case EGET_BUTTON_CLICKED:
+                switch (id)
+                {
+                case gui_ids::BUTTON_CANCEL:
+                    device.closeDevice();
+                    return true;
+                case gui_ids::BUTTON_SAVE_AND_EXIT:
+                    SaveSettings();
+                    device.closeDevice();
+                    return true;
+
+                default:
+                    return false;
+                }
+                break;
+
+            case EGET_FILE_SELECTED:
+            {
+            }
+            break;
+
+            default:
+                break;
             }
         }
 
         return false;
     }
 
-    bool OnEvent(const SEvent &event) override
-    {
-        if (event.EventType == EET_GUI_EVENT)
-            return OnGUIEvent(event.GUIEvent);
-        else
-            return false;
-    }
+private:
+    IrrlichtDevice& device;
 };
 
-int main(int argc, const char **argv)
+int main(int argc, const char** argv)
 {
     VariantMap settings;
     settings["appName"] = "Puzzle Moppet";
     settings["windowTitle"] = "Puzzle Moppet Configuration";
     settings["screenWidth"] = 250;
     settings["screenHeight"] = 330;
-#ifndef __APPLE__
-    // Software renderer doesn't seem to work on Mac...
-    settings["softwareMode"] = true;
-#endif
 
-    IEngine *engine = CreateEngine(argc, argv, &settings);
+    // create device and exit if creation failed
+    IrrlichtDevice* device =
+        createDevice(video::EDT_SOFTWARE, core::dimension2d<u32>(320, 480));
 
-    IrrlichtDevice *device = engine->GetIrrlichtDevice();
+    if (device == 0)
+        return 1; // could not create selected driver.
 
-    // Filesystem...
-    // Irrlicht needs this so it can load textures from same dir as font xml.
-    engine->GetIrrlichtDevice()->getFileSystem()->addFileArchive(
-        paths::get_data_dir());
+    device->setWindowCaption(L"Puzzle Moppet Configuration");
+    device->setResizable(true);
 
-    // Show the cursor
-    device->getCursorControl()->setVisible(true);
+    video::IVideoDriver* driver = device->getVideoDriver();
+    IGUIEnvironment* env = device->getGUIEnvironment();
 
-    // Pause World, not needed for GUI app.
-    // (pausing World also disables mouse centring)
-    engine->GetWorld()->Pause();
+    IGUISkin* skin = env->getSkin();
 
-    // Load GUI
-    gui::IGUIEnvironment *guienv = device->getGUIEnvironment();
-    ASSERT(guienv->loadGUI("gui.xml"));
+    skin->setFont(env->getFont(paths::get_font("lucida.xml")));
+    setSkinTransparency(255.f, skin);
 
-    // Get pointers to important elements within the loaded GUI.
-    // Ideally in the future we'll have a layout manager and won't need the GUI
-    // defined in xml.
-    FindGUIElementPointers();
+    {
+        // Screen mode
+        env->addStaticText(L"Screen mode:", rect<s32>(20, 20, 130, 50));
 
-    // Default font
-    guienv->getSkin()->setFont(guienv->getFont(paths::get_font("lucida.xml")));
+        comboboxScreenRes = env->addComboBox(rect<s32>(60, 50, 200, 80));
+        {
+            // Find available video modes.
+            video::IVideoModeList* vmList = device->getVideoModeList();
 
-    // Change background colour...
-    engine->GetRenderSystem()->SetBackgroundCol(
-        video::SColor(0, 200, 200, 200));
+            // We ignore the bit depth, as the maximum available is always
+            // chosen. (32 bits, when creating the Irrlicht device).
+            for (s32 i = 0; i < vmList->getVideoModeCount(); i++)
+                videoModes.Insert(vmList->getVideoModeResolution(i));
 
-    // Receive GUI events.
-    // This prevents Litha Engine from receiving GUI events, but that doesn't
-    // matter.
-    IEventReceiver *eventReceiver = new EventReceiver(engine);
-    guienv->setUserEventReceiver(eventReceiver);
+            for (auto& videoMode : videoModes)
+            {
+                core::stringw resStr;
+                resStr += videoMode.Width;
+                resStr += "x";
+                resStr += videoMode.Height;
+                comboboxScreenRes->addItem(resStr.c_str());
+            }
+        }
 
-    // Init
+        // Full screen
+        env->addStaticText(L"Full screen", rect<s32>(90, 100, 160, 130));
+        checkboxFullScreen = env->addCheckBox(L"", rect<s32>(60, 90, 160, 130));
+    }
+
+    {
+        // Graphics
+        env->addStaticText(L"Graphics:", rect<s32>(20, 150, 140, 171));
+
+        env->addStaticText(L"Shaders", rect<s32>(90, 180, 150, 210));
+        checkboxShaders = env->addCheckBox(L"", rect<s32>(60, 170, 150, 209));
+
+        env->addStaticText(L"Post processing effects",
+                           rect<s32>(90, 220, 230, 246));
+        checkboxPostProcessing =
+            env->addCheckBox(L"", rect<s32>(60, 210, 220, 253));
+    }
+
+    { // Exit buttons
+        constexpr size_t BUTTON_WIDTH = 130;
+        constexpr size_t BUTTON_HEIGHT = 32;
+
+        constexpr size_t BUTTON_LEFT_X0 = 25;
+        constexpr size_t BUTTON_LEFT_X1 = BUTTON_LEFT_X0 + BUTTON_WIDTH;
+
+        constexpr size_t BUTTON_Y0 = 280;
+        constexpr size_t BUTTON_Y1 = BUTTON_Y0 + BUTTON_HEIGHT;
+
+        constexpr size_t BUTTON_RIGHT_X0 = BUTTON_LEFT_X1 + 10;
+        constexpr size_t BUTTON_RIGHT_X1 = BUTTON_RIGHT_X0 + BUTTON_WIDTH;
+
+        env->addButton(rect<s32>(BUTTON_LEFT_X0, BUTTON_Y0, BUTTON_LEFT_X1,
+                                 BUTTON_Y1),
+                       0, gui_ids::BUTTON_CANCEL, L"Exit without saving",
+                       L"Exits Program without saving");
+        env->addButton(rect<s32>(BUTTON_RIGHT_X0, BUTTON_Y0, BUTTON_RIGHT_X1,
+                                 BUTTON_Y1),
+                       0, gui_ids::BUTTON_SAVE_AND_EXIT, L"Save & Exit",
+                       L"Exits Program and saves");
+    }
+
+    // Then create the event receiver, giving it that context structure.
+    MyEventReceiver receiver(*device);
+
+    // And tell the device to use our custom event receiver.
+    device->setEventReceiver(&receiver);
+
     InitSettings();
-    InitGUI();
+    InitGUI(device);
 
-    engine->Run();
-    engine->drop();
-    delete eventReceiver;
+    while (device->run() && driver)
+    {
+        driver->beginScene(true, true, SColor(0, 200, 200, 200));
+        env->drawAll();
+        driver->endScene();
+    }
+
+    device->drop();
 
     return 0;
 }
