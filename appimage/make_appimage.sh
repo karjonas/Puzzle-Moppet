@@ -12,6 +12,8 @@ wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/lin
 chmod +x linuxdeploy-x86_64.AppImage
 cd build
 cmake ../.. -DCMAKE_TOOLCHAIN_FILE=$PWD/../vcpkg/scripts/buildsystems/vcpkg.cmake -DDATA_DIR=/usr/share/puzzlemoppet/Puzzle/data -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-make -j `nproc --all` install DESTDIR=AppDir
+make -j `nproc --all` install DESTDIR=AppDirPuzzle
+make -j `nproc --all` install DESTDIR=AppDirConfig
 cd ..
-./linuxdeploy-x86_64.AppImage --appdir build/AppDir --output appimage -d puzzlemoppet.desktop -i ../icons/main.png
+./linuxdeploy-x86_64.AppImage --appdir build/AppDirPuzzle --output appimage -d puzzlemoppet.desktop -i ../icons/main.png
+./linuxdeploy-x86_64.AppImage --appdir build/AppDirConfig --output appimage -d config.desktop -i ../icons/config.png

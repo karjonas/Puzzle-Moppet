@@ -1,4 +1,6 @@
-add_executable(puzzlemoppet
+set(PROJECT_NAME puzzlemoppet)
+
+add_executable(${PROJECT_NAME}
 main.cpp
 Level.cpp
 Map.cpp
@@ -17,6 +19,6 @@ volume.cpp
 options.cpp
 )
 
-target_link_libraries(puzzlemoppet Litha)
+target_link_libraries(${PROJECT_NAME} Litha)
 
-install(TARGETS puzzlemoppet RUNTIME DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
