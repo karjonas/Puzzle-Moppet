@@ -70,7 +70,7 @@ std::vector<core::stringc> explode(const core::stringc &delimiter,
 
     u32 i = 0;
 
-    while (1)
+    while (true)
     {
         // Eat up delimiters
         while (str.subString(i, delimiter.size()) == delimiter &&
@@ -120,7 +120,7 @@ std::vector<core::stringc> explode_chars(const core::stringc &delimiterChars,
 
     u32 i = 0;
 
-    while (1)
+    while (true)
     {
         // Eat up delimiters
         while (char_occurs(str[i], delimiterChars) && i < str.size())

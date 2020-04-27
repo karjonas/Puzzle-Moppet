@@ -1611,12 +1611,12 @@ void Level::CreatePlayer(core::vector3di mapCoord)
     mesh->GetMaterial(0).Lighting = false;
     mesh->GetMaterial(0).BackfaceCulling = false;
 
-    mesh->DefineAnimation(ANIM_IDLE, 27, 45, 5.0, 1, 1);
-    mesh->DefineAnimation(ANIM_WALK, 0, 23, 30.0, 0, 1);
-    mesh->DefineAnimation(ANIM_FALL, 79, 88, 10.0, 1, 1, 0.5);
+    mesh->DefineAnimation(ANIM_IDLE, 27, 45, 5.0, true, true);
+    mesh->DefineAnimation(ANIM_WALK, 0, 23, 30.0, false, true);
+    mesh->DefineAnimation(ANIM_FALL, 79, 88, 10.0, true, true, 0.5);
 
-    mesh->DefineAnimation(ANIM_PUSH, 93, 111, 30.f, 0, 1);
-    mesh->DefineAnimation(ANIM_FALL_UPRIGHT, 113, 128, 30.f, 1, 1, 0.5);
+    mesh->DefineAnimation(ANIM_PUSH, 93, 111, 30.f, false, true);
+    mesh->DefineAnimation(ANIM_FALL_UPRIGHT, 113, 128, 30.f, true, true, 0.5);
 
     // Create actor
 

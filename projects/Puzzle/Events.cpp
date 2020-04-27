@@ -622,7 +622,7 @@ void LiftEvent::MoveInDirection(core::vector3di liftCoord,
 
         core::vector3di coord = liftCoord;
 
-        while (1)
+        while (true)
         {
             coord.Y++;
 
@@ -634,7 +634,7 @@ void LiftEvent::MoveInDirection(core::vector3di liftCoord,
                 // So iterate back downwards moving each object up by one
                 // (including the lift itself)
 
-                while (1)
+                while (true)
                 {
                     coord.Y--;
 
@@ -861,7 +861,7 @@ void LiftEvent::OnMapEvent(core::vector3di coord)
 
         core::vector3di probeCoord = liftCoord;
 
-        while (1)
+        while (true)
         {
             probeCoord.Y++;
 
