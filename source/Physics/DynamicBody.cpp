@@ -13,19 +13,19 @@
 void DynamicBody::FillODEMassFromGeometry(dMass *dmass, f32 density,
                                           ICollisionGeometry *geom)
 {
-    if (BoxCollisionGeometry *boxGeom =
+    if (auto *boxGeom =
             dynamic_cast<BoxCollisionGeometry *>(geom))
     {
         const core::vector3df &size = boxGeom->GetSize();
 
         dMassSetBox(dmass, density, size.X, size.Y, size.Z);
     }
-    else if (MeshCollisionGeometry *meshGeom =
+    else if (auto *meshGeom =
                  dynamic_cast<MeshCollisionGeometry *>(geom))
     {
         dMassSetTrimesh(dmass, density, meshGeom->GetODEGeom());
     }
-    else if (SphereCollisionGeometry *sphereGeom =
+    else if (auto *sphereGeom =
                  dynamic_cast<SphereCollisionGeometry *>(geom))
     {
         dMassSetSphere(dmass, density, sphereGeom->GetRadius());
@@ -64,7 +64,7 @@ void DynamicBody::AddCollisionGeometry(ICollisionGeometry *geom)
     geometry.push_back(geom);
 
     // attach its dGeomID to this dBodyID
-    if (CollisionGeometry *hasGeom = dynamic_cast<CollisionGeometry *>(geom))
+    if (auto *hasGeom = dynamic_cast<CollisionGeometry *>(geom))
     {
         dGeomSetBody(hasGeom->GetODEGeom(), body);
     }

@@ -136,7 +136,7 @@ ODEMeshData *ODECreateMeshData(scene::IMesh *mesh,
     }
 
     // Create ODE storage.
-    dVector3 *vertices = new dVector3[vertexCountTotal];
+    auto *vertices = new dVector3[vertexCountTotal];
     int *indices = new int[indexCountTotal];
 
     // Fill ODE mesh data...
@@ -155,7 +155,7 @@ ODEMeshData *ODECreateMeshData(scene::IMesh *mesh,
         {
         case video::EVT_STANDARD:
         {
-            video::S3DVertex *iVertices = (video::S3DVertex *)mb->getVertices();
+            auto *iVertices = (video::S3DVertex *)mb->getVertices();
             for (u32 j = 0; j < vertexCount; j++)
             {
                 vertices[vertexCountTotal + j][0] =
@@ -170,7 +170,7 @@ ODEMeshData *ODECreateMeshData(scene::IMesh *mesh,
         }
         case video::EVT_2TCOORDS:
         {
-            video::S3DVertex2TCoords *iVertices =
+            auto *iVertices =
                 (video::S3DVertex2TCoords *)mb->getVertices();
             for (u32 j = 0; j < vertexCount; j++)
             {
@@ -234,7 +234,7 @@ ODEMeshData *ODECreateMeshData(scene::IMesh *mesh,
                                 indexCountTotal, 3 * sizeof(int));
 #endif
 
-    ODEMeshData *md = new ODEMeshData;
+    auto *md = new ODEMeshData;
     md->triMeshData = triMeshData;
     md->vertices = vertices;
     md->indices = indices;

@@ -134,7 +134,7 @@ void SimpleMenu::OnEvent(const Event &event)
             {
                 if (element->getType() == gui::EGUIET_STATIC_TEXT)
                 {
-                    gui::IGUIStaticText *textElement =
+                    auto *textElement =
                         (gui::IGUIStaticText *)element;
 
                     if (element == mouseOverElement)
@@ -156,7 +156,7 @@ void SimpleMenu::OnEvent(const Event &event)
                 }
                 else if (element->getType() == gui::EGUIET_IMAGE)
                 {
-                    gui::IGUIImage *imageElement = (gui::IGUIImage *)element;
+                    auto *imageElement = (gui::IGUIImage *)element;
 
                     if (element == mouseOverElement)
                     {

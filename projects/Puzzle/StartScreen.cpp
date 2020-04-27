@@ -561,7 +561,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 
     optionsMenus.clear();
 
-    SimpleVerticalMenu *vertMenu =
+    auto *vertMenu =
         new SimpleVerticalMenu(OPTIONS_MENU_ID, marginBottom);
 
 #ifndef __APPLE__
@@ -669,7 +669,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     video::IVideoDriver *driver = device->getVideoDriver();
     u32 screenHeight = driver->getScreenSize().Height;
 
-    SimpleHorizontalMenu *horizMenu = new SimpleHorizontalMenu(
+    auto *horizMenu = new SimpleHorizontalMenu(
         OPTIONS_MENU_ID, s32(screenHeight - screenHeight * marginBottom) + 20,
         25, false);
     horizMenu->AddItem("Cancel", EMI_OPTIONS_CANCEL);
@@ -797,7 +797,7 @@ void StartScreen::OnEvent(const Event &event)
                     levelFractionText = nullptr;
                 }
 
-                SimpleHorizontalMenu *horizMenu =
+                auto *horizMenu =
                     new SimpleHorizontalMenu(START_NEW_GAME_MENU_ID);
                 // Text and options copied from similar menu in MainState
                 horizMenu->SetHeading(

@@ -417,7 +417,7 @@ int main(int argc, const char **argv)
         // StartScreen *MAY* create a MainState, returning the pointer to
         // mainState so that we can delete it from here in main.cpp (why do we
         // want to delete it from main? because we always have...)
-        StartScreen *startScreen = new StartScreen(&mainState);
+        auto *startScreen = new StartScreen(&mainState);
         engine->GetLogicUpdater().AddUpdatable(startScreen);
         startScreen->drop();
     }

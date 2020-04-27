@@ -229,7 +229,7 @@ void Level::ApplyDefaultShaders(IMesh *mesh,
             // shader->SetPixelConstant("cloudShadowTexture",	1);
 
             // Callback to set the world matrix.
-            DefaultShaderCallback *callback = new DefaultShaderCallback(engine);
+            auto *callback = new DefaultShaderCallback(engine);
             shader->SetCallback(callback);
             callback->drop();
 
@@ -267,7 +267,7 @@ void Level::ApplyDefaultShadersIrr(scene::IMesh *mesh,
             // shader->SetPixelConstant("cloudShadowTexture",	1);
 
             // Callback to set the world matrix.
-            DefaultShaderCallback *callback = new DefaultShaderCallback(engine);
+            auto *callback = new DefaultShaderCallback(engine);
             shader->SetCallback(callback);
             callback->drop();
 
@@ -310,7 +310,7 @@ void Level::ApplyLandShaders(IMesh *mesh, video::E_MATERIAL_TYPE baseMaterial)
             // shader->SetPixelConstant("cloudShadowTexture",	1);
 
             // Callback to set the world matrix.
-            DefaultShaderCallback *callback = new DefaultShaderCallback(engine);
+            auto *callback = new DefaultShaderCallback(engine);
             shader->SetCallback(callback);
             callback->drop();
 
@@ -381,7 +381,7 @@ void Level::ApplyWoodShaders(IMesh *mesh)
             // shader->SetPixelConstant("diffuseTexture", 0);
 
             // Callback to set the world matrix.
-            DefaultShaderCallback *callback = new DefaultShaderCallback(engine);
+            auto *callback = new DefaultShaderCallback(engine);
             shader->SetCallback(callback);
             callback->drop();
 
@@ -413,7 +413,7 @@ void Level::ApplyIceShaders(IMesh *mesh)
             // shader->SetPixelConstant("diffuseTexture", 0);
 
             // Callback to set the world matrix.
-            DefaultShaderCallback *callback = new DefaultShaderCallback(engine);
+            auto *callback = new DefaultShaderCallback(engine);
             shader->SetCallback(callback);
             callback->drop();
 
@@ -443,7 +443,7 @@ void Level::ApplyBalloonShaders(IMesh *mesh)
             shader->SetPixelRegisterMap(get_pixel_shader_register_map());
 
             // Callback to set the world matrix.
-            DefaultShaderCallback *callback = new DefaultShaderCallback(engine);
+            auto *callback = new DefaultShaderCallback(engine);
             shader->SetCallback(callback);
             callback->drop();
 
@@ -733,7 +733,7 @@ void Level::OptimiseLevel()
         video::IVideoDriver *driver =
             engine->GetIrrlichtDevice()->getVideoDriver();
 
-        scene::SMesh *mesh = new scene::SMesh();
+        auto *mesh = new scene::SMesh();
 
         // We put everything in just two mesh buffers!
 
@@ -764,7 +764,7 @@ void Level::OptimiseLevel()
 
                 // Find the ground block mesh.
 
-                IMesh *objMesh = obj->GetFirstChildOfType<IMesh>();
+                auto *objMesh = obj->GetFirstChildOfType<IMesh>();
 
                 ASSERT(objMesh);
 
@@ -801,7 +801,7 @@ void Level::OptimiseLevel()
 
                     ASSERT(mbTemp->getVertexType() == video::EVT_STANDARD);
 
-                    video::S3DVertex *vertices =
+                    auto *vertices =
                         (video::S3DVertex *)mbTemp->getVertices();
 
                     // Get texture name from otherMb since material has not been
@@ -2441,7 +2441,7 @@ void Level::OnEvent(const Event &event)
 
 void Level::ShowEndLevelScreen()
 {
-    EndLevelScreen *es = new EndLevelScreen(mainState, this);
+    auto *es = new EndLevelScreen(mainState, this);
     world->GetUpdater().AddUpdatable(es);
     es->drop();
 
@@ -3020,7 +3020,7 @@ void Level::HandleTutorialEvents(const Event &event)
     {
         for (auto &elem : tutorialTextElements)
         {
-            GUIElementFade *fade = new GUIElementFade(
+            auto *fade = new GUIElementFade(
                 engine->GetIrrlichtDevice()->getGUIEnvironment(), elem, this,
                 event["fade_time"], event["fade_time"], false);
             fade->drop();
@@ -3033,7 +3033,7 @@ void Level::HandleTutorialEvents(const Event &event)
     {
         for (auto &elem : tutorialTextElements)
         {
-            GUIElementFade *fade = new GUIElementFade(
+            auto *fade = new GUIElementFade(
                 engine->GetIrrlichtDevice()->getGUIEnvironment(), elem, this,
                 event["fade_time"], event["fade_time"], true);
             fade->drop();
@@ -3421,7 +3421,7 @@ void Level::Update(f32 dt)
     // When *attempted* move is nonzero. (attempted, so could be walking against
     // a wall and not moving but will still sound)
 
-    ISoundSource *footStepSoundSource =
+    auto *footStepSoundSource =
         GetPlayer()->GetFirstChildOfType<ISoundSource>();
     ASSERT(footStepSoundSource);
 

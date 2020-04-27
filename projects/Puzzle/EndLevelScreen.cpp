@@ -119,7 +119,7 @@ void EndLevelScreen::OnEvent(const Event &event)
 
         for (auto &elem : guiElements)
         {
-            GUIElementFade *fade = new GUIElementFade(
+            auto *fade = new GUIElementFade(
                 engine->GetIrrlichtDevice()->getGUIEnvironment(), elem, this,
                 itemFadeOnTime, itemFadeOnTime, false);
             fade->drop();
@@ -232,7 +232,7 @@ void EndLevelScreen::OnEvent(const Event &event)
             element->setRelativePosition(rect);
             guiElements.push_back(element);
 
-            GUIElementFade *fade = new GUIElementFade(
+            auto *fade = new GUIElementFade(
                 engine->GetIrrlichtDevice()->getGUIEnvironment(), element, this,
                 itemFadeOnTime, itemFadeOnTime, false);
             fade->drop();
@@ -254,7 +254,7 @@ void EndLevelScreen::OnEvent(const Event &event)
             element->setRelativePosition(rect);
             guiElements.push_back(element);
 
-            GUIElementFade *fade = new GUIElementFade(
+            auto *fade = new GUIElementFade(
                 engine->GetIrrlichtDevice()->getGUIEnvironment(), element, this,
                 itemFadeOnTime, itemFadeOnTime, false);
             fade->drop();
@@ -277,7 +277,7 @@ void EndLevelScreen::OnEvent(const Event &event)
                                           // are on a black background
                                           + video::SColor(50, 0, 0, 0));
 
-            GUIElementFade *fade2 = new GUIElementFade(
+            auto *fade2 = new GUIElementFade(
                 engine->GetIrrlichtDevice()->getGUIEnvironment(), textElement,
                 this, itemFadeOnTime, itemFadeOnTime, false);
             fade2->drop();

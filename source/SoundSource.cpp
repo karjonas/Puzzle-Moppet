@@ -64,7 +64,7 @@ void SoundSource::Update(f32 dt)
     for (auto &tempAllSound : tempAllSounds)
     {
         // Is it a 3D sound?
-        if (ISound3D *sound3d = dynamic_cast<ISound3D *>(tempAllSound))
+        if (auto *sound3d = dynamic_cast<ISound3D *>(tempAllSound))
         {
             sound3d->SetPosition(pos);
             sound3d->SetVelocity(vel);

@@ -253,8 +253,8 @@ void Physics::ODE_GeomCollide(dGeomID o1, dGeomID o2)
 
     // Get ICollisionGeometries.
     // all ODE geoms should have had one set.
-    ICollisionGeometry *collisionGeom1 = (ICollisionGeometry *)dGeomGetData(o1);
-    ICollisionGeometry *collisionGeom2 = (ICollisionGeometry *)dGeomGetData(o2);
+    auto *collisionGeom1 = (ICollisionGeometry *)dGeomGetData(o1);
+    auto *collisionGeom2 = (ICollisionGeometry *)dGeomGetData(o2);
 
     ASSERT(collisionGeom1);
     ASSERT(collisionGeom2);

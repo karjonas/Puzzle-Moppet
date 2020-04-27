@@ -143,16 +143,16 @@ void World::AddTransformable(ITransformable *transformable)
 
     // Specific types
 
-    if (IGraphic *graphic = dynamic_cast<IGraphic *>(transformable))
+    if (auto *graphic = dynamic_cast<IGraphic *>(transformable))
         graphics.Insert(graphic);
 
-    if (ICharacter *character = dynamic_cast<ICharacter *>(transformable))
+    if (auto *character = dynamic_cast<ICharacter *>(transformable))
         characters.Insert(character);
 
-    if (ISensor *sensor = dynamic_cast<ISensor *>(transformable))
+    if (auto *sensor = dynamic_cast<ISensor *>(transformable))
         sensors.Insert(sensor);
 
-    if (ISoundSource *soundSource = dynamic_cast<ISoundSource *>(transformable))
+    if (auto *soundSource = dynamic_cast<ISoundSource *>(transformable))
         soundSources.Insert(soundSource);
 }
 
@@ -177,16 +177,16 @@ void World::RemoveTransformable(ITransformable *transformable)
     // Ok, transformable doesn't have a parent, so we can remove it right away.
     // Pointer is valid, so now remove specific types.
 
-    if (IGraphic *graphic = dynamic_cast<IGraphic *>(transformable))
+    if (auto *graphic = dynamic_cast<IGraphic *>(transformable))
         graphics.Remove(graphic);
 
-    if (ICharacter *character = dynamic_cast<ICharacter *>(transformable))
+    if (auto *character = dynamic_cast<ICharacter *>(transformable))
         characters.Remove(character);
 
-    if (ISensor *sensor = dynamic_cast<ISensor *>(transformable))
+    if (auto *sensor = dynamic_cast<ISensor *>(transformable))
         sensors.Remove(sensor);
 
-    if (ISoundSource *soundSource = dynamic_cast<ISoundSource *>(transformable))
+    if (auto *soundSource = dynamic_cast<ISoundSource *>(transformable))
         soundSources.Remove(soundSource);
 
     // Remove from main transformables list
@@ -236,7 +236,7 @@ INodeHandler *World::AddIrrNodeHandler(scene::ISceneNode *irrNode,
 
 ITransformable *World::AddTransform()
 {
-    ITransformable *transformable = new ITransformable();
+    auto *transformable = new ITransformable();
     AddTransformable(transformable);
     transformable->drop();
     return transformable;
@@ -291,7 +291,7 @@ IMotionSensor *World::AddSoundMotionSensor(const core::stringc &startSound,
     ms->AddChild(ss);
 
     // motion sensor callback has a pointer to the sound source
-    SoundMotionCallback *callback =
+    auto *callback =
         new SoundMotionCallback(ss, startSound, stopSound, motionLoopSound);
     ms->SetAnyMotionCallback(callback);
     callback->drop();

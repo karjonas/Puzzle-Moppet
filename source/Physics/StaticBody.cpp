@@ -20,7 +20,7 @@ void StaticBody::AddCollisionGeometry(ICollisionGeometry *geom)
     geom->grab();
     geometry.push_back(geom);
 
-    if (CollisionGeometry *hasGeom = dynamic_cast<CollisionGeometry *>(geom))
+    if (auto *hasGeom = dynamic_cast<CollisionGeometry *>(geom))
     {
         dGeomID odeGeom = hasGeom->GetODEGeom();
         odeGeoms.push_back(odeGeom);

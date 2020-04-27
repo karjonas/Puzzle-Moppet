@@ -477,10 +477,10 @@ void FanEvent::OnMapEvent(core::vector3di coord)
     // Change character's animation when in the fan updraft
     if (map->GetObject(coord) && map->GetObjectType(coord) == EOT_PLAYER_CENTRE)
     {
-        if (IProxyTransformable *proxy =
+        if (auto *proxy =
                 dynamic_cast<IProxyTransformable *>(map->GetObject(coord)))
         {
-            if (ICharacter *character = dynamic_cast<ICharacter *>(
+            if (auto *character = dynamic_cast<ICharacter *>(
                     proxy->GetProxiedTransformable()))
             {
                 // Hacked in.
@@ -519,10 +519,10 @@ void FanEvent::OnMapEvent(core::vector3di coord)
             map->GetObjectType(coord) == EOT_PLAYER_CENTRE)
         {
             // this would work for any Actor
-            if (IProxyTransformable *proxy =
+            if (auto *proxy =
                     dynamic_cast<IProxyTransformable *>(map->GetObject(coord)))
             {
-                if (ICharacter *character = dynamic_cast<ICharacter *>(
+                if (auto *character = dynamic_cast<ICharacter *>(
                         proxy->GetProxiedTransformable()))
                 {
                     IBobAnimator *anim =

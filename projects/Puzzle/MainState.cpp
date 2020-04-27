@@ -665,7 +665,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor,
         // which will not go lower than a certain height (i.e. does not go below
         // the sea)
 
-        FinalScenePlayerProxy *proxy = new FinalScenePlayerProxy();
+        auto *proxy = new FinalScenePlayerProxy();
         world->AddTransformable(proxy);
         level->GetPlayer()->AddChild(proxy);
 
@@ -725,7 +725,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor,
             player->SetMoveSpeed(0.2);
 
             // turn off footstep sound...
-            ISoundSource *footStepSoundSource =
+            auto *footStepSoundSource =
                 player->GetFirstChildOfType<ISoundSource>();
 
             if (footStepSoundSource)
@@ -1291,7 +1291,7 @@ void MainState::OnEvent(const Event &event)
                     // this is all stupidly hacked in.
                     *mainStatePtrLoc = nullptr;
 
-                    StartScreen *startScreen = new StartScreen(mainStatePtrLoc);
+                    auto *startScreen = new StartScreen(mainStatePtrLoc);
                     engine->GetLogicUpdater().AddUpdatable(startScreen);
                     startScreen->drop();
 
@@ -1404,7 +1404,7 @@ void MainState::OnEvent(const Event &event)
 
             for (auto &element : elements)
             {
-                gui::IGUIStaticText *textElement =
+                auto *textElement =
                     (gui::IGUIStaticText *)element;
 
                 if (element == mouseOverElement)

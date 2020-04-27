@@ -245,14 +245,14 @@ void OpenALSoundSystem::SetListenerVelocity(core::vector3df vel)
 
 ISound2D *OpenALSoundSystem::CreateSound2D()
 {
-    OpenALSound2D *newSound = new OpenALSound2D(this);
+    auto *newSound = new OpenALSound2D(this);
     newSound->SetSeparateVolume(globalVolume2D);
     return newSound;
 }
 
 ISound3D *OpenALSoundSystem::CreateSound3D()
 {
-    OpenALSound3D *newSound = new OpenALSound3D(this);
+    auto *newSound = new OpenALSound3D(this);
     newSound->SetSeparateVolume(globalVolume3D);
     return newSound;
 }
