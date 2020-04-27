@@ -4,10 +4,8 @@
 #include "CollisionGeometry.h"
 #include "ode_utility.h"
 
-StaticBody::StaticBody()
-{
-    // Do nothing yet...
-}
+// Do nothing yet...
+StaticBody::StaticBody() = default;
 
 StaticBody::~StaticBody()
 {

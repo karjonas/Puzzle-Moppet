@@ -1,7 +1,7 @@
 
 #include "LogicTask.h"
 
-LogicTask::LogicTask() {}
+LogicTask::LogicTask() = default;
 
 void LogicTask::Update(f32 dt)
 {

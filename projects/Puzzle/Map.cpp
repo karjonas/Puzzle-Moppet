@@ -24,12 +24,10 @@ void Map::EraseLocation(core::vector3di coord)
     map[coord.X][coord.Y].erase(coord.Z);
 }
 
-Map::Map() {}
+Map::Map() = default;
 
-Map::~Map()
-{
-    // Objects are removed by Level.
-}
+// Objects are removed by Level.
+Map::~Map() = default;
 
 std::vector<core::vector3di> Map::GetAllEvents()
 {

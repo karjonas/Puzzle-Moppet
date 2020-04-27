@@ -10,7 +10,7 @@ BoxCollisionGeometry::BoxCollisionGeometry(dSpaceID space,
     this->size = size;
 }
 
-BoxCollisionGeometry::~BoxCollisionGeometry() {}
+BoxCollisionGeometry::~BoxCollisionGeometry() = default;
 
 core::vector3df BoxCollisionGeometry::GetSize()
 {

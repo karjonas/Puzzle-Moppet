@@ -9,7 +9,7 @@ SphereCollisionGeometry::SphereCollisionGeometry(dSpaceID space, f32 radius)
     this->radius = radius;
 }
 
-SphereCollisionGeometry::~SphereCollisionGeometry() {}
+SphereCollisionGeometry::~SphereCollisionGeometry() = default;
 
 core::vector3df SphereCollisionGeometry::GetSize()
 {
