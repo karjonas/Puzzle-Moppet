@@ -309,7 +309,7 @@ int main(int argc, const char** argv)
     IrrlichtDevice* device =
         createDevice(video::EDT_SOFTWARE, core::dimension2d<u32>(320, 480));
 
-    if (device == 0)
+    if (device == nullptr)
         return 1; // could not create selected driver.
 
     device->setWindowCaption(L"Puzzle Moppet Configuration");
@@ -380,11 +380,11 @@ int main(int argc, const char** argv)
 
         env->addButton(rect<s32>(BUTTON_LEFT_X0, BUTTON_Y0, BUTTON_LEFT_X1,
                                  BUTTON_Y1),
-                       0, gui_ids::BUTTON_CANCEL, L"Exit without saving",
+                       nullptr, gui_ids::BUTTON_CANCEL, L"Exit without saving",
                        L"Exits Program without saving");
         env->addButton(rect<s32>(BUTTON_RIGHT_X0, BUTTON_Y0, BUTTON_RIGHT_X1,
                                  BUTTON_Y1),
-                       0, gui_ids::BUTTON_SAVE_AND_EXIT, L"Save & Exit",
+                       nullptr, gui_ids::BUTTON_SAVE_AND_EXIT, L"Save & Exit",
                        L"Exits Program and saves");
     }
 
