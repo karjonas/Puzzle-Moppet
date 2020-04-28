@@ -61,9 +61,7 @@ io::path getcwd()
 
         if (size >= 16384) // 1024*2*2*2*2
         {
-            const char *adjectives[5] = {"stupidly", "ridiculously", "crazy",
-                                         "absurdly", "oh my that's a"};
-            WARN << adjectives[rand() % 5] << " long working directory";
+            WARN << " long working directory";
         }
     }
 }

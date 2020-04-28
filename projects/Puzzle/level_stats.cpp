@@ -1,8 +1,12 @@
 #include "level_stats.h"
 #include "utils/paths.h"
 
-const char *resultTexts[7] = {"Awful",   "Fair",           "Good", "Excellent",
-                              "Perfect", "EXTRAORDINARY!", "???"};
+#include <array>
+
+std::array<const char *, 7> resultTexts = {"Awful",   "Fair",
+                                           "Good",    "Excellent",
+                                           "Perfect", "EXTRAORDINARY!",
+                                           "???"};
 
 io::path getsavescoredir()
 {

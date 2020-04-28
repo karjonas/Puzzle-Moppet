@@ -4,6 +4,8 @@
 #include "Map.h"
 #include "Events.h"
 
+#include <array>
+
 core::vector3di Editor::GetTargetCoord()
 {
     return level->GetCoord(targetCube->getPosition());
@@ -110,19 +112,19 @@ Editor::Editor(Level *level)
 
     // Add an Irrlicht FPS camera
 
-    SKeyMap keyMapArray[] = {// Cursor keys
-                             SKeyMap(EKA_MOVE_FORWARD, KEY_UP),
-                             SKeyMap(EKA_MOVE_BACKWARD, KEY_DOWN),
-                             SKeyMap(EKA_STRAFE_LEFT, KEY_LEFT),
-                             SKeyMap(EKA_STRAFE_RIGHT, KEY_RIGHT),
-                             // WSAD
-                             SKeyMap(EKA_MOVE_FORWARD, KEY_KEY_W),
-                             SKeyMap(EKA_MOVE_BACKWARD, KEY_KEY_S),
-                             SKeyMap(EKA_STRAFE_LEFT, KEY_KEY_A),
-                             SKeyMap(EKA_STRAFE_RIGHT, KEY_KEY_D)};
+    std::array<SKeyMap, 8> keyMapArray = {// Cursor keys
+                                          SKeyMap(EKA_MOVE_FORWARD, KEY_UP),
+                                          SKeyMap(EKA_MOVE_BACKWARD, KEY_DOWN),
+                                          SKeyMap(EKA_STRAFE_LEFT, KEY_LEFT),
+                                          SKeyMap(EKA_STRAFE_RIGHT, KEY_RIGHT),
+                                          // WSAD
+                                          SKeyMap(EKA_MOVE_FORWARD, KEY_KEY_W),
+                                          SKeyMap(EKA_MOVE_BACKWARD, KEY_KEY_S),
+                                          SKeyMap(EKA_STRAFE_LEFT, KEY_KEY_A),
+                                          SKeyMap(EKA_STRAFE_RIGHT, KEY_KEY_D)};
 
-    camera =
-        smgr->addCameraSceneNodeFPS(nullptr, 100.0, 0.005, -1, keyMapArray, 8);
+    camera = smgr->addCameraSceneNodeFPS(nullptr, 100.0, 0.005, -1,
+                                         keyMapArray.data(), 8);
 
     smgr->setActiveCamera(camera);
 
