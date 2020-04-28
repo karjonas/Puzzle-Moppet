@@ -1,7 +1,7 @@
 
 #include "utils/Variant.h" // hax
 #include "utils/log.h"
-#include <stdarg.h>
+#include <cstdarg>
 
 namespace utils
 {

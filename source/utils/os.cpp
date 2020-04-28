@@ -7,7 +7,7 @@
 #include <shlobj.h> //for folder paths
 #else
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
 #include <dirent.h>
 #include <pwd.h>
 #endif
