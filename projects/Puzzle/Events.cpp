@@ -181,7 +181,7 @@ public:
         firstEmit = true;
     }
 
-    ~SingleEmissionEmitter() { baseEmitter->drop(); }
+    ~SingleEmissionEmitter() override { baseEmitter->drop(); }
 
     s32 emitt(u32 now, u32 timeSinceLastCall,
               scene::SParticle *&outArray) override

@@ -252,7 +252,7 @@ public:
     {
     }
 
-    virtual bool OnEvent(const SEvent& event)
+    bool OnEvent(const SEvent& event) override
     {
         if (event.EventType == EET_GUI_EVENT)
         {
