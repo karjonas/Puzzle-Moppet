@@ -115,26 +115,8 @@ void InitSettings()
         override_variantmap(projectSettings, configFileSettings);
 }
 
-void InitGUI(IrrlichtDevice* device)
+void InitGUI()
 {
-    // Find available video modes.
-    video::IVideoModeList* vmList = device->getVideoModeList();
-
-    // We ignore the bit depth, as the maximum available is always chosen.
-    // (32 bits, when creating the Irrlicht device).
-
-    for (s32 i = 0; i < vmList->getVideoModeCount(); i++)
-        videoModes.Insert(vmList->getVideoModeResolution(i));
-
-    for (auto& videoMode : videoModes)
-    {
-        core::stringw resStr;
-        resStr += videoMode.Width;
-        resStr += "x";
-        resStr += videoMode.Height;
-        comboboxScreenRes->addItem(resStr.c_str());
-    }
-
     // Now we set up the GUI depending on the previously saved settings.
 
     ASSERT(projectSettings["screenWidth"] > 0);
@@ -395,7 +377,7 @@ int main(int argc, const char** argv)
     device->setEventReceiver(&receiver);
 
     InitSettings();
-    InitGUI(device);
+    InitGUI();
 
     while (device->run() && driver)
     {
