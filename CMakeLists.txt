@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in install path")
-set(DATA_DIR ${PROJECT_SOURCE_DIR}/data CACHE PATH "Directory for game data")
+set(DATA_DIR ${PROJECT_SOURCE_DIR}/data CACHE STRING "Directory for game data")
 add_definitions(-DDATA_DIR="${DATA_DIR}")
 
 if (BUILD_FOR_INSTALL)
