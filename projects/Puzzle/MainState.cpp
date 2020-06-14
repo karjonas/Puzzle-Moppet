@@ -9,6 +9,9 @@
 #include "level_stats.h"
 #include "utils/paths.h"
 
+#include <iostream>
+#include <fstream>
+
 extern ISound *bgAmbientSound;
 extern ISound *bgMusic;
 
@@ -903,18 +906,20 @@ void MainState::NextLevel(bool wait)
             // Also, let's exclude the first level
             && currentLevelFileName != "intro.lev")
         {
-            FILE *fp = fopen(get_full_save_path().c_str(), "wb");
+            const std::string filePath = get_full_save_path().c_str();
+            std::ofstream saveFile(filePath);
 
-            if (fp)
+            if (saveFile.is_open())
             {
-                if (fputs(currentLevelFileName.c_str(), fp) == EOF)
-                    WARN << "Could not save game (" << currentLevelFileName
-                         << ")";
-                else
-                    NOTE << "Saved game successfully (" << currentLevelFileName
-                         << ")";
+                saveFile << currentLevelFileName.c_str();
+                saveFile.close();
 
-                fclose(fp);
+                NOTE << "Saved game successfully (" << currentLevelFileName << ")";
+            }
+            else
+            {
+                WARN << "Could not open save file " << filePath.c_str();
+
             }
 
             // EDIT. Hacked in. Save furthest reached.
