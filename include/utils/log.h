@@ -68,14 +68,14 @@ public:
 
 // Should probably modify this so the test is done by Logger, that way assert
 // could also output text...
-#define ASSERT(test)                                                       \
-    do                                                                     \
-    {                                                                      \
-        if (!(test))                                                       \
-        {                                                                  \
-            utils::log::Logger(utils::log::ELL_ASSERT, __FILE__, __LINE__, \
-                               __func__);                                  \
-        }                                                                  \
-    } while (0)
+#define ASSERT(test)                                                        \
+    do                                                                      \
+    {                                                                       \
+        if (!(test))                                                        \
+        {                                                                   \
+            auto tmp = utils::log::Logger(utils::log::ELL_ASSERT, __FILE__, \
+                                          __LINE__, __func__);              \
+        }                                                                   \
+    } while (false)
 
 #endif
