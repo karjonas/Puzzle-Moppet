@@ -39,7 +39,7 @@ Install vcpkg and the dependencies:
     git clone https://github.com/microsoft/vcpkg.git
     cd vcpkg
     ./bootstrap-vcpkg.sh
-    ./vcpkg install irrlicht ode openal-soft
+    ./vcpkg install irrlicht ode openal-soft scnlib
 
 
 Building the Game

@@ -1,6 +1,7 @@
 find_package(irrlicht CONFIG REQUIRED 1.7)
 find_package(OpenAL CONFIG REQUIRED)
 find_package(ode CONFIG REQUIRED)
+find_package(scn CONFIG REQUIRED)
 
 add_library(Litha STATIC
     # C++ files
@@ -60,6 +61,7 @@ target_link_libraries(Litha
     Irrlicht
     OpenAL::OpenAL
     ODE::ODE
+    scn::scn
     )
 
 target_include_directories(Litha PUBLIC

@@ -10,7 +10,11 @@
 #include "RotateToAnimator.h"
 
 #include "utils/paths.h"
+
+#include <scn/scn.h>
+
 #include <algorithm>
+#include <fstream>
 
 std::map<core::stringc, f32> lowestPointCache;
 
@@ -801,8 +805,7 @@ void Level::OptimiseLevel()
 
                     ASSERT(mbTemp->getVertexType() == video::EVT_STANDARD);
 
-                    auto *vertices =
-                        (video::S3DVertex *)mbTemp->getVertices();
+                    auto *vertices = (video::S3DVertex *)mbTemp->getVertices();
 
                     // Get texture name from otherMb since material has not been
                     // set on temp meshbuffer
@@ -2590,42 +2593,35 @@ void Level::Load(UndoState *undoState)
 
     if (!undoState) // default, loads from filename
     {
-        FILE *fp = fopen(fileName.c_str(), "rb");
+        std::ifstream infile(fileName.c_str());
 
-        if (fp)
+        std::string line;
+        while (std::getline(infile, line))
         {
-            while (true)
+            core::vector3di coord;
+            int objectType;
+            int eventType;
+
+            // position
+            // objectType,eventType
+            // NOTE: UNKNOWN types of object or event indicate no
+            // object/event.
+            const auto lineView = std::string_view(line);
+            auto result = scn::scan(lineView, "{},{},{}\t{}\t{}", coord.X,
+                                    coord.Y, coord.Z, objectType, eventType);
+            if (!result)
             {
-                core::vector3di coord;
-                int objectType;
-                int eventType;
-
-                // position
-                // objectType,eventType
-                // NOTE: UNKNOWN types of object or event indicate no
-                // object/event.
-                int ret = fscanf(fp, "%i,%i,%i\t%i\t%i\n", &coord.X, &coord.Y,
-                                 &coord.Z, &objectType, &eventType);
-
-                if (ret == EOF)
-                    break;
-
-                if (ret != 5)
-                {
-                    WARN << "Invalid level file (" << fileName << ")";
-                    break;
-                }
-
-                // Successfully read a location, so create stuff!
-                CreateObject(coord, (E_OBJECT_TYPE)objectType);
-                CreateEvent(coord, (E_EVENT_TYPE)eventType);
-
-                // Special logic for player start events.
-                if (eventType == EET_PLAYER_START_EVENT)
-                    startPositions.push_back(coord);
+                WARN << "Invalid level file (" << fileName << ")";
+                break;
             }
 
-            fclose(fp);
+            // Successfully read a location, so create stuff!
+            CreateObject(coord, (E_OBJECT_TYPE)objectType);
+            CreateEvent(coord, (E_EVENT_TYPE)eventType);
+
+            // Special logic for player start events.
+            if (eventType == EET_PLAYER_START_EVENT)
+                startPositions.push_back(coord);
         }
 
         lowestPointCache[fileName] = lowestPoint;
