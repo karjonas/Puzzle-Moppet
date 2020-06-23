@@ -2561,26 +2561,26 @@ void Level::Save()
 {
     std::vector<core::vector3di> mapLocations = map->GetAllMapLocations();
 
-    FILE *fp = fopen(fileName.c_str(), "wb");
+    std::ofstream saveFile;
+    saveFile.open(fileName.c_str());
 
-    if (fp)
+    if (saveFile.is_open())
     {
         for (auto &mapLocation : mapLocations)
         {
             core::vector3di &coord = mapLocation;
-
+            const auto objectType =
+                map->GetObject(coord) ? map->GetObjectType(coord) : EOT_UNKNOWN;
+            const auto eventType = map->GetEvent(coord)
+                                       ? map->GetEvent(coord)->GetType()
+                                       : EET_UNKNOWN;
             // position
             // objectType
             // eventType
             // NOTE: UNKNOWN types of object or event indicate no object/event.
-            fprintf(fp, "%i,%i,%i\t%i\t%i\n", coord.X, coord.Y, coord.Z,
-                    map->GetObject(coord) ? map->GetObjectType(coord)
-                                          : EOT_UNKNOWN,
-                    map->GetEvent(coord) ? map->GetEvent(coord)->GetType()
-                                         : EET_UNKNOWN);
+            saveFile << coord.X << ',' << coord.Y << ',' << coord.Z << '\t'
+                     << objectType << '\t' << eventType << std::endl;
         }
-
-        fclose(fp);
     }
 }
 
