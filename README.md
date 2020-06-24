@@ -25,11 +25,13 @@ Requirements
 Distribution specific instructions
 ----------------------------------
 
-
 Ubuntu:
 
-    sudo apt-get install build-essential cmake libxxf86vm-dev
+    sudo apt-get install build-essential cmake libxxf86vm-dev libopenal-dev git curl unzip tar libgl1-mesa-dev
 
+Arch Linux:
+
+    sudo pacman -S openal cmake make gcc git
 
 Dependencies
 ------------

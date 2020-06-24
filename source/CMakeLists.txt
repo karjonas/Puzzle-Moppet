@@ -1,5 +1,8 @@
 find_package(irrlicht CONFIG REQUIRED 1.7)
+if(NOT BUILD_FOR_APPIMAGE)
+# If building for appimage we use system openal
 find_package(OpenAL CONFIG REQUIRED)
+endif()
 find_package(ode CONFIG REQUIRED)
 find_package(scn CONFIG REQUIRED)
 
@@ -57,12 +60,16 @@ add_library(Litha STATIC
     # C files
     SoundSystems/OpenALSoundSystem/stb_vorbis.c)
 
-target_link_libraries(Litha
-    Irrlicht
-    OpenAL::OpenAL
-    ODE::ODE
-    scn::scn
-    )
+set(LINK_LIBRARIES Irrlicht ODE::ODE scn::scn)
+
+# If building for appimage we use system openal
+if(BUILD_FOR_APPIMAGE)
+    list(APPEND LINK_LIBRARIES openal)
+else()
+    list(APPEND LINK_LIBRARIES OpenAL::OpenAL)
+endif()
+
+target_link_libraries(Litha ${LINK_LIBRARIES})
 
 target_include_directories(Litha PUBLIC
     ${CMAKE_SOURCE_DIR}/include
