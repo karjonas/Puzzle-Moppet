@@ -3,7 +3,7 @@ rm -rf vcpkg
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.sh
-./vcpkg install irrlicht ode scnlib
+./vcpkg install irrlicht ode
 cd ..
 rm -rf build
 mkdir build

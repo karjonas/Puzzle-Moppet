@@ -8,7 +8,7 @@ rmdir -r vcpkg
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 .\bootstrap-vcpkg.bat
-.\vcpkg.exe install irrlicht ode openal-soft scnlib --triplet x64-windows
+.\vcpkg.exe install irrlicht ode openal-soft --triplet x64-windows
 cd ../build
 cmake ../../ -DDATA_DIR="./data" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$base_path\vcpkg\scripts\buildsystems\vcpkg.cmake"
 devenv LithaEngine.sln /Build Release

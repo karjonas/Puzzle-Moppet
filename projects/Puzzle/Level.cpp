@@ -11,10 +11,9 @@
 
 #include "utils/paths.h"
 
-#include <scn/scn.h>
-
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 
 std::map<core::stringc, f32> lowestPointCache;
 
@@ -2598,22 +2597,23 @@ void Level::Load(UndoState *undoState)
         std::string line;
         while (std::getline(infile, line))
         {
-            core::vector3di coord;
+            std::stringstream ss(line);
+            int x, y, z;
             int objectType;
             int eventType;
-
-            // position
-            // objectType,eventType
-            // NOTE: UNKNOWN types of object or event indicate no
-            // object/event.
-            const auto lineView = std::string_view(line);
-            auto result = scn::scan(lineView, "{},{},{}\t{}\t{}", coord.X,
-                                    coord.Y, coord.Z, objectType, eventType);
-            if (!result)
+            // NOTE: UNKNOWN types of object or event indicate no object/event.
+            // format: {x},{y},{z}\t{objectType}\t{eventType}
+            // NOTE: The tabs are ignored when reading
+            char comma = ',';
+            if (!(ss >> x >> comma >> y >> comma >> z >> objectType >>
+                  eventType) ||
+                comma != ',')
             {
                 WARN << "Invalid level file (" << fileName << ")";
                 break;
             }
+
+            const auto coord = core::vector3di(x, y, z);
 
             // Successfully read a location, so create stuff!
             CreateObject(coord, (E_OBJECT_TYPE)objectType);

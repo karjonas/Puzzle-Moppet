@@ -4,7 +4,6 @@ if(NOT BUILD_FOR_APPIMAGE)
 find_package(OpenAL CONFIG REQUIRED)
 endif()
 find_package(ode CONFIG REQUIRED)
-find_package(scn CONFIG REQUIRED)
 
 add_library(Litha STATIC
     # C++ files
@@ -60,7 +59,7 @@ add_library(Litha STATIC
     # C files
     SoundSystems/OpenALSoundSystem/stb_vorbis.c)
 
-set(LINK_LIBRARIES Irrlicht ODE::ODE scn::scn)
+set(LINK_LIBRARIES Irrlicht ODE::ODE)
 
 # If building for appimage we use system openal
 if(BUILD_FOR_APPIMAGE)
