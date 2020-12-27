@@ -12,15 +12,25 @@ replace art assets and continue the game development. Videos, details and
 binaries can still be found at original developer's website: 
 http://garnetgames.com/puzzlemoppet.
 
+Releases
+========
+
+Check out the [Releases page](https://github.com/karjonas/Puzzle-Moppet/releases) on GitHub to download binaries for Windows 10 and an AppImage for Linux systems.
+
+Building
+========
+
+The following section details how to build Puzzle Moppet on a Linux system. Building for Windows is quite similar, you first install the dependencies (git, vcpkg) and then you can open the CMakeLists.txt directly in Visual Studio.
+
 Requirements
 ------------
 
-- CMake
-- git
-- vcpkg, https://github.com/microsoft/vcpkg/
-- Irrlicht, http://irrlicht.sourceforge.net/downloads/
-- ODE, http://www.ode.org/
-- OpenAL, http://connect.creativelabs.com/openal/default.aspx
+- [CMake](https://cmake.org/)
+- [git](https://git-scm.com/)
+- [vcpkg](https://github.com/microsoft/vcpkg/)
+    - [Irrlicht](http://irrlicht.sourceforge.net/)
+    - [ODE](http://www.ode.org/)
+    - [OpenAL Soft](https://openal-soft.org/)
 
 Distribution specific instructions
 ----------------------------------
@@ -36,7 +46,7 @@ Arch Linux:
 Dependencies
 ------------
 
-Install vcpkg and the dependencies:
+Open a terminal, then install vcpkg and the dependencies:
 
     git clone https://github.com/microsoft/vcpkg.git
     cd vcpkg
@@ -46,6 +56,7 @@ Install vcpkg and the dependencies:
 
 Building the Game
 -----------------
+
 Open a terminal/console window, navigate to the project folder. Replace <VCPKG_DIR> with the vcpkg path, then run CMake and then Make:
 
     mkdir build
