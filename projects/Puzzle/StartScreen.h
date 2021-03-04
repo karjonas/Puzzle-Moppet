@@ -57,6 +57,7 @@ class StartScreen : public IUpdatable, public IWantEvents
     void AndSoItBegins();
 
     void ShowOptionsMenu(VariantMap settings);
+    void deleteMenues();
 
 public:
     StartScreen(MainState **mainStatePtrLoc);

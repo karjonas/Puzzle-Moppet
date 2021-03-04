@@ -686,6 +686,36 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     */
 }
 
+void StartScreen::deleteMenues() {
+    ASSERT(menu);
+    delete menu;
+    menu = nullptr;
+
+    ASSERT(menuLevelSelect);
+    delete menuLevelSelect;
+    menuLevelSelect = nullptr;
+
+    if (levelTitleText)
+    {
+        levelTitleText->remove();
+        levelTitleText = nullptr;
+    }
+
+    if (levelRatingText)
+    {
+        levelRatingText->remove();
+        levelRatingText = nullptr;
+    }
+
+    if (levelFractionText)
+    {
+        levelFractionText->remove();
+        levelFractionText = nullptr;
+    }
+
+}
+
+
 void StartScreen::OnEvent(const Event &event)
 {
     if (event.IsType("ButtonDown") && event["button"] == KEY_ESCAPE)
@@ -734,32 +764,7 @@ void StartScreen::OnEvent(const Event &event)
             else if (event["button"] == EMI_OPTIONS)
             {
                 NOTE << "Showing options menu...";
-
-                ASSERT(menu);
-                delete menu;
-                menu = nullptr;
-
-                ASSERT(menuLevelSelect);
-                delete menuLevelSelect;
-                menuLevelSelect = nullptr;
-
-                if (levelTitleText)
-                {
-                    levelTitleText->remove();
-                    levelTitleText = nullptr;
-                }
-
-                if (levelRatingText)
-                {
-                    levelRatingText->remove();
-                    levelRatingText = nullptr;
-                }
-
-                if (levelFractionText)
-                {
-                    levelFractionText->remove();
-                    levelFractionText = nullptr;
-                }
+                deleteMenues();
 
                 originalConfig = get_current_config();
                 newConfig = originalConfig; // (will be modified by user
@@ -770,32 +775,7 @@ void StartScreen::OnEvent(const Event &event)
             else if (event["button"] == EMI_NEW_GAME)
             {
                 NOTE << "Showing new game confirmation prompt...";
-
-                ASSERT(menu);
-                delete menu;
-                menu = nullptr;
-
-                ASSERT(menuLevelSelect);
-                delete menuLevelSelect;
-                menuLevelSelect = nullptr;
-
-                if (levelTitleText)
-                {
-                    levelTitleText->remove();
-                    levelTitleText = nullptr;
-                }
-
-                if (levelRatingText)
-                {
-                    levelRatingText->remove();
-                    levelRatingText = nullptr;
-                }
-
-                if (levelFractionText)
-                {
-                    levelFractionText->remove();
-                    levelFractionText = nullptr;
-                }
+                deleteMenues();
 
                 auto *horizMenu =
                     new SimpleHorizontalMenu(START_NEW_GAME_MENU_ID);
