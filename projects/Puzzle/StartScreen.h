@@ -8,6 +8,8 @@
 class MainState;
 class Level;
 
+#include <array>
+
 // Start Screen is well and truly hacked in, since I never intended to have one.
 // So some stuff may be duplicated from MainState.
 class StartScreen : public IUpdatable, public IWantEvents
@@ -37,7 +39,7 @@ class StartScreen : public IUpdatable, public IWantEvents
     SimpleMenu *menu;
     SimpleEitherSideToggleMenu *menuLevelSelect;
 
-    std::vector<SimpleMenu *> optionsMenus;
+    std::array<SimpleMenu *, 2> optionsMenus = {nullptr, nullptr};
 
     // for options menu
     VariantMap originalConfig;

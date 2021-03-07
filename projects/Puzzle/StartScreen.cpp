@@ -557,12 +557,12 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     f32 marginBottom = 0.2;
 
     for (auto &elem : optionsMenus)
+    {
         delete elem;
+        elem = nullptr;
+    }
 
-    optionsMenus.clear();
-
-    auto *vertMenu =
-        new SimpleVerticalMenu(OPTIONS_MENU_ID, marginBottom);
+    auto *vertMenu = new SimpleVerticalMenu(OPTIONS_MENU_ID, marginBottom);
 
 #ifndef __APPLE__
     // temp disabled on Mac since problems with mouse control in windowed mode.
@@ -632,7 +632,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 
     vertMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     vertMenu->Finalise();
-    optionsMenus.push_back(vertMenu);
+    optionsMenus[0] = vertMenu;
 
     {
         gui::IGUIEnvironment *guienv =
@@ -676,7 +676,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     horizMenu->AddItem("Apply", EMI_OPTIONS_OK);
     horizMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     horizMenu->Finalise();
-    optionsMenus.push_back(horizMenu);
+    optionsMenus[1] = horizMenu;
 
     /*
     SimpleHorizontalMenu *title = new SimpleHorizontalMenu(OPTIONS_MENU_ID);
@@ -686,7 +686,8 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     */
 }
 
-void StartScreen::deleteMenues() {
+void StartScreen::deleteMenues()
+{
     ASSERT(menu);
     delete menu;
     menu = nullptr;
@@ -712,9 +713,7 @@ void StartScreen::deleteMenues() {
         levelFractionText->remove();
         levelFractionText = nullptr;
     }
-
 }
-
 
 void StartScreen::OnEvent(const Event &event)
 {
@@ -820,9 +819,10 @@ void StartScreen::OnEvent(const Event &event)
                 event["button"] == EMI_OPTIONS_OK)
             {
                 for (auto &elem : optionsMenus)
+                {
                     delete elem;
-
-                optionsMenus.clear();
+                    elem = nullptr;
+                }
 
                 // Go back to first menu.
                 CreateFirstMenu();
