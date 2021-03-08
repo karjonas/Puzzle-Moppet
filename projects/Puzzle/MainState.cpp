@@ -914,12 +914,12 @@ void MainState::NextLevel(bool wait)
                 saveFile << currentLevelFileName.c_str();
                 saveFile.close();
 
-                NOTE << "Saved game successfully (" << currentLevelFileName << ")";
+                NOTE << "Saved game successfully (" << currentLevelFileName
+                     << ")";
             }
             else
             {
                 WARN << "Could not open save file " << filePath.c_str();
-
             }
 
             // EDIT. Hacked in. Save furthest reached.
@@ -1409,8 +1409,7 @@ void MainState::OnEvent(const Event &event)
 
             for (auto &element : elements)
             {
-                auto *textElement =
-                    (gui::IGUIStaticText *)element;
+                auto *textElement = (gui::IGUIStaticText *)element;
 
                 if (element == mouseOverElement)
                 {

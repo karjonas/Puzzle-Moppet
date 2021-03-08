@@ -134,8 +134,7 @@ void SimpleMenu::OnEvent(const Event &event)
             {
                 if (element->getType() == gui::EGUIET_STATIC_TEXT)
                 {
-                    auto *textElement =
-                        (gui::IGUIStaticText *)element;
+                    auto *textElement = (gui::IGUIStaticText *)element;
 
                     if (element == mouseOverElement)
                     {

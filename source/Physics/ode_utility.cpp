@@ -170,8 +170,7 @@ ODEMeshData *ODECreateMeshData(scene::IMesh *mesh,
         }
         case video::EVT_2TCOORDS:
         {
-            auto *iVertices =
-                (video::S3DVertex2TCoords *)mb->getVertices();
+            auto *iVertices = (video::S3DVertex2TCoords *)mb->getVertices();
             for (u32 j = 0; j < vertexCount; j++)
             {
                 vertices[vertexCountTotal + j][0] =

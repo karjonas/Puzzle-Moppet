@@ -81,8 +81,7 @@ ShaderInstance *ShaderManager::GetShaderInstance(
     }
 
     // Doesn't exist, so create
-    auto *shaderInstance =
-        new ShaderInstance(driver, this, shaderInstanceDef);
+    auto *shaderInstance = new ShaderInstance(driver, this, shaderInstanceDef);
 
     // It's immediately (and permanently) added to the Irrlicht engine as a
     // material so we no longer need to keep track of it.

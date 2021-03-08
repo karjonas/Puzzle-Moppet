@@ -13,20 +13,17 @@
 void DynamicBody::FillODEMassFromGeometry(dMass *dmass, f32 density,
                                           ICollisionGeometry *geom)
 {
-    if (auto *boxGeom =
-            dynamic_cast<BoxCollisionGeometry *>(geom))
+    if (auto *boxGeom = dynamic_cast<BoxCollisionGeometry *>(geom))
     {
         const core::vector3df &size = boxGeom->GetSize();
 
         dMassSetBox(dmass, density, size.X, size.Y, size.Z);
     }
-    else if (auto *meshGeom =
-                 dynamic_cast<MeshCollisionGeometry *>(geom))
+    else if (auto *meshGeom = dynamic_cast<MeshCollisionGeometry *>(geom))
     {
         dMassSetTrimesh(dmass, density, meshGeom->GetODEGeom());
     }
-    else if (auto *sphereGeom =
-                 dynamic_cast<SphereCollisionGeometry *>(geom))
+    else if (auto *sphereGeom = dynamic_cast<SphereCollisionGeometry *>(geom))
     {
         dMassSetSphere(dmass, density, sphereGeom->GetRadius());
     }
