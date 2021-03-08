@@ -1,6 +1,7 @@
 
 #include "PostProcessingChain.h"
 #include "IShader.h"
+#include "Colors.h"
 
 // for RTT dropping bug (see below)
 #include "IEngine.h"
@@ -191,7 +192,7 @@ void PostProcessingChain::Process()
     {
         // Render to the input texture of the next effect.
         driver->setRenderTarget(effects[i + 1].material.TextureLayer[0].Texture,
-                                true, false, video::SColor(0, 0, 0, 0));
+                                true, false, Colors::black());
         driver->setMaterial(effects[i].material);
         driver->drawIndexedTriangleList(quadVertices, 4, quadIndices, 2);
     }
@@ -203,7 +204,7 @@ void PostProcessingChain::ApplyToScreen()
     // If screen hasn't been rendered to, we must also clear the frame buffer.
     // (as it may have stuff left over from rendering to textures in it)
     driver->setRenderTarget(video::ERT_FRAME_BUFFER, !renderScreen, false,
-                            video::SColor(0, 0, 0, 0));
+                            Colors::black());
 
     driver->setMaterial(effects[effects.size() - 1].material);
     driver->drawIndexedTriangleList(quadVertices, 4, quadIndices, 2);

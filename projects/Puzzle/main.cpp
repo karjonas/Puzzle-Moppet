@@ -3,6 +3,7 @@
 #include "StartScreen.h"
 #include "utils/paths.h"
 #include "volume.h"
+#include "Colors.h"
 
 // oh no another global
 ISound *bgAmbientSound = nullptr;
@@ -135,7 +136,7 @@ int main(int argc, const char **argv)
         loadingGUI->setRelativePosition(rect);
 
         // Render the gui once.
-        driver->beginScene(true, true, video::SColor(0, 0, 0, 0));
+        driver->beginScene(true, true, Colors::black());
         guienv->drawAll();
         driver->endScene();
 

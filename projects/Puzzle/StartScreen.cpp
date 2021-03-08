@@ -4,6 +4,7 @@
 #include "Level.h"
 #include "options.h"
 #include "utils/paths.h"
+#include "Colors.h"
 
 #include <string>
 
@@ -314,7 +315,7 @@ void StartScreen::CreateLevelSelectButtons()
                 levelTitleText->getRelativePosition().getWidth() / 2,
             s32(screenHeight * distFromTop)));
 
-        levelTitleText->setOverrideColor(video::SColor(115, 255, 255, 255));
+        levelTitleText->setOverrideColor(Colors::text_level_title());
 
         levelTitleText->setAlignment(irr::gui::EGUIA_CENTER,
                                      irr::gui::EGUIA_CENTER,
@@ -362,7 +363,7 @@ void StartScreen::CreateLevelSelectButtons()
                         get_rating_col(previousRating));
                 else
                     levelRatingText->setOverrideColor(
-                        video::SColor(100, 255, 255, 255));
+                        Colors::text_level_default_rating());
             }
         }
 
@@ -430,7 +431,7 @@ void StartScreen::CreateLevelSelectButtons()
                         yGap));
 
                 levelFractionText->setOverrideColor(
-                    video::SColor(75, 255, 255, 255));
+                    Colors::text_level_fraction());
                 levelFractionText->setAlignment(irr::gui::EGUIA_CENTER,
                                                 irr::gui::EGUIA_CENTER,
                                                 irr::gui::EGUIA_CENTER,

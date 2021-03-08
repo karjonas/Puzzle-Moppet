@@ -8,6 +8,7 @@
 #include "StartScreen.h"
 #include "level_stats.h"
 #include "utils/paths.h"
+#include "Colors.h"
 
 #include <iostream>
 #include <fstream>
@@ -21,9 +22,6 @@ extern core::vector3df sunDirection;
 #include "Map.h"
 
 #define GAME_SAVE_FILENAME "puzzlegame.save"
-
-#define TEXT_COL video::SColor(150, 255, 255, 255)
-#define TEXT_COL_MOUSEOVER video::SColor(100, 200, 200, 200)
 
 // gets the full path to a level file, relative to the executable's directory
 core::stringc level_path_rel_exe(core::stringc levelFile)
@@ -243,7 +241,7 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
                                           dim.Height * nbLines),
                               false, true);
     textElement->setOverrideFont(guienv->getFont(paths::get_font("font2.xml")));
-    textElement->setOverrideColor(TEXT_COL);
+    textElement->setOverrideColor(Colors::text_col());
     return textElement;
 }
 
@@ -261,7 +259,7 @@ gui::IGUIStaticText *add_static_text2(const wchar_t *str)
                               false, false);
     textElement->setOverrideFont(
         guienv->getFont(paths::get_font("fontlarge2.xml")));
-    textElement->setOverrideColor(TEXT_COL);
+    textElement->setOverrideColor(Colors::text_col());
     return textElement;
 }
 
@@ -762,8 +760,7 @@ void MainState::StartLevel(core::stringc levelFileName, bool startEditor,
         }
 
         smgr->getMeshManipulator()->setVertexColors(staticMeshWater,
-                                                    video::SColor(255, 255, 255,
-                                                                  255));
+                                                    Colors::white());
 
         {
             const f32 waveHeight = 0.1;
@@ -1101,9 +1098,8 @@ void MainState::Update(f32 dt)
 
         for (auto &elem : introTexts)
         {
-            elem->setOverrideColor(
-                TEXT_COL.getInterpolated(video::SColor(0, 255, 255, 255),
-                                         alpha));
+            elem->setOverrideColor(Colors::text_col().getInterpolated(
+                video::SColor(0, 255, 255, 255), alpha));
         }
     }
 
@@ -1130,9 +1126,8 @@ void MainState::Update(f32 dt)
 
         for (auto &elem : startLevelTexts)
         {
-            elem->setOverrideColor(
-                TEXT_COL.getInterpolated(video::SColor(0, 255, 255, 255),
-                                         alpha));
+            elem->setOverrideColor(Colors::text_col().getInterpolated(
+                video::SColor(0, 255, 255, 255), alpha));
         }
     }
 
@@ -1413,14 +1408,15 @@ void MainState::OnEvent(const Event &event)
 
                 if (element == mouseOverElement)
                 {
-                    if (textElement->getOverrideColor() != TEXT_COL_MOUSEOVER)
+                    if (textElement->getOverrideColor() !=
+                        Colors::text_col_mouseover())
                         menuSound->Play(paths::get_sfx("beep.ogg"));
 
-                    textElement->setOverrideColor(TEXT_COL_MOUSEOVER);
+                    textElement->setOverrideColor(Colors::text_col_mouseover());
                 }
                 else
                 {
-                    textElement->setOverrideColor(TEXT_COL);
+                    textElement->setOverrideColor(Colors::text_col());
                 }
             }
         }

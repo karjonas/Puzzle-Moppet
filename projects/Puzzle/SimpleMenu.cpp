@@ -1,14 +1,11 @@
 
 #include "SimpleMenu.h"
 #include "Positioner.h"
+#include "Colors.h"
 
 // taken from mainstate
 gui::IGUIStaticText *add_static_text2(const wchar_t *str);
 gui::IGUIStaticText *add_static_text(const wchar_t *str);
-
-// copied from mainstate
-#define TEXT_COL video::SColor(150, 255, 255, 255)
-#define TEXT_COL_MOUSEOVER video::SColor(100, 200, 200, 200)
 
 SimpleMenu::SimpleMenu(s32 uniqueId)
 {
@@ -139,18 +136,19 @@ void SimpleMenu::OnEvent(const Event &event)
                     if (element == mouseOverElement)
                     {
                         if (textElement->getOverrideColor() !=
-                            TEXT_COL_MOUSEOVER)
+                            Colors::text_col_mouseover())
                         {
                             if (mouseOverSound.size() &&
                                 !event.HasKey("SimpleMenu::Finalise"))
                                 menuSound->Play(mouseOverSound);
                         }
 
-                        textElement->setOverrideColor(TEXT_COL_MOUSEOVER);
+                        textElement->setOverrideColor(
+                            Colors::text_col_mouseover());
                     }
                     else
                     {
-                        textElement->setOverrideColor(TEXT_COL);
+                        textElement->setOverrideColor(Colors::text_col());
                     }
                 }
                 else if (element->getType() == gui::EGUIET_IMAGE)

@@ -8,6 +8,7 @@
 #include "EndLevelScreen.h"
 #include "GridBasedCharacterController.h"
 #include "RotateToAnimator.h"
+#include "Colors.h"
 
 #include "utils/paths.h"
 
@@ -2997,7 +2998,7 @@ void Level::HandleTutorialEvents(const Event &event)
                 text->setRelativePosition(rect);
                 tutorialTextElements.push_back(text);
 
-                text->setOverrideColor(video::SColor(150, 255, 255, 255));
+                text->setOverrideColor(Colors::text_col());
 
                 y -= rect.getHeight();
             }

@@ -7,6 +7,7 @@
 #include "ShaderManager.h"
 #include "Shader.h"
 #include "Event.h"
+#include "Colors.h"
 
 RenderTask::RenderTask(World *world)
 {
@@ -37,7 +38,7 @@ RenderTask::RenderTask(World *world)
     currentScreenFade = 1.0;
 
     // Default background colour
-    SetBackgroundCol(video::SColor(0, 0, 0, 0));
+    SetBackgroundCol(Colors::black());
 
     renderInvisible = false;
 }

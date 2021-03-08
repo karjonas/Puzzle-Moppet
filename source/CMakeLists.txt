@@ -11,6 +11,7 @@ add_library(Litha STATIC
     Animators/RotationAnimator.cpp
     Camera.cpp
     Character.cpp
+    Colors.cpp
     Engine.cpp
     EventQueue.cpp
     InputProfile.cpp
