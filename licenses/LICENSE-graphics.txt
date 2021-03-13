@@ -18,11 +18,10 @@ All files in puzzlemoppet/projects/Puzzle/media.
   license: WTFPL
   source: http://garnetgames.com/puzzlemoppet/
 
-./font/fontlarge20.png
-./font/font20.png
-  author: wmk69 <wmk69@o2.pl>
-  license: SILOFLv1.1
-  edited by Daniel Frith <dan@xzist.org>
+./font/sansation20_irr.png
+./font/sansation32_irr.png
+  author: Bernd Montag
+  license: Freeware
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is available with a FAQ at: http://scripts.sil.org/OFL

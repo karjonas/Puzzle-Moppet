@@ -638,7 +638,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     {
         gui::IGUIEnvironment *guienv =
             GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
-        gui::IGUIFont *font = guienv->getFont("font2.xml");
+        gui::IGUIFont *font = guienv->getFont("sansation20.xml");
 
         const std::vector<gui::IGUIElement *> &elements =
             vertMenu->GetElements();

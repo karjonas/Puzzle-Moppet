@@ -225,7 +225,7 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
                           ->getScreenSize()
                           .Width;
 
-    gui::IGUIFont *font = guienv->getFont(paths::get_font("font2.xml"));
+    gui::IGUIFont *font = guienv->getFont(paths::get_font("sansation20.xml"));
 
     core::dimension2du dim = font->getDimension(str);
 
@@ -240,7 +240,7 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
                               core::recti((nbLines > 1 ? 10 : 0), 0, dim.Width,
                                           dim.Height * nbLines),
                               false, true);
-    textElement->setOverrideFont(guienv->getFont(paths::get_font("font2.xml")));
+    textElement->setOverrideFont(guienv->getFont(paths::get_font("sansation20.xml")));
     textElement->setOverrideColor(Colors::text_col());
     return textElement;
 }
@@ -250,7 +250,7 @@ gui::IGUIStaticText *add_static_text2(const wchar_t *str)
     gui::IGUIEnvironment *guienv =
         GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
 
-    gui::IGUIFont *font = guienv->getFont(paths::get_font("fontlarge2.xml"));
+    gui::IGUIFont *font = guienv->getFont(paths::get_font("sansation32.xml"));
 
     core::dimension2du dim = font->getDimension(str);
 
@@ -258,7 +258,7 @@ gui::IGUIStaticText *add_static_text2(const wchar_t *str)
         guienv->addStaticText(str, core::recti(0, 0, dim.Width, dim.Height),
                               false, false);
     textElement->setOverrideFont(
-        guienv->getFont(paths::get_font("fontlarge2.xml")));
+        guienv->getFont(paths::get_font("sansation32.xml")));
     textElement->setOverrideColor(Colors::text_col());
     return textElement;
 }
