@@ -41,6 +41,7 @@ nbproject
 *.cxxflags
 *.files
 *.includes
+CMakeLists.txt.user
 
 # AppImage
 *.AppImage
