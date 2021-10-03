@@ -11,7 +11,7 @@ cd vcpkg
 .\vcpkg.exe install irrlicht ode openal-soft --triplet x64-windows
 cd ../build
 cmake ../../ -DDATA_DIR="./data" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$base_path\vcpkg\scripts\buildsystems\vcpkg.cmake"
-devenv LithaEngine.sln /Build Release
+devenv PuzzleMoppet.sln /Build Release
 cd ..
 rmdir -r $out_dir
 mkdir $out_dir
