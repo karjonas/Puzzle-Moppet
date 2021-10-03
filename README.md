@@ -53,6 +53,10 @@ Open a terminal, then install vcpkg and the dependencies:
     ./bootstrap-vcpkg.sh
     ./vcpkg install irrlicht ode openal-soft
 
+If running Windows 64-bit make sure to provide the triplet like this:
+
+    ./vcpkg install irrlicht ode openal-soft --triplet=windows-x64
+
 
 Building the Game
 -----------------
@@ -63,34 +67,6 @@ Open a terminal/console window, navigate to the project folder. Replace <VCPKG_D
     cd build
     cmake .. -DCMAKE_TOOLCHAIN_FILE=<VCPKG_DIR>/scripts/buildsystems/vcpkg.cmake
     make
-
-To "install" the game (i.e. use make install):
-
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_FOR_INSTALL=ON .
-    make
-    sudo make install
-
-or
-
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/somewhere -DBUILD_FOR_INSTALL=ON .
-    make
-    make install
-
-Other cmake options
--------------------
-- ```cmake . ``` For normal build
-
-- ```cmake -DCMAKE_BUILD_TYPE=Debug .``` If you want debug symbols
-
-- ```cmake -DCMAKE_BUILD_TYPE=Release . ``` will give you -O2 optimisation for release builds
-
-- ```CMAKE_INSTALL_PREFIX``` :
-	Install directory used by install.
-	If ```make install``` is invoked or INSTALL is built, this directory is
-	pre-pended onto all install directories.  This variable defaults to
-	/usr/local on UNIX and c:/Program Files on Windows.
-
-- ```BUILD_FOR_INSTALL```: Should the game search for its datas in install path
 
 Running the game
 ----------------
