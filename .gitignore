@@ -47,3 +47,7 @@ CMakeLists.txt.user
 *.AppImage
 vcpkg
 
+# PKGBUILD
+pkgbuild/puzzlemoppet-git*
+pkgbuild/src
+pkgbuild/pkg

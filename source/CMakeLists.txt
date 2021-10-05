@@ -1,10 +1,3 @@
-find_package(irrlicht CONFIG REQUIRED 1.7)
-if(NOT BUILD_FOR_APPIMAGE)
-# If building for appimage we use system openal
-find_package(OpenAL CONFIG REQUIRED)
-endif()
-find_package(ode CONFIG REQUIRED)
-
 add_library(Litha STATIC
     # C++ files
     Animators/BobAnimator.cpp
@@ -60,13 +53,30 @@ add_library(Litha STATIC
     # C files
     SoundSystems/OpenALSoundSystem/stb_vorbis.c)
 
-set(LINK_LIBRARIES Irrlicht ODE::ODE)
+if(NOT BUILD_FOR_APPIMAGE AND NOT BUILD_FOR_PKGBUILD)
+    # If building for appimage we use system openal
+    find_package(OpenAL CONFIG REQUIRED)
+endif()
 
+if(NOT BUILD_FOR_PKGBUILD)
+    find_package(irrlicht CONFIG REQUIRED 1.7)
+    find_package(ode CONFIG REQUIRED)
+endif()
+
+set(LINK_LIBRARIES Irrlicht)
 # If building for appimage we use system openal
-if(BUILD_FOR_APPIMAGE)
+if(BUILD_FOR_APPIMAGE OR BUILD_FOR_PKGBUILD)
     list(APPEND LINK_LIBRARIES openal)
 else()
     list(APPEND LINK_LIBRARIES OpenAL::OpenAL)
+endif()
+
+set(IRRLICHT_INCLUDE_DIR "")
+if(BUILD_FOR_PKGBUILD)
+    list(APPEND LINK_LIBRARIES ode)
+    set(IRRLICHT_INCLUDE_DIR /usr/include/irrlicht)
+else()
+    list(APPEND LINK_LIBRARIES ODE::ODE)
 endif()
 
 target_link_libraries(Litha ${LINK_LIBRARIES})
@@ -80,4 +90,5 @@ target_include_directories(Litha PUBLIC
     SoundSystems/OpenALSoundSystem
     utils
     utils/os
+    ${IRRLICHT_INCLUDE_DIR}
     )
