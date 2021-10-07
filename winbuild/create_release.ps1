@@ -1,6 +1,6 @@
 $base_path = Get-Location
 $curr_hash = (git rev-parse HEAD).Substring(0,8)
-$out_dir = "Puzzle_Moppet-$curr_hash"
+$out_dir = "Puzzle_Moppet-Win64-$curr_hash"
 echo "Output dir: $out_dir"
 rmdir -r build
 mkdir build
