@@ -15,7 +15,15 @@ http://garnetgames.com/puzzlemoppet.
 Releases
 ========
 
+Windows / Linux
+---------------
+
 Check out the [Releases page](https://github.com/karjonas/Puzzle-Moppet/releases) on GitHub to download binaries for Windows 10 and an AppImage for Linux systems.
+
+Arch Linux
+----------
+
+For Arch Linux users Puzzle Moppet is available through the AUR with the [puzzlemoppet-git](https://aur.archlinux.org/packages/puzzlemoppet-git/) package.
 
 Building
 ========
