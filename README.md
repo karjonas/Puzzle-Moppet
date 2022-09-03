@@ -69,8 +69,10 @@ If running Windows 64-bit make sure to provide the triplet like this:
 Building the Game
 -----------------
 
-Open a terminal/console window, navigate to the project folder. Replace <VCPKG_DIR> with the vcpkg path, then run CMake and then Make:
+Open a terminal/console window, then clone the project, make a build directory, run CMake and Make (replace <VCPKG_DIR> with the vcpkg path):
 
+    git clone https://github.com/karjonas/Puzzle-Moppet.git
+    cd Puzzle-Moppet
     mkdir build
     cd build
     cmake .. -DCMAKE_TOOLCHAIN_FILE=<VCPKG_DIR>/scripts/buildsystems/vcpkg.cmake
