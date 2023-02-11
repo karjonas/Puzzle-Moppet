@@ -1,45 +1,91 @@
 add_library(Litha STATIC
-    # C++ files
     Animators/BobAnimator.cpp
+    Animators/BobAnimator.h
     Animators/RotationAnimator.cpp
+    Animators/RotationAnimator.h
     Camera.cpp
+    Camera.h
     Character.cpp
+    Character.h
     Colors.cpp
     Engine.cpp
+    Engine.h
     EventQueue.cpp
+    EventQueue.h
+    InfiniteRunningAverage.h
     InputProfile.cpp
+    InputProfile.h
     Kernel.cpp
+    Kernel.h
     LogicTask.cpp
+    LogicTask.h
     Mesh.cpp
+    Mesh.h
     MotionSensor.cpp
+    MotionSensor.h
     NodeHandler.cpp
+    NodeHandler.h
     Physics/BoxCollisionGeometry.cpp
+    Physics/BoxCollisionGeometry.h
     Physics/CollisionGeometry.cpp
+    Physics/CollisionGeometry.h
     Physics/CollisionMaterial.cpp
+    Physics/CollisionMaterial.h
     Physics/DynamicBody.cpp
+    Physics/DynamicBody.h
     Physics/MeshCollisionGeometry.cpp
+    Physics/MeshCollisionGeometry.h
     Physics/ode_utility.cpp
+    Physics/ode_utility.h
     Physics/Physics.cpp
+    Physics/Physics.h
     Physics/ray_collision.cpp
+    Physics/ray_collision.h
     Physics/SphereCollisionGeometry.cpp
+    Physics/SphereCollisionGeometry.h
     Physics/StaticBody.cpp
+    Physics/StaticBody.h
     PostProcessingChain.cpp
+    PostProcessingChain.h
     ProxyTransformable.cpp
+    ProxyTransformable.h
     RenderTask.cpp
+    RenderTask.h
     Shader.cpp
+    Shader.h
     ShaderInstance.cpp
+    ShaderInstance.h
+    ShaderInstanceDef.h
     ShaderManager.cpp
+    ShaderManager.h
+    SoundMotionCallback.h
     SoundQueue.cpp
+    SoundQueue.h
     SoundSource.cpp
-    SoundSystems/OpenALSoundSystem/OpenALSound2D.cpp
-    SoundSystems/OpenALSoundSystem/OpenALSound3D.cpp
-    SoundSystems/OpenALSoundSystem/OpenALSound.cpp
-    SoundSystems/OpenALSoundSystem/OpenALSoundSystem.cpp
+    SoundSource.h
+    SoundSystems/OpenALSoundSystem
     SoundSystems/OpenALSoundSystem/openal_stuff.cpp
+    SoundSystems/OpenALSoundSystem/openal_stuff.h
+    SoundSystems/OpenALSoundSystem/OpenALSound.cpp
+    SoundSystems/OpenALSoundSystem/OpenALSound.h
+    SoundSystems/OpenALSoundSystem/OpenALSound2D.cpp
+    SoundSystems/OpenALSoundSystem/OpenALSound2D.h
+    SoundSystems/OpenALSoundSystem/OpenALSound3D.cpp
+    SoundSystems/OpenALSoundSystem/OpenALSound3D.h
+    SoundSystems/OpenALSoundSystem/OpenALSoundSystem.cpp
+    SoundSystems/OpenALSoundSystem/OpenALSoundSystem.h
     SoundSystems/OpenALSoundSystem/sound_reg.cpp
+    SoundSystems/OpenALSoundSystem/sound_reg.h
+    SoundSystems/OpenALSoundSystem/stb_vorbis.c
+    SoundSystems/OpenALSoundSystem/stb_vorbis.h
     SoundSystems/SoundSystem.cpp
+    SoundSystems/SoundSystem.h
+    Task.h
     ThirdPersonCameraController.cpp
+    ThirdPersonCameraController.h
+    Updater.h
     UserCharacterController.cpp
+    UserCharacterController.h
     utils/file.cpp
     utils/log.cpp
     utils/maths.cpp
@@ -50,8 +96,8 @@ add_library(Litha STATIC
     utils/Variant.cpp
     utils/VariantMap.cpp
     World.cpp
-    # C files
-    SoundSystems/OpenALSoundSystem/stb_vorbis.c)
+    World.h
+)
 
 if(NOT BUILD_FOR_APPIMAGE AND NOT BUILD_FOR_PKGBUILD)
     # If building for appimage we use system openal
