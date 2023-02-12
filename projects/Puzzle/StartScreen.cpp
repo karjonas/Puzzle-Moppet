@@ -222,221 +222,219 @@ void StartScreen::CreateFirstMenu()
 
 void StartScreen::CreateLevelSelectButtons()
 {
+    video::IVideoDriver *driver = device->getVideoDriver();
+    u32 screenWidth = driver->getScreenSize().Width;
+    u32 screenHeight = driver->getScreenSize().Height;
+
+    ASSERT(levelPreview);
+
+    core::stringc levelTitle;
+
+    if (levelTitles.count(levelPreview->GetShortName()))
+        levelTitle = levelTitles[levelPreview->GetShortName()];
+    else
+        levelTitle = "";
+
+    menuLevelSelect = new SimpleEitherSideToggleMenu(LEVEL_SELECT_MENU_ID);
+    menuLevelSelect->AddImageItem("arrow_left.png", EMI_LEVEL_PREV);
+    menuLevelSelect->AddImageItem("arrow_right.png", EMI_LEVEL_NEXT);
+
+    // show level select only if more than one level
+    // and NOT first run either...
+    if (levelFileNames.size() > 1 && !firstRun)
     {
-        video::IVideoDriver *driver = device->getVideoDriver();
-        u32 screenWidth = driver->getScreenSize().Width;
-        u32 screenHeight = driver->getScreenSize().Height;
+        // Can click to a previous level if the current level is not the
+        // first.
+        bool canGoPrev = levelPreview->GetShortName() != levelFileNames[0];
 
-        ASSERT(levelPreview);
+        // Can click to a next level if the current level is not the last.
+        // AND if the current level is not the furthest reached.
+        bool canGoNext =
+            levelPreview->GetShortName() !=
+                levelFileNames[levelFileNames.size() - 1] &&
+            levelPreview->GetShortName() != furthestLevelReached
+            // and a furthest level has actually been set
+            // (if not, it's probably first run with no levels to choose
+            // from!)
+            && furthestLevelReached.size();
 
-        core::stringc levelTitle;
+        // So display the prev/next options depending on those states.
+        menuLevelSelect->Enable(canGoPrev, canGoNext);
+    }
+    else
+    {
+        menuLevelSelect->Enable(false, false);
+    }
 
-        if (levelTitles.count(levelPreview->GetShortName()))
-            levelTitle = levelTitles[levelPreview->GetShortName()];
+    // menuLevelSelect->SetHeading(levelTitle);
+    menuLevelSelect->SetMouseOverSound(paths::get_sfx("beep.ogg"));
+    menuLevelSelect->Finalise();
+
+    // level name
+
+    if (levelTitleText)
+    {
+        levelTitleText->remove();
+        levelTitleText = nullptr;
+    }
+
+    core::stringw text;
+
+    /*
+    // find fraction of levels this one is
+    {
+        u32 i = 0;
+        for (; i < levelFileNames.size(); i ++)
+        {
+            if (levelFileNames[i] == levelPreview->GetShortName())
+                break;
+        }
+
+        // not found?
+        if (i >= levelFileNames.size())
+        {
+        }
+        else // found!
+        {
+            text += i+1;
+            text += L"/";
+            text += levelFileNames.size();
+            text += " ";
+        }
+    }
+    */
+
+    text += levelTitle;
+    levelTitleText = add_static_text2(text.c_str());
+
+    f32 distFromTop = 0.24;
+
+    levelTitleText->setRelativePosition(core::vector2di(
+        screenWidth / 2 -
+            levelTitleText->getRelativePosition().getWidth() / 2,
+        s32(screenHeight * distFromTop)));
+
+    levelTitleText->setOverrideColor(Colors::text_level_title());
+
+    levelTitleText->setAlignment(irr::gui::EGUIA_CENTER,
+                                 irr::gui::EGUIA_CENTER,
+                                 irr::gui::EGUIA_CENTER,
+                                 irr::gui::EGUIA_CENTER);
+
+    // level rating text?
+
+    if (levelRatingText)
+    {
+        levelRatingText->remove();
+        levelRatingText = nullptr;
+    }
+
+    if (levelPreview->GetShortName() != "titlescreen.lev")
+    {
+        E_SCORE_RESULT previousRating =
+            get_saved_score(levelPreview->GetShortName());
+
+        core::stringw ratingDescription;
+
+        if (previousRating != ESR_UNKNOWN)
+            ratingDescription = get_result_description(previousRating);
         else
-            levelTitle = "";
+            ratingDescription = L"uncompleted";
 
-        menuLevelSelect = new SimpleEitherSideToggleMenu(LEVEL_SELECT_MENU_ID);
-        menuLevelSelect->AddImageItem("arrow_left.png", EMI_LEVEL_PREV);
-        menuLevelSelect->AddImageItem("arrow_right.png", EMI_LEVEL_NEXT);
-
-        // show level select only if more than one level
-        // and NOT first run either...
-        if (levelFileNames.size() > 1 && !firstRun)
+        if (ratingDescription.size() > 0)
         {
-            // Can click to a previous level if the current level is not the
-            // first.
-            bool canGoPrev = levelPreview->GetShortName() != levelFileNames[0];
+            core::stringw ratingText = L"(";
+            ratingText += ratingDescription;
+            ratingText += L")";
 
-            // Can click to a next level if the current level is not the last.
-            // AND if the current level is not the furthest reached.
-            bool canGoNext =
-                levelPreview->GetShortName() !=
-                    levelFileNames[levelFileNames.size() - 1] &&
-                levelPreview->GetShortName() != furthestLevelReached
-                // and a furthest level has actually been set
-                // (if not, it's probably first run with no levels to choose
-                // from!)
-                && furthestLevelReached.size();
+            levelRatingText = add_static_text(ratingText.c_str());
 
-            // So display the prev/next options depending on those states.
-            menuLevelSelect->Enable(canGoPrev, canGoNext);
-        }
-        else
-        {
-            menuLevelSelect->Enable(false, false);
-        }
-
-        // menuLevelSelect->SetHeading(levelTitle);
-        menuLevelSelect->SetMouseOverSound(paths::get_sfx("beep.ogg"));
-        menuLevelSelect->Finalise();
-
-        // level name
-
-        if (levelTitleText)
-        {
-            levelTitleText->remove();
-            levelTitleText = nullptr;
-        }
-
-        core::stringw text;
-
-        /*
-        // find fraction of levels this one is
-        {
-            u32 i = 0;
-            for (; i < levelFileNames.size(); i ++)
-            {
-                if (levelFileNames[i] == levelPreview->GetShortName())
-                    break;
-            }
-
-            // not found?
-            if (i >= levelFileNames.size())
-            {
-            }
-            else // found!
-            {
-                text += i+1;
-                text += L"/";
-                text += levelFileNames.size();
-                text += " ";
-            }
-        }
-        */
-
-        text += levelTitle;
-        levelTitleText = add_static_text2(text.c_str());
-
-        f32 distFromTop = 0.24;
-
-        levelTitleText->setRelativePosition(core::vector2di(
-            screenWidth / 2 -
-                levelTitleText->getRelativePosition().getWidth() / 2,
-            s32(screenHeight * distFromTop)));
-
-        levelTitleText->setOverrideColor(Colors::text_level_title());
-
-        levelTitleText->setAlignment(irr::gui::EGUIA_CENTER,
-                                     irr::gui::EGUIA_CENTER,
-                                     irr::gui::EGUIA_CENTER,
-                                     irr::gui::EGUIA_CENTER);
-
-        // level rating text?
-
-        if (levelRatingText)
-        {
-            levelRatingText->remove();
-            levelRatingText = nullptr;
-        }
-
-        if (levelPreview->GetShortName() != "titlescreen.lev")
-        {
-            E_SCORE_RESULT previousRating =
-                get_saved_score(levelPreview->GetShortName());
-
-            core::stringw ratingDescription;
+            const s32 yOffset = 10;
+            core::recti rect = levelRatingText->getRelativePosition();
+            rect += core::vector2di(
+                screenWidth / 2 - rect.getWidth() / 2,
+                levelTitleText->getRelativePosition().LowerRightCorner.Y +
+                    yOffset);
+            levelRatingText->setRelativePosition(rect);
 
             if (previousRating != ESR_UNKNOWN)
-                ratingDescription = get_result_description(previousRating);
+                levelRatingText->setOverrideColor(
+                    get_rating_col(previousRating));
             else
-                ratingDescription = L"uncompleted";
+                levelRatingText->setOverrideColor(
+                    Colors::text_level_default_rating());
+        }
+    }
 
-            if (ratingDescription.size() > 0)
-            {
-                core::stringw ratingText = L"(";
-                ratingText += ratingDescription;
-                ratingText += L")";
+    // hmm, let's position rating after
+    if (levelRatingText)
+    {
+        const s32 gap = 10;
 
-                levelRatingText = add_static_text(ratingText.c_str());
+        // move title left by half rating size
+        levelTitleText->setRelativePosition(
+            levelTitleText->getRelativePosition() -
+            core::vector2di(
+                levelRatingText->getRelativePosition().getWidth() / 2 +
+                    gap / 2,
+                0));
 
-                const s32 yOffset = 10;
-                core::recti rect = levelRatingText->getRelativePosition();
-                rect += core::vector2di(
-                    screenWidth / 2 - rect.getWidth() / 2,
-                    levelTitleText->getRelativePosition().LowerRightCorner.Y +
-                        yOffset);
-                levelRatingText->setRelativePosition(rect);
+        // and re-position rating text to just after title text
+        levelRatingText->setRelativePosition(
+            levelTitleText->getRelativePosition().UpperLeftCorner +
+            core::vector2di(
+                levelTitleText->getRelativePosition().getWidth() + gap / 2,
+                levelTitleText->getRelativePosition().getHeight() / 2 -
+                    levelRatingText->getRelativePosition().getHeight() /
+                        2));
+        // Set the alignment relative to the window
+        levelRatingText->setAlignment(irr::gui::EGUIA_CENTER,
+                                      irr::gui::EGUIA_CENTER,
+                                      irr::gui::EGUIA_CENTER,
+                                      irr::gui::EGUIA_CENTER);
+    }
 
-                if (previousRating != ESR_UNKNOWN)
-                    levelRatingText->setOverrideColor(
-                        get_rating_col(previousRating));
-                else
-                    levelRatingText->setOverrideColor(
-                        Colors::text_level_default_rating());
-            }
+    // Level fraction completed...
+
+    if (levelFractionText)
+    {
+        levelFractionText->remove();
+        levelFractionText = nullptr;
+    }
+
+    {
+        u32 i = 0;
+        for (; i < levelFileNames.size(); i++)
+        {
+            if (levelFileNames[i] == levelPreview->GetShortName())
+                break;
         }
 
-        // hmm, let's position rating after
-        if (levelRatingText)
+        // not found?
+        if (i >= levelFileNames.size())
         {
-            const s32 gap = 10;
-
-            // move title left by half rating size
-            levelTitleText->setRelativePosition(
-                levelTitleText->getRelativePosition() -
-                core::vector2di(
-                    levelRatingText->getRelativePosition().getWidth() / 2 +
-                        gap / 2,
-                    0));
-
-            // and re-position rating text to just after title text
-            levelRatingText->setRelativePosition(
-                levelTitleText->getRelativePosition().UpperLeftCorner +
-                core::vector2di(
-                    levelTitleText->getRelativePosition().getWidth() + gap / 2,
-                    levelTitleText->getRelativePosition().getHeight() / 2 -
-                        levelRatingText->getRelativePosition().getHeight() /
-                            2));
-            // Set the alignment relative to the window
-            levelRatingText->setAlignment(irr::gui::EGUIA_CENTER,
-                                          irr::gui::EGUIA_CENTER,
-                                          irr::gui::EGUIA_CENTER,
-                                          irr::gui::EGUIA_CENTER);
         }
-
-        // Level fraction completed...
-
-        if (levelFractionText)
+        else // found!
         {
-            levelFractionText->remove();
-            levelFractionText = nullptr;
-        }
+            const std::wstring str = L"Puzzle " + std::to_wstring(i + 1) +
+                                     L" of " +
+                                     std::to_wstring(levelFileNames.size());
+            levelFractionText = add_static_text(str.c_str());
 
-        {
-            u32 i = 0;
-            for (; i < levelFileNames.size(); i++)
-            {
-                if (levelFileNames[i] == levelPreview->GetShortName())
-                    break;
-            }
+            s32 yGap = -2;
 
-            // not found?
-            if (i >= levelFileNames.size())
-            {
-            }
-            else // found!
-            {
-                const std::wstring str = L"Puzzle " + std::to_wstring(i + 1) +
-                                         L" of " +
-                                         std::to_wstring(levelFileNames.size());
-                levelFractionText = add_static_text(str.c_str());
+            levelFractionText->setRelativePosition(core::vector2di(
+                screenWidth / 2 -
+                    levelFractionText->getRelativePosition().getWidth() / 2,
+                levelTitleText->getRelativePosition().LowerRightCorner.Y +
+                    yGap));
 
-                s32 yGap = -2;
-
-                levelFractionText->setRelativePosition(core::vector2di(
-                    screenWidth / 2 -
-                        levelFractionText->getRelativePosition().getWidth() / 2,
-                    levelTitleText->getRelativePosition().LowerRightCorner.Y +
-                        yGap));
-
-                levelFractionText->setOverrideColor(
-                    Colors::text_level_fraction());
-                levelFractionText->setAlignment(irr::gui::EGUIA_CENTER,
-                                                irr::gui::EGUIA_CENTER,
-                                                irr::gui::EGUIA_CENTER,
-                                                irr::gui::EGUIA_CENTER);
-            }
+            levelFractionText->setOverrideColor(
+                Colors::text_level_fraction());
+            levelFractionText->setAlignment(irr::gui::EGUIA_CENTER,
+                                            irr::gui::EGUIA_CENTER,
+                                            irr::gui::EGUIA_CENTER,
+                                            irr::gui::EGUIA_CENTER);
         }
     }
 }
