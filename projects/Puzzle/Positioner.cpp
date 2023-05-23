@@ -33,8 +33,8 @@ void Positioner::Add(gui::IGUIElement *element, s32 id)
 {
     element->setAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER,
                           irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
+    element->setID(id);
     elements.push_back(element);
-    ids.push_back(id);
 }
 
 void Positioner::Reset()
@@ -43,7 +43,6 @@ void Positioner::Reset()
         elem->remove();
 
     elements.clear();
-    ids.clear();
 }
 
 s32 Positioner::GetMouseOverId()
@@ -56,7 +55,7 @@ s32 Positioner::GetMouseOverId()
                     ->getCursorControl()
                     ->getPosition()))
         {
-            return ids[i];
+            return elements[i]->getID();
         }
     }
     return -1;
@@ -276,14 +275,12 @@ void EitherSidePositioner::Enable(bool left, bool right)
     {
         elements[0]->remove();
         elements.erase(elements.begin());
-        ids.erase(ids.begin());
         return;
     }
     if (!enabledRight)
     {
         elements[1]->remove();
         elements.erase(elements.begin() + 1);
-        ids.erase(ids.begin() + 1);
         return;
     }
 }

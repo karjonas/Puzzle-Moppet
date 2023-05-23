@@ -11,7 +11,6 @@ protected:
     video::IVideoDriver *driver;
 
     std::vector<gui::IGUIElement *> elements;
-    std::vector<s32> ids;
 
     s32 spacing;
 
