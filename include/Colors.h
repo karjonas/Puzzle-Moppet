@@ -8,6 +8,7 @@ using SColor = irr::video::SColor;
 
 SColor text_col();
 SColor text_col_mouseover();
+SColor text_col_disabled();
 
 SColor text_level_title();
 SColor text_level_default_rating();
