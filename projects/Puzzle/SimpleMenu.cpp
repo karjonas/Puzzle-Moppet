@@ -252,16 +252,3 @@ SimpleVerticalMenu::SimpleVerticalMenu(s32 uniqueId, f32 marginBottom)
     positioner =
         new ColumnPositionerCentred(device->getVideoDriver(), 10, marginBottom);
 }
-
-// ***************** SimpleEitherSideToggleMenu ****************
-
-SimpleEitherSideToggleMenu::SimpleEitherSideToggleMenu(s32 uniqueId)
-    : SimpleMenu(uniqueId)
-{
-    positioner = new EitherSidePositioner(device->getVideoDriver());
-}
-
-void SimpleEitherSideToggleMenu::Enable(bool left, bool right)
-{
-    ((EitherSidePositioner *)positioner)->Enable(left, right);
-}

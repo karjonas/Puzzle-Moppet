@@ -79,19 +79,4 @@ public:
     void Apply() override;
 };
 
-class EitherSidePositioner : public Positioner
-{
-    bool enabledLeft, enabledRight;
-
-public:
-    EitherSidePositioner(video::IVideoDriver *driver);
-
-    // this is really hacked in.
-    // call only after two items have been added
-    // and before Apply.
-    void Enable(bool left, bool right);
-
-    void Apply() override;
-};
-
 #endif

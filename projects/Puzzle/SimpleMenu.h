@@ -86,12 +86,4 @@ public:
     SimpleVerticalMenu(s32 uniqueId, f32 marginBottom = 0.1);
 };
 
-class SimpleEitherSideToggleMenu : public SimpleMenu
-{
-public:
-    SimpleEitherSideToggleMenu(s32 uniqueId);
-
-    void Enable(bool left, bool right);
-};
-
 #endif
