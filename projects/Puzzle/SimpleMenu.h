@@ -61,6 +61,8 @@ public:
 
     const std::vector<gui::IGUIElement *> &GetElements();
 
+    void SetElementEnabled(s32 uniqueItemId, bool enabled);
+
     // used internally
     void OnEvent(const Event &event) override;
 };

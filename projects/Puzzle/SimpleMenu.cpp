@@ -95,14 +95,43 @@ const std::vector<gui::IGUIElement *> &SimpleMenu::GetElements()
     return positioner->GetElements();
 }
 
+void SimpleMenu::SetElementEnabled(s32 uniqueItemId, bool enabled)
+{
+    ASSERT(positioner);
+    for (const auto &element : positioner->GetElements())
+    {
+        if (element->getID() == uniqueItemId)
+        {
+            element->setEnabled(enabled);
+
+            // Update override color if text
+            if (element->getType() == gui::EGUIET_STATIC_TEXT)
+            {
+                auto *textElement = static_cast<gui::IGUIStaticText *>(element);
+                auto color =
+                    enabled ? Colors::text_col() : Colors::text_col_disabled();
+                textElement->setOverrideColor(color);
+            }
+
+            return;
+        }
+    }
+    ASSERT(false && "element not found");
+}
+
 void SimpleMenu::OnEvent(const Event &event)
 {
     if (event.IsType("ButtonDown"))
     {
         if (event["button"] == KEY_LBUTTON)
         {
-            s32 mouseOverId = positioner->GetMouseOverId();
+            auto mouseOverElement = positioner->GetMouseOverElement();
+            if (mouseOverElement && !mouseOverElement->isEnabled())
+            {
+                return;
+            }
 
+            s32 mouseOverId = positioner->GetMouseOverId();
             if (mouseOverId != -1)
             {
                 Event event("MenuButton");
@@ -122,6 +151,11 @@ void SimpleMenu::OnEvent(const Event &event)
             gui::IGUIElement *mouseOverElement =
                 positioner->GetMouseOverElement();
 
+            if (mouseOverElement && !mouseOverElement->isEnabled())
+            {
+                return;
+            }
+
             // Update all colours
 
             const std::vector<gui::IGUIElement *> &elements =
@@ -132,8 +166,15 @@ void SimpleMenu::OnEvent(const Event &event)
                 if (element->getType() == gui::EGUIET_STATIC_TEXT)
                 {
                     auto *textElement = (gui::IGUIStaticText *)element;
+                    // Hacky way to check if the element is disabled
+                    bool isDisabled = textElement->getOverrideColor() ==
+                                      Colors::text_col_disabled();
 
-                    if (element == mouseOverElement)
+                    if (isDisabled)
+                    {
+                        // Do nothing
+                    }
+                    else if (element == mouseOverElement)
                     {
                         if (textElement->getOverrideColor() !=
                             Colors::text_col_mouseover())
