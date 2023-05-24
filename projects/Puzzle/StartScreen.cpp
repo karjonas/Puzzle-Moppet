@@ -197,13 +197,22 @@ void StartScreen::UpdateLevelCamera()
 
 void StartScreen::CreateFirstMenu()
 {
+    // level selector
+    CreateLevelPreviewView();
+    UpdatePlayablePuzzles();
+
     menu = new SimpleVerticalMenu(START_MENU_ID);
 
     if (os::path::exists(get_full_save_path()))
     {
         NOTE << "Game save exists, will show continue game option.";
-        menu->AddItem("Continue", EMI_PLAY);
+        menu->AddItem("Play", EMI_PLAY);
+        menu->AddItem("Previous Puzzle", EMI_LEVEL_PREV);
+        menu->AddItem("Next Puzzle", EMI_LEVEL_NEXT);
         menu->AddItem("New Game", EMI_NEW_GAME);
+
+        menu->SetElementEnabled(EMI_LEVEL_PREV, CanGoPreviousPuzzle);
+        menu->SetElementEnabled(EMI_LEVEL_NEXT, CanGoNextPuzzle);
     }
     else
     {
@@ -215,12 +224,36 @@ void StartScreen::CreateFirstMenu()
     menu->AddItem("Exit", EMI_EXIT);
     menu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     menu->Finalise();
-
-    // level selector
-    CreateLevelSelectButtons();
 }
 
-void StartScreen::CreateLevelSelectButtons()
+void StartScreen::UpdatePlayablePuzzles()
+{
+    // show level select only if more than one level
+    // and NOT first run either...
+    bool canGoPrev = false;
+    bool canGoNext = false;
+    if (levelFileNames.size() > 1 && !firstRun)
+    {
+        // Can click to a previous level if the current level is not the
+        // first.
+        canGoPrev = levelPreview->GetShortName() != levelFileNames[0];
+
+        // Can click to a next level if the current level is not the last.
+        // AND if the current level is not the furthest reached.
+        canGoNext = levelPreview->GetShortName() !=
+                        levelFileNames[levelFileNames.size() - 1] &&
+                    levelPreview->GetShortName() != furthestLevelReached
+                    // and a furthest level has actually been set
+                    // (if not, it's probably first run with no levels to choose
+                    // from!)
+                    && furthestLevelReached.size();
+    }
+
+    CanGoPreviousPuzzle = canGoPrev;
+    CanGoNextPuzzle = canGoNext;
+}
+
+void StartScreen::CreateLevelPreviewView()
 {
     video::IVideoDriver *driver = device->getVideoDriver();
     u32 screenWidth = driver->getScreenSize().Width;
@@ -234,41 +267,6 @@ void StartScreen::CreateLevelSelectButtons()
         levelTitle = levelTitles[levelPreview->GetShortName()];
     else
         levelTitle = "";
-
-    menuLevelSelect = new SimpleEitherSideToggleMenu(LEVEL_SELECT_MENU_ID);
-    menuLevelSelect->AddImageItem("arrow_left.png", EMI_LEVEL_PREV);
-    menuLevelSelect->AddImageItem("arrow_right.png", EMI_LEVEL_NEXT);
-
-    // show level select only if more than one level
-    // and NOT first run either...
-    if (levelFileNames.size() > 1 && !firstRun)
-    {
-        // Can click to a previous level if the current level is not the
-        // first.
-        bool canGoPrev = levelPreview->GetShortName() != levelFileNames[0];
-
-        // Can click to a next level if the current level is not the last.
-        // AND if the current level is not the furthest reached.
-        bool canGoNext =
-            levelPreview->GetShortName() !=
-                levelFileNames[levelFileNames.size() - 1] &&
-            levelPreview->GetShortName() != furthestLevelReached
-            // and a furthest level has actually been set
-            // (if not, it's probably first run with no levels to choose
-            // from!)
-            && furthestLevelReached.size();
-
-        // So display the prev/next options depending on those states.
-        menuLevelSelect->Enable(canGoPrev, canGoNext);
-    }
-    else
-    {
-        menuLevelSelect->Enable(false, false);
-    }
-
-    // menuLevelSelect->SetHeading(levelTitle);
-    menuLevelSelect->SetMouseOverSound(paths::get_sfx("beep.ogg"));
-    menuLevelSelect->Finalise();
 
     // level name
 
@@ -444,9 +442,6 @@ StartScreen::~StartScreen()
     if (menu)
         delete menu;
 
-    if (menuLevelSelect)
-        delete menuLevelSelect;
-
     if (levelTitleText)
         levelTitleText->remove();
 
@@ -473,12 +468,6 @@ void StartScreen::AndSoItBegins()
     {
         delete menu;
         menu = nullptr;
-    }
-
-    if (menuLevelSelect)
-    {
-        delete menuLevelSelect;
-        menuLevelSelect = nullptr;
     }
 
     world->SetCameraController(nullptr);
@@ -691,10 +680,6 @@ void StartScreen::deleteMenues()
     delete menu;
     menu = nullptr;
 
-    ASSERT(menuLevelSelect);
-    delete menuLevelSelect;
-    menuLevelSelect = nullptr;
-
     if (levelTitleText)
     {
         levelTitleText->remove();
@@ -748,7 +733,78 @@ void StartScreen::OnEvent(const Event &event)
 
         if (event["menu"] == START_MENU_ID)
         {
-            if (event["button"] == EMI_PLAY)
+            if (event["button"] == EMI_LEVEL_PREV ||
+                event["button"] == EMI_LEVEL_NEXT)
+            {
+                ASSERT(levelPreview);
+
+                core::stringc oldLevelName = levelPreview->GetShortName();
+
+                // (level select buttons should only have been shown if there
+                // are >= 1 levels)
+                ASSERT(levelFileNames.size());
+
+                // Find where last level was in list.
+                u32 i = 0;
+                for (; i < levelFileNames.size(); i++)
+                {
+                    if (levelFileNames[i] == oldLevelName)
+                        break;
+                }
+
+                // not found?
+                if (i >= levelFileNames.size())
+                {
+                    // No change... Don't replace level.
+                }
+                else // was found
+                {
+                    core::stringc newLevelName = oldLevelName;
+
+                    if (event["button"] == EMI_LEVEL_PREV &&
+                        CanGoPreviousPuzzle)
+                    {
+                        // Go to previous level, if one exists.
+                        if (i > 0)
+                        {
+                            newLevelName = levelFileNames[i - 1];
+
+                            // Let's save the selected one as the current.
+                            if (i > 1)
+                                file::put(get_full_save_path(),
+                                          levelFileNames[i - 2]);
+
+                            // ugliest of hacks ever
+                            // since we need to save the level before, but that
+                            // has been excluded from the levelFileNames list...
+                            // :S so we just hard code it.
+                            if (i == 1)
+                                file::put(get_full_save_path(), "first.lev");
+                        }
+                    }
+                    else if (event["button"] == EMI_LEVEL_NEXT &&
+                             CanGoNextPuzzle)
+                    {
+                        // Go to next level, if one exists.
+                        if (i < levelFileNames.size() - 1)
+                        {
+                            newLevelName = levelFileNames[i + 1];
+
+                            // Let's save the selected one as the current.
+                            file::put(get_full_save_path(), levelFileNames[i]);
+                        }
+                    }
+
+                    levelPreview->ReplaceWith(level_path_rel_exe(newLevelName));
+                    UpdateLevelCamera();
+                }
+
+                // Recreate all menues
+                deleteMenues();
+                CreateLevelPreviewView();
+                CreateFirstMenu();
+            }
+            else if (event["button"] == EMI_PLAY)
             {
                 NOTE << "Beginning play from start screen...";
                 renderSystem->ScreenFadeFromCurrent(0.0, 2, true);
@@ -973,81 +1029,6 @@ void StartScreen::OnEvent(const Event &event)
                 apply_temp_config(newConfig);
                 ShowOptionsMenu(newConfig);
             }
-        }
-        else if (event["menu"] == LEVEL_SELECT_MENU_ID)
-        {
-            // Either Previous or Next has been clicked.
-            // event["button"] == EMI_LEVEL_PREV
-
-            ASSERT(levelPreview);
-
-            core::stringc oldLevelName = levelPreview->GetShortName();
-
-            // (level select buttons should only have been shown if there are >=
-            // 1 levels)
-            ASSERT(levelFileNames.size());
-
-            // Find where last level was in list.
-            u32 i = 0;
-            for (; i < levelFileNames.size(); i++)
-            {
-                if (levelFileNames[i] == oldLevelName)
-                    break;
-            }
-
-            // not found?
-            if (i >= levelFileNames.size())
-            {
-                // No change... Don't replace level.
-            }
-            else // was found
-            {
-                core::stringc newLevelName = oldLevelName;
-
-                if (event["button"] == EMI_LEVEL_PREV)
-                {
-                    // Go to previous level, if one exists.
-                    if (i > 0)
-                    {
-                        newLevelName = levelFileNames[i - 1];
-
-                        // Let's save the selected one as the current.
-                        if (i > 1)
-                            file::put(get_full_save_path(),
-                                      levelFileNames[i - 2]);
-
-                        // ugliest of hacks ever
-                        // since we need to save the level before, but that has
-                        // been excluded from the levelFileNames list... :S
-                        // so we just hard code it.
-                        if (i == 1)
-                            file::put(get_full_save_path(), "first.lev");
-                    }
-                }
-                else if (event["button"] == EMI_LEVEL_NEXT)
-                {
-                    // Go to next level, if one exists.
-                    if (i < levelFileNames.size() - 1)
-                    {
-                        newLevelName = levelFileNames[i + 1];
-
-                        // Let's save the selected one as the current.
-                        file::put(get_full_save_path(), levelFileNames[i]);
-                    }
-                }
-                else
-                {
-                    WARN << "invalid button id";
-                }
-
-                levelPreview->ReplaceWith(level_path_rel_exe(newLevelName));
-                UpdateLevelCamera();
-            }
-
-            // Re-show prev/next buttons
-            delete menuLevelSelect;
-            menuLevelSelect = nullptr;
-            CreateLevelSelectButtons();
         }
     }
 }

@@ -37,7 +37,6 @@ class StartScreen : public IUpdatable, public IWantEvents
     MainState **mainStatePtrLoc;
 
     SimpleMenu *menu;
-    SimpleEitherSideToggleMenu *menuLevelSelect;
 
     std::array<SimpleMenu *, 2> optionsMenus = {nullptr, nullptr};
 
@@ -54,13 +53,16 @@ class StartScreen : public IUpdatable, public IWantEvents
     void CreatePreviewLevel(core::stringc previewLevelName);
     void UpdateLevelCamera();
     void CreateFirstMenu();
-    void CreateLevelSelectButtons();
+    void CreateLevelPreviewView();
+    void UpdatePlayablePuzzles();
 
     void AndSoItBegins();
 
     void ShowOptionsMenu(VariantMap settings);
     void deleteMenues();
 
+    bool CanGoPreviousPuzzle = false;
+    bool CanGoNextPuzzle = false;
 public:
     StartScreen(MainState **mainStatePtrLoc);
     ~StartScreen();
