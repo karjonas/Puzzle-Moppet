@@ -82,8 +82,6 @@ class MainState : public IUpdatable, public IWantEvents
     };
 
     RowPositioner *pauseMenuPositioner;
-    RowPositioner *levelSelectMenuPositioner;
-    RowPositioner *levelConfirmMenuPositioner;
 
     // Location in main.cpp where another pointer to MainState must be stored...
     MainState **mainStatePtrLoc;

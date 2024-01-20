@@ -309,11 +309,6 @@ MainState::MainState(MainState **mainStatePtrLoc)
     u32 halfScreenHeight = driver->getScreenSize().Height / 2;
     pauseMenuPositioner =
         new RowPositioner(device->getVideoDriver(), halfScreenHeight, 50);
-    levelSelectMenuPositioner =
-        new RowPositioner(device->getVideoDriver(), halfScreenHeight + 100, 25);
-    levelConfirmMenuPositioner =
-        new RowPositioner(device->getVideoDriver(), halfScreenHeight + 150, 25);
-
     gameEnded = false;
 
     ShowInitTexts();
@@ -328,8 +323,6 @@ MainState::~MainState()
 
     menuSound->drop();
     delete pauseMenuPositioner;
-    delete levelSelectMenuPositioner;
-    delete levelConfirmMenuPositioner;
 
     engine->UnregisterAllEventInterest(this);
 
@@ -1440,19 +1433,6 @@ void MainState::ShowPauseMenu()
                              EPM_RESTART_LEVEL);
     pauseMenuPositioner->Add(add_static_text(L"Continue"), EPM_CONTINUE);
     pauseMenuPositioner->Apply();
-
-    /*
-    levelSelectMenuPositioner->Reset();
-    levelSelectMenuPositioner->Add( add_static_text(L"<"), -1 );
-    levelSelectMenuPositioner->Add( add_static_text(L"1 / 32"), -1 );
-    levelSelectMenuPositioner->Add( add_static_text(L">"), -1 );
-    levelSelectMenuPositioner->Apply();
-
-    levelConfirmMenuPositioner->Reset();
-    levelConfirmMenuPositioner->Add( add_static_text(L"Cancel"), -1 );
-    levelConfirmMenuPositioner->Add( add_static_text(L"OK"), -1 );
-    levelConfirmMenuPositioner->Apply();
-    */
 }
 
 void MainState::HidePauseMenu()
