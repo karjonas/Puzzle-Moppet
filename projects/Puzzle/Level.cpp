@@ -10,6 +10,7 @@
 #include "RotateToAnimator.h"
 #include "Colors.h"
 
+#include "GUIPane.h"
 #include "utils/paths.h"
 
 #include <algorithm>
@@ -1821,6 +1822,8 @@ Level::Level(MainState *mainState, core::stringc fileName,
     engine->RegisterEventInterest(this, "TutorialFadeOff");
     engine->RegisterEventInterest(this, "TutorialDelete");
 
+    engine->RegisterEventInterest(this, "ScreenResize");
+
     cloudShadowTexture =
         engine->GetIrrlichtDevice()->getVideoDriver()->getTexture(
             "cloudshadow.png");
@@ -2380,6 +2383,49 @@ void Level::OnButtonDown(s32 id)
         ApplyUndo();
 }
 
+void Level::RepositionTutorialTexts()
+{
+    // Nothing to resize
+    if (tutorialTextElements.size() == 0)
+        return;
+
+    // NOTE: last element in list is the background
+    const int lastElement = tutorialTextElements.size() - 1;
+
+    video::IVideoDriver *driver = engine->GetIrrlichtDevice()->getVideoDriver();
+    s32 screenWidth = driver->getScreenSize().Width;
+    s32 screenHeight = driver->getScreenSize().Height;
+    s32 bottomY = (s32)(screenHeight * 0.8);
+    s32 y = bottomY;
+
+    // All these are text elements
+    for (int i = 0; i < lastElement; i++)
+    {
+        // Cannot assert with dynamic_cast since irrlicht has disabled rtti
+        gui::IGUIStaticText *text =
+            static_cast<gui::IGUIStaticText *>(tutorialTextElements[i]);
+
+        const s32 textWidth = text->getRelativePosition().getWidth();
+        const s32 textHeight = text->getRelativePosition().getHeight();
+
+        auto rect = core::rect<s32>(0, 0, textWidth, textHeight);
+        rect += core::vector2di(screenWidth / 2 - rect.getWidth() / 2,
+                                y - rect.getHeight());
+
+        text->setRelativePosition(rect);
+        y -= textHeight;
+    }
+
+    ASSERT(dynamic_cast<GUIPane *>(tutorialTextElements[lastElement]));
+    GUIPane *bg = static_cast<GUIPane *>(tutorialTextElements[lastElement]);
+
+    const s32 padding = 10;
+
+    // now actually size bg
+    bg->setRelativePosition(
+        core::recti(-10, y - padding, screenWidth + 10, bottomY + padding));
+}
+
 void Level::OnEvent(const Event &event)
 {
     if (mainState)
@@ -2437,6 +2483,10 @@ void Level::OnEvent(const Event &event)
         GetPlayer()->RemoveAllAnimators();
 
         isPlayerPushing = false;
+    }
+    else if (event.IsType("ScreenResize"))
+    {
+        RepositionTutorialTexts();
     }
 
     HandleTutorialEvents(event);
@@ -2919,8 +2969,6 @@ void Level::TouchedEndLevelPortal(ITransformable *portal)
     }
 }
 
-#include "GUIPane.h"
-
 class TutorialWait : public IWaitLogic
 {
     Level *level;
@@ -2969,48 +3017,26 @@ void Level::HandleTutorialEvents(const Event &event)
         inputProfile->ForceButtonState(2, false);
         inputProfile->ForceButtonState(3, false);
 
-        video::IVideoDriver *driver =
-            engine->GetIrrlichtDevice()->getVideoDriver();
-
-        s32 screenWidth = driver->getScreenSize().Width;
-        s32 screenHeight = driver->getScreenSize().Height;
-
         if (lines.size()) // probably not needed
         {
-            gui::IGUIStaticText *text;
-            s32 bottomY = (s32)(screenHeight * 0.8);
-            s32 y = bottomY;
-
             // add bg first so it's rendered below texts
             gui::IGUIElement *bg = new GUIPane(engine->GetIrrlichtDevice()
                                                    ->getGUIEnvironment()
                                                    ->getRootGUIElement(),
-                                               core::recti(0, 0, 11, 11),
+                                               core::recti(0, 0, 1, 1),
                                                video::SColor(100, 0, 0, 0));
             bg->drop();
 
             for (s32 i = lines.size() - 1; i >= 0; i--)
             {
-                text = add_static_text(core::stringw(lines[i]).c_str());
-                core::rect<s32> rect = text->getRelativePosition();
-                rect += core::vector2di(screenWidth / 2 - rect.getWidth() / 2,
-                                        y - rect.getHeight());
-                text->setRelativePosition(rect);
-                tutorialTextElements.push_back(text);
-
+                auto text = add_static_text(core::stringw(lines[i]).c_str());
                 text->setOverrideColor(Colors::text_col());
-
-                y -= rect.getHeight();
+                tutorialTextElements.push_back(text);
             }
 
-            const s32 padding = 10;
-
-            // now actually size bg
-            bg->setRelativePosition(core::recti(-10, y - padding,
-                                                screenWidth + 10,
-                                                bottomY + padding));
-
             tutorialTextElements.push_back(bg);
+
+            RepositionTutorialTexts();
         }
     }
     else if (event.IsType("TutorialFadeOn"))

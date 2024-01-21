@@ -65,19 +65,24 @@ public:
 
     // used internally
     void OnEvent(const Event &event) override;
+
+    // Used when screen is resized
+    void Relayout();
 };
 
 // A horizontal list of choices that appears in the centre of the screen.
 class SimpleHorizontalMenu : public SimpleMenu
 {
 public:
-    SimpleHorizontalMenu(s32 uniqueId, s32 yPos = -1, s32 spacing = 50,
-                         bool vertCentred = true); // if yPos is not set, uses
-                                                   // half screen height
+    SimpleHorizontalMenu(s32 uniqueId, s32 yPos, s32 spacing,
+                         bool vertCentred = true);
 
     // A text heading that appears above the menu choices. e.g. "Are you sure?"
     // type text.
     void SetHeading(core::stringw text);
+
+    void SetYPos(s32 yPos);
+    void SetSpacing(s32 spacing);
 };
 
 class SimpleVerticalMenu : public SimpleMenu

@@ -16,6 +16,8 @@ extern core::stringc globalLogFurthestLevel;
 #define LEVEL_SELECT_MENU_ID 13865
 #define OPTIONS_MENU_ID 31337
 
+constexpr f32 MARGIN_BOTTOM = 0.2;
+
 enum E_MENU_ITEM
 {
     EMI_PLAY,
@@ -60,6 +62,7 @@ StartScreen::StartScreen(MainState **mainStatePtrLoc)
     engine->RegisterEventInterest(this, "ButtonDown");
     engine->RegisterEventInterest(this, "ScreenFadeFinished");
     engine->RegisterEventInterest(this, "MenuButton");
+    engine->RegisterEventInterest(this, "ScreenResize");
 
     fadingIntoGame = false;
 
@@ -201,29 +204,29 @@ void StartScreen::CreateFirstMenu()
     CreateLevelPreviewView();
     UpdatePlayablePuzzles();
 
-    menu = new SimpleVerticalMenu(START_MENU_ID);
+    startMenu = new SimpleVerticalMenu(START_MENU_ID);
 
     if (os::path::exists(get_full_save_path()))
     {
         NOTE << "Game save exists, will show continue game option.";
-        menu->AddItem("Play", EMI_PLAY);
-        menu->AddItem("Previous Puzzle", EMI_LEVEL_PREV);
-        menu->AddItem("Next Puzzle", EMI_LEVEL_NEXT);
-        menu->AddItem("New Game", EMI_NEW_GAME);
+        startMenu->AddItem("Play", EMI_PLAY);
+        startMenu->AddItem("Previous Puzzle", EMI_LEVEL_PREV);
+        startMenu->AddItem("Next Puzzle", EMI_LEVEL_NEXT);
+        startMenu->AddItem("New Game", EMI_NEW_GAME);
 
-        menu->SetElementEnabled(EMI_LEVEL_PREV, CanGoPreviousPuzzle);
-        menu->SetElementEnabled(EMI_LEVEL_NEXT, CanGoNextPuzzle);
+        startMenu->SetElementEnabled(EMI_LEVEL_PREV, CanGoPreviousPuzzle);
+        startMenu->SetElementEnabled(EMI_LEVEL_NEXT, CanGoNextPuzzle);
     }
     else
     {
         NOTE << "No game save exists, showing only Start Game option.";
-        menu->AddItem("Start Game", EMI_PLAY);
+        startMenu->AddItem("Start Game", EMI_PLAY);
     }
 
-    menu->AddItem("Options", EMI_OPTIONS);
-    menu->AddItem("Exit", EMI_EXIT);
-    menu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
-    menu->Finalise();
+    startMenu->AddItem("Options", EMI_OPTIONS);
+    startMenu->AddItem("Exit", EMI_EXIT);
+    startMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
+    startMenu->Finalise();
 }
 
 void StartScreen::UpdatePlayablePuzzles()
@@ -314,11 +317,6 @@ void StartScreen::CreateLevelPreviewView()
 
     levelTitleText->setOverrideColor(Colors::text_level_title());
 
-    levelTitleText->setAlignment(irr::gui::EGUIA_CENTER,
-                                 irr::gui::EGUIA_CENTER,
-                                 irr::gui::EGUIA_CENTER,
-                                 irr::gui::EGUIA_CENTER);
-
     // level rating text?
 
     if (levelRatingText)
@@ -385,11 +383,6 @@ void StartScreen::CreateLevelPreviewView()
                 levelTitleText->getRelativePosition().getHeight() / 2 -
                     levelRatingText->getRelativePosition().getHeight() /
                         2));
-        // Set the alignment relative to the window
-        levelRatingText->setAlignment(irr::gui::EGUIA_CENTER,
-                                      irr::gui::EGUIA_CENTER,
-                                      irr::gui::EGUIA_CENTER,
-                                      irr::gui::EGUIA_CENTER);
     }
 
     // Level fraction completed...
@@ -429,18 +422,14 @@ void StartScreen::CreateLevelPreviewView()
 
             levelFractionText->setOverrideColor(
                 Colors::text_level_fraction());
-            levelFractionText->setAlignment(irr::gui::EGUIA_CENTER,
-                                            irr::gui::EGUIA_CENTER,
-                                            irr::gui::EGUIA_CENTER,
-                                            irr::gui::EGUIA_CENTER);
         }
     }
 }
 
 StartScreen::~StartScreen()
 {
-    if (menu)
-        delete menu;
+    delete startMenu;
+    delete newGameMenu;
 
     if (levelTitleText)
         levelTitleText->remove();
@@ -464,11 +453,7 @@ void StartScreen::AndSoItBegins()
 
     device->getCursorControl()->setVisible(false);
 
-    if (menu)
-    {
-        delete menu;
-        menu = nullptr;
-    }
+    deleteMenues();
 
     world->SetCameraController(nullptr);
     world->RemoveTransformable(camTarget);
@@ -542,15 +527,12 @@ void StartScreen::Update(f32 dt)
 
 void StartScreen::ShowOptionsMenu(VariantMap settings)
 {
-    f32 marginBottom = 0.2;
+    delete optionsMenuHorizontal;
+    optionsMenuHorizontal = nullptr;
+    delete optionsMenuVertical;
+    optionsMenuVertical = nullptr;
 
-    for (auto &elem : optionsMenus)
-    {
-        delete elem;
-        elem = nullptr;
-    }
-
-    auto *vertMenu = new SimpleVerticalMenu(OPTIONS_MENU_ID, marginBottom);
+    auto *vertMenu = new SimpleVerticalMenu(OPTIONS_MENU_ID, MARGIN_BOTTOM);
 
 #ifndef __APPLE__
     // temp disabled on Mac since problems with mouse control in windowed mode.
@@ -620,7 +602,7 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 
     vertMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     vertMenu->Finalise();
-    optionsMenus[0] = vertMenu;
+    optionsMenuVertical = vertMenu;
 
     {
         gui::IGUIEnvironment *guienv =
@@ -658,13 +640,13 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     u32 screenHeight = driver->getScreenSize().Height;
 
     auto *horizMenu = new SimpleHorizontalMenu(
-        OPTIONS_MENU_ID, s32(screenHeight - screenHeight * marginBottom) + 20,
+        OPTIONS_MENU_ID, s32(screenHeight - screenHeight * MARGIN_BOTTOM) + 20,
         25, false);
     horizMenu->AddItem("Cancel", EMI_OPTIONS_CANCEL);
     horizMenu->AddItem("Apply", EMI_OPTIONS_OK);
     horizMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
     horizMenu->Finalise();
-    optionsMenus[1] = horizMenu;
+    optionsMenuHorizontal = horizMenu;
 
     /*
     SimpleHorizontalMenu *title = new SimpleHorizontalMenu(OPTIONS_MENU_ID);
@@ -676,9 +658,11 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
 
 void StartScreen::deleteMenues()
 {
-    ASSERT(menu);
-    delete menu;
-    menu = nullptr;
+    delete startMenu;
+    startMenu = nullptr;
+
+    delete newGameMenu;
+    newGameMenu = nullptr;
 
     if (levelTitleText)
     {
@@ -701,6 +685,27 @@ void StartScreen::deleteMenues()
 
 void StartScreen::OnEvent(const Event &event)
 {
+    if (event.IsType("ScreenResize"))
+    {
+        if (startMenu != nullptr)
+            startMenu->Relayout();
+
+        if (newGameMenu != nullptr)
+        {
+            video::IVideoDriver *driver = device->getVideoDriver();
+            u32 halfScreenHeight = driver->getScreenSize().Height / 2;
+            newGameMenu->SetYPos(halfScreenHeight);
+        }
+
+        if (optionsMenuVertical && optionsMenuHorizontal) {
+            ShowOptionsMenu(newConfig);
+        }
+
+        // A bit overkill to recreate texts but should be quick enough
+        if (levelTitleText)
+            CreateLevelPreviewView();
+    }
+
     if (event.IsType("ButtonDown") && event["button"] == KEY_ESCAPE)
     {
         NOTE << "Exiting from start screen... (esc pressed)";
@@ -831,26 +836,27 @@ void StartScreen::OnEvent(const Event &event)
                 NOTE << "Showing new game confirmation prompt...";
                 deleteMenues();
 
-                auto *horizMenu =
-                    new SimpleHorizontalMenu(START_NEW_GAME_MENU_ID);
+                video::IVideoDriver *driver = device->getVideoDriver();
+                u32 halfScreenHeight = driver->getScreenSize().Height / 2;
+
+                ASSERT(newGameMenu == nullptr);
+                newGameMenu = new SimpleHorizontalMenu(START_NEW_GAME_MENU_ID,
+                                                       halfScreenHeight, 50);
                 // Text and options copied from similar menu in MainState
-                horizMenu->SetHeading(
+                newGameMenu->SetHeading(
                     L"This will completely clear your game progress. Are you "
                     L"sure?");
-                menu = horizMenu;
-                menu->AddItem("Cancel", EMI_NEW_GAME_NO);
-                menu->AddItem("Start New Game", EMI_NEW_GAME_YES);
-                menu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
-                menu->Finalise();
+                newGameMenu->AddItem("Cancel", EMI_NEW_GAME_NO);
+                newGameMenu->AddItem("Start New Game", EMI_NEW_GAME_YES);
+                newGameMenu->SetMouseOverSound(paths::get_sfx("beep.ogg"));
+                newGameMenu->Finalise();
             }
         }
         else if (event["menu"] == START_NEW_GAME_MENU_ID)
         {
             if (event["button"] == EMI_NEW_GAME_NO)
             {
-                ASSERT(menu);
-                delete menu;
-                menu = nullptr;
+                deleteMenues();
 
                 // Go back to first menu.
                 CreateFirstMenu();
@@ -873,11 +879,10 @@ void StartScreen::OnEvent(const Event &event)
             if (event["button"] == EMI_OPTIONS_CANCEL ||
                 event["button"] == EMI_OPTIONS_OK)
             {
-                for (auto &elem : optionsMenus)
-                {
-                    delete elem;
-                    elem = nullptr;
-                }
+                delete optionsMenuHorizontal;
+                optionsMenuHorizontal = nullptr;
+                delete optionsMenuVertical;
+                optionsMenuVertical = nullptr;
 
                 // Go back to first menu.
                 CreateFirstMenu();

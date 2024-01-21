@@ -4,6 +4,7 @@
 
 class MainState;
 class Level;
+class GUIPane;
 
 class EndLevelScreen : public IUpdatable, public IWantEvents
 {
@@ -17,11 +18,20 @@ class EndLevelScreen : public IUpdatable, public IWantEvents
 
     E_SCORE_RESULT scoreResult;
 
-    std::vector<gui::IGUIElement *> guiElements;
+    GUIPane *guiBackground = nullptr;
+    gui::IGUIStaticText *guiTextLevelComplete = nullptr;
+    gui::IGUIStaticText *guiTextBlocksPushed = nullptr;
+    gui::IGUIStaticText *guiTextElevatorJourneys = nullptr;
+    gui::IGUIStaticText *guiTextUndosUsed = nullptr;
+    gui::IGUIStaticText *guiTextDeaths = nullptr;
+    gui::IGUIStaticText *guiTextYourRating = nullptr;
+    gui::IGUIStaticText *guiTextRating = nullptr;
 
     IEventQueue *eventQueue;
 
     ISound *sound;
+
+    void RepositionGuiElements();
 
 public:
     EndLevelScreen(MainState *mainState, Level *level);

@@ -296,6 +296,7 @@ MainState::MainState(MainState **mainStatePtrLoc)
     engine->RegisterEventInterest(this, "ButtonDown");
     engine->RegisterEventInterest(this, "AxisMoved");
     engine->RegisterEventInterest(this, "RestartLevel");
+    engine->RegisterEventInterest(this, "ScreenResize");
 
     // sound
     menuSound = engine->GetSoundSystem()->CreateSound2D();
@@ -1158,6 +1159,31 @@ void MainState::Update(f32 dt)
 
 void MainState::OnEvent(const Event &event)
 {
+    if (event.IsType("ScreenResize"))
+    {
+        const auto screenSize = device->getVideoDriver()->getScreenSize();
+
+        { // Re-layout menues
+            u32 halfScreenHeight = screenSize.Height / 2;
+
+            pauseMenuPositioner->SetYPos(halfScreenHeight);
+            pauseMenuPositioner->SetSpacing(50);
+            pauseMenuPositioner->Apply();
+        }
+
+        { // Resize level texts
+            const s32 screenWidth = screenSize.Width;
+
+            for (gui::IGUIStaticText *text : startLevelTexts)
+            {
+                const s32 textWidth = text->getRelativePosition().getWidth();
+                const auto rect =
+                    core::vector2di(screenWidth / 2 - textWidth / 2, 50);
+                text->setRelativePosition(rect);
+            }
+        }
+    }
+
     if (gameEnded)
     {
         // Exit on any button press.

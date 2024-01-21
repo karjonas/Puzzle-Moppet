@@ -24,6 +24,8 @@ EndLevelScreen::EndLevelScreen(MainState *mainState, Level *level)
     engine->RegisterEventInterest(this, "EndLevelScreenListItem");
     engine->RegisterEventInterest(this, "EndLevelScreenListItemFinalScore");
 
+    engine->RegisterEventInterest(this, "ScreenResize");
+
     sound = engine->GetSoundSystem()->CreateSound2D();
     sound->SetVolume(0.5);
 
@@ -44,16 +46,96 @@ EndLevelScreen::~EndLevelScreen()
 
     engine->UnregisterAllEventInterest(this);
 
-    for (auto &elem : guiElements)
-        elem->remove();
+    guiBackground->remove();
+    guiTextLevelComplete->remove();
+    guiTextBlocksPushed->remove();
+    if (guiTextElevatorJourneys)
+        guiTextElevatorJourneys->remove();
+    if (guiTextUndosUsed)
+        guiTextUndosUsed->remove();
+    guiTextDeaths->remove();
+    guiTextYourRating->remove();
+    guiTextRating->remove();
 }
 
-void offset_y(gui::IGUIElement *element, s32 y)
+void EndLevelScreen::RepositionGuiElements()
 {
-    core::recti rect = element->getRelativePosition();
-    rect.UpperLeftCorner.Y += y;
-    rect.LowerRightCorner.Y += y;
-    element->setRelativePosition(rect);
+    if (!guiBackground)
+        return;
+
+    ASSERT(guiTextLevelComplete);
+    ASSERT(guiTextBlocksPushed);
+    // ASSERT(guiTextElevatorJourneys); // Optional
+    // ASSERT(guiTextUndosUsed); // Optional
+    ASSERT(guiTextDeaths);
+    ASSERT(guiTextYourRating);
+    ASSERT(guiTextRating);
+
+    video::IVideoDriver *driver = engine->GetIrrlichtDevice()->getVideoDriver();
+    s32 screenWidth = driver->getScreenSize().Width;
+    s32 screenHeight = driver->getScreenSize().Height;
+
+    // Layout background
+    s32 bgHeight = 0;
+    {
+        // pad above + below
+        bgHeight += 2 * guiTextLevelComplete->getTextHeight();
+        bgHeight += 1.5 * guiTextBlocksPushed->getTextHeight();
+        if (guiTextElevatorJourneys)
+            bgHeight += 1.5 * guiTextElevatorJourneys->getTextHeight();
+        if (guiTextUndosUsed)
+            bgHeight += 1.5 * guiTextUndosUsed->getTextHeight();
+        bgHeight += 1.5 * guiTextDeaths->getTextHeight();
+        bgHeight += 1.5 * std::max(guiTextYourRating->getTextHeight(),
+                                   guiTextRating->getTextHeight());
+
+        auto rect = core::rect<s32>(0, 0, screenWidth, bgHeight);
+        rect += core::vector2di(0, screenHeight / 2 - bgHeight / 2); // center y
+        guiBackground->setRelativePosition(rect);
+    }
+
+    // Layout all text except rating
+    s32 yPos = s32(screenHeight / 2 - bgHeight / 2);
+
+    for (gui::IGUIStaticText *element :
+         {guiTextLevelComplete, guiTextBlocksPushed, guiTextElevatorJourneys,
+          guiTextUndosUsed, guiTextDeaths})
+    {
+        if (element == nullptr)
+            continue; // elevator optional
+
+        const int width = element->getTextWidth();
+        const int height = element->getTextHeight();
+
+        // Add padding before first item
+        if (element == guiTextLevelComplete)
+            yPos += height * 0.5;
+
+        auto rect = core::rect<s32>(0, 0, width, height);
+        rect += core::vector2di(screenWidth / 2 - width / 2, yPos);
+        element->setRelativePosition(rect);
+        yPos += height * 1.5;
+    }
+
+    // Layout rating
+    {
+        // "Your rating"
+        core::recti rect = core::recti(0, 0, guiTextYourRating->getTextWidth(),
+                                       guiTextYourRating->getTextHeight());
+        rect += core::vector2di(screenWidth / 2 - rect.getWidth() / 2, yPos);
+
+        // "Good", "Perfect" etc.
+        core::recti rect2 = core::recti(0, 0, guiTextRating->getTextWidth(),
+                                        guiTextRating->getTextHeight());
+        rect2 += core::vector2di(screenWidth / 2 - rect2.getWidth() / 2, yPos);
+
+        // Move side by side
+        rect -= core::vector2di(rect2.getWidth() / 2, 0);
+        rect2 += core::vector2di(rect.getWidth() / 2, 0);
+
+        guiTextYourRating->setRelativePosition(rect);
+        guiTextRating->setRelativePosition(rect2);
+    }
 }
 
 void EndLevelScreen::OnEvent(const Event &event)
@@ -62,76 +144,72 @@ void EndLevelScreen::OnEvent(const Event &event)
     s32 screenWidth = driver->getScreenSize().Width;
     s32 screenHeight = driver->getScreenSize().Height;
 
-    const f32 betweenItemWait = 1.f;
-    const f32 itemFadeOnTime = 0.5f;
+    constexpr f32 betweenItemWait = 1.0f;
+    constexpr f32 itemFadeOnTime = 0.5f;
 
-    // f32 bgMinY = 0.3;//0.15;
-
-    // bgMinY = (screenHeight - bgHeight) / 2 ;
-
-    if (event.IsType("EndLevelScreenShow"))
+    auto addFade = [&](gui::IGUIStaticText *element)
     {
-        gui::IGUIElement *bg;
+        element->setVisible(true);
+        auto *fade =
+            new GUIElementFade(engine->GetIrrlichtDevice()->getGUIEnvironment(),
+                               element, this, itemFadeOnTime, itemFadeOnTime,
+                               false);
+        fade->drop();
+        fade->OnPostRender(0);
+    };
 
+    if (event.IsType("ScreenResize"))
+    {
+        RepositionGuiElements();
+    }
+    else if (event.IsType("EndLevelScreenShow"))
+    {
         {
-            bg =
+            ASSERT(guiBackground == nullptr);
+
+            guiBackground =
                 new GUIPane(engine->GetIrrlichtDevice()
                                 ->getGUIEnvironment()
                                 ->getRootGUIElement(),
                             core::recti(-10, 0, screenWidth + 10, screenHeight),
                             video::SColor(200, 0, 0, 0));
-            bg->drop();
-            guiElements.push_back(bg);
+            guiBackground->drop();
         }
 
         {
+            ASSERT(guiTextLevelComplete == nullptr);
+
             core::stringw text = L"Level Complete!";
-
-            s32 yPos = s32(screenHeight * 0.05);
-            gui::IGUIElement *element = add_static_text2(text.c_str());
-            core::recti rect = element->getRelativePosition();
-            rect +=
-                core::vector2di(screenWidth / 2 - rect.getWidth() / 2, yPos);
-            element->setRelativePosition(rect);
-            guiElements.push_back(element);
+            guiTextLevelComplete = add_static_text2(text.c_str());
         }
 
-        // apply fades to all stuff created so far
-        // (fade on)
-
-        for (auto &elem : guiElements)
         {
-            auto *fade = new GUIElementFade(
-                engine->GetIrrlichtDevice()->getGUIEnvironment(), elem, this,
-                itemFadeOnTime, itemFadeOnTime, false);
-            fade->drop();
-            fade->OnPostRender(0);
-        }
+            ASSERT(guiTextBlocksPushed == nullptr);
 
-        // Now queue the rest of the stuff.
-
-        f32 yPos = 0.15;
-        const f32 yInc = 0.05f;
-
-        {
             eventQueue->AddTimeWait(betweenItemWait);
             Event event("EndLevelScreenListItem");
             event["text"] << "Blocks pushed: " << stats.pushes;
-            event["y_pos"] = yPos;
             eventQueue->AddEvent(event);
+            gui::IGUIStaticText *element = add_static_text(
+                core::stringw(event["text"].To<core::stringc>()).c_str());
+            guiTextBlocksPushed = element;
+            guiTextBlocksPushed->setVisible(false);
         }
 
         // presumably if there are elevators present, we will use them at least
         // once. so this if should fail only if there are no elevators.
         if (stats.elevatorMoves > 0)
         {
-            yPos += yInc;
+            ASSERT(guiTextElevatorJourneys == nullptr);
 
             eventQueue->AddTimeWait(betweenItemWait);
             Event event("EndLevelScreenListItem");
             event["text"] << "Elevator journeys: " << stats.elevatorMoves;
-            event["y_pos"] = yPos;
             eventQueue->AddEvent(event);
+            gui::IGUIStaticText *element = add_static_text(
+                core::stringw(event["text"].To<core::stringc>()).c_str());
+            guiTextElevatorJourneys = element;
+            guiTextElevatorJourneys->setVisible(false);
         }
 
         // ugly hack.
@@ -139,63 +217,56 @@ void EndLevelScreen::OnEvent(const Event &event)
         // (since tutorial doesn't introduce undo until second level)
         if (level->GetShortName() != "first.lev")
         {
-            yPos += yInc;
+            ASSERT(guiTextUndosUsed == nullptr);
 
             eventQueue->AddTimeWait(betweenItemWait);
             Event event("EndLevelScreenListItem");
             event["text"] << "Undos used: " << stats.undos;
-            event["y_pos"] = yPos;
             eventQueue->AddEvent(event);
+            gui::IGUIStaticText *element = add_static_text(
+                core::stringw(event["text"].To<core::stringc>()).c_str());
+            guiTextUndosUsed = element;
+            guiTextUndosUsed->setVisible(false);
         }
 
-        yPos += yInc;
-
         {
+            ASSERT(guiTextDeaths == nullptr);
+
             eventQueue->AddTimeWait(betweenItemWait);
             Event event("EndLevelScreenListItem");
             event["text"] << "Deaths: " << stats.deaths;
-            event["y_pos"] = yPos;
             eventQueue->AddEvent(event);
+            gui::IGUIStaticText *element = add_static_text(
+                core::stringw(event["text"].To<core::stringc>()).c_str());
+            guiTextDeaths = element;
+            guiTextDeaths->setVisible(false);
         }
 
-        yPos += 0.1f;
-
         {
+            ASSERT(guiTextYourRating == nullptr);
+            ASSERT(guiTextRating == nullptr);
+
             eventQueue->AddTimeWait(betweenItemWait);
             Event event("EndLevelScreenListItemFinalScore");
             event["text"] << "Your rating: ";
             event["text2"] << get_result_description(scoreResult);
-            event["y_pos"] = yPos;
             eventQueue->AddEvent(event);
+            gui::IGUIStaticText *element = add_static_text2(
+                core::stringw(event["text"].To<core::stringc>()).c_str());
+            guiTextYourRating = element;
+            guiTextYourRating->setVisible(false);
+
+            gui::IGUIStaticText *element2 = add_static_text2(
+                core::stringw(event["text2"].To<core::stringc>()).c_str());
+            element2->setOverrideColor(get_rating_col(scoreResult)
+                                       // and make a bit brighter since we
+                                       // are on a black background
+                                       + video::SColor(50, 0, 0, 0));
+            guiTextRating = element2;
+            guiTextRating->setVisible(false);
         }
 
-        f32 bgHeight = yPos + 0.05f;
-
-        // set bg correct height
-        core::recti rect = bg->getRelativePosition();
-        rect.LowerRightCorner.Y = s32(screenHeight * bgHeight);
-        bg->setRelativePosition(rect);
-
-        // now find downwards Y offset required to centre everything vertically.
-        s32 yOffset = (screenHeight - s32(screenHeight * bgHeight)) / 2;
-        f32 yOffsetFloat = (1.f - bgHeight) / 2.f;
-
-        // apply to all gui elements created so far
-        for (auto &elem : guiElements)
-            offset_y(elem, yOffset);
-
-        // and all those waiting in events...
-        // (hack alert!)
-
-        std::vector<Event *> allEvents = eventQueue->GetAllEvents();
-
-        for (auto &elem : allEvents)
-        {
-            Event &event = (*elem);
-
-            if (event.HasKey("y_pos"))
-                event["y_pos"] = event["y_pos"] + yOffsetFloat;
-        }
+        RepositionGuiElements();
 
         // Stop player teleport effects.
         // Not sure whether to do this or not.
@@ -203,107 +274,62 @@ void EndLevelScreen::OnEvent(const Event &event)
     }
     else if (event.IsType("EndLevelScreenListItem"))
     {
+        core::stringw text = event["text"].To<core::stringc>();
+        auto textStartsWith = [&text](const char *other) -> bool
+        { return text.subString(0, strlen(other)) == other; };
+
+        if (textStartsWith("Blocks pushed:"))
         {
-            gui::IGUIElement *element = add_static_text(
-                core::stringw(event["text"].To<core::stringc>()).c_str());
-            core::recti rect = element->getRelativePosition();
-            rect +=
-                core::vector2di(screenWidth / 2 - rect.getWidth() + 75,
-                                s32(screenHeight * event["y_pos"].To<f32>()) -
-                                    rect.getHeight() / 2);
-            element->setRelativePosition(rect);
-            guiElements.push_back(element);
-
-            auto *fade = new GUIElementFade(
-                engine->GetIrrlichtDevice()->getGUIEnvironment(), element, this,
-                itemFadeOnTime, itemFadeOnTime, false);
-            fade->drop();
-            fade->OnPostRender(0);
-
-            sound->Play(paths::get_sfx("appear.ogg"));
+            addFade(guiTextBlocksPushed);
         }
+        else if (textStartsWith("Elevator journeys:"))
+        {
+            addFade(guiTextElevatorJourneys);
+        }
+        else if (textStartsWith("Undos used:"))
+        {
+            addFade(guiTextUndosUsed);
+        }
+        else if (textStartsWith("Deaths:"))
+        {
+            addFade(guiTextDeaths);
+        }
+
+        sound->Play(paths::get_sfx("appear.ogg"));
     }
     else if (event.IsType("EndLevelScreenListItemFinalScore"))
     {
+        addFade(guiTextYourRating);
+        addFade(guiTextRating);
+
+        switch (scoreResult)
         {
-            gui::IGUIElement *element = add_static_text2(
-                core::stringw(event["text"].To<core::stringc>()).c_str());
-            core::recti rect = element->getRelativePosition();
-            rect +=
-                core::vector2di(screenWidth / 2 - rect.getWidth() / 2,
-                                s32(screenHeight * event["y_pos"].To<f32>()) -
-                                    rect.getHeight());
-            element->setRelativePosition(rect);
-            guiElements.push_back(element);
-
-            auto *fade = new GUIElementFade(
-                engine->GetIrrlichtDevice()->getGUIEnvironment(), element, this,
-                itemFadeOnTime, itemFadeOnTime, false);
-            fade->drop();
-            fade->OnPostRender(0);
-
-            // rating is separate
-
-            gui::IGUIStaticText *textElement = add_static_text2(
-                core::stringw(event["text2"].To<core::stringc>()).c_str());
-            core::recti rect2 = textElement->getRelativePosition();
-            rect2 +=
-                core::vector2di(screenWidth / 2 - rect2.getWidth() / 2,
-                                s32(screenHeight * event["y_pos"].To<f32>()) -
-                                    rect2.getHeight());
-            textElement->setRelativePosition(rect2);
-            guiElements.push_back(textElement);
-
-            textElement->setOverrideColor(get_rating_col(scoreResult)
-                                          // and make a bit brighter since we
-                                          // are on a black background
-                                          + video::SColor(50, 0, 0, 0));
-
-            auto *fade2 = new GUIElementFade(
-                engine->GetIrrlichtDevice()->getGUIEnvironment(), textElement,
-                this, itemFadeOnTime, itemFadeOnTime, false);
-            fade2->drop();
-            fade2->OnPostRender(0);
-
-            // now reposition both
-
-            element->setRelativePosition(
-                rect.UpperLeftCorner -
-                core::vector2di(rect2.getWidth() / 2, 0));
-
-            textElement->setRelativePosition(
-                rect2.UpperLeftCorner +
-                core::vector2di(rect.getWidth() / 2, 0));
-
-            switch (scoreResult)
-            {
-            case ESR_AWFUL:
-                sound->Play(paths::get_sfx("laugh.ogg"));
-                break;
-            case ESR_FAIR:
-                sound->SetVolume(0.15);
-                sound->Play(paths::get_sfx("fair.ogg"));
-                break;
-            case ESR_GOOD:
-                sound->SetVolume(0.15);
-                sound->Play(paths::get_sfx("good.ogg"));
-                break;
-            case ESR_EXCELLENT:
-                sound->SetVolume(0.15);
-                sound->Play(paths::get_sfx("excellent.ogg"));
-                break;
-            case ESR_PERFECT:
-                sound->SetVolume(0.25);
-                sound->Play(paths::get_sfx("perfect.ogg"));
-                break;
-            case ESR_EXTRAORDINARY:
-                sound->SetVolume(0.25);
-                sound->Play(paths::get_sfx("extraordinary.ogg"));
-                break;
-            default:
-                WARN << "Unknown score result.";
-                break;
-            }
+        case ESR_AWFUL:
+            sound->Play(paths::get_sfx("laugh.ogg"));
+            break;
+        case ESR_FAIR:
+            sound->SetVolume(0.15);
+            sound->Play(paths::get_sfx("fair.ogg"));
+            break;
+        case ESR_GOOD:
+            sound->SetVolume(0.15);
+            sound->Play(paths::get_sfx("good.ogg"));
+            break;
+        case ESR_EXCELLENT:
+            sound->SetVolume(0.15);
+            sound->Play(paths::get_sfx("excellent.ogg"));
+            break;
+        case ESR_PERFECT:
+            sound->SetVolume(0.25);
+            sound->Play(paths::get_sfx("perfect.ogg"));
+            break;
+        case ESR_EXTRAORDINARY:
+            sound->SetVolume(0.25);
+            sound->Play(paths::get_sfx("extraordinary.ogg"));
+            break;
+        default:
+            WARN << "Unknown score result.";
+            break;
         }
     }
     else if (event.IsType("ButtonDown") &&

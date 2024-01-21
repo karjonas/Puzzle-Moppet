@@ -224,23 +224,38 @@ void SimpleMenu::OnEvent(const Event &event)
     }
 }
 
+void SimpleMenu::Relayout()
+{
+    positioner->Apply();
+}
+
 // ***************** SimpleHorizontalMenu ****************
 
 SimpleHorizontalMenu::SimpleHorizontalMenu(s32 uniqueId, s32 yPos, s32 spacing,
                                            bool vertCentred)
     : SimpleMenu(uniqueId)
 {
-    video::IVideoDriver *driver = device->getVideoDriver();
-    u32 halfScreenHeight = driver->getScreenSize().Height / 2;
-
-    positioner = new RowPositioner(device->getVideoDriver(),
-                                   yPos == -1 ? halfScreenHeight : yPos,
-                                   spacing, vertCentred);
+    positioner =
+        new RowPositioner(device->getVideoDriver(), yPos, spacing, vertCentred);
 }
 
 void SimpleHorizontalMenu::SetHeading(core::stringw text)
 {
     ((RowPositioner *)positioner)->SetTitle(add_static_text(text.c_str()));
+}
+
+void SimpleHorizontalMenu::SetYPos(s32 yPos)
+{
+    ASSERT(dynamic_cast<RowPositioner *>(positioner) != nullptr);
+    static_cast<RowPositioner *>(positioner)->SetYPos(yPos);
+    positioner->Apply();
+}
+
+void SimpleHorizontalMenu::SetSpacing(s32 spacing)
+{
+    ASSERT(dynamic_cast<RowPositioner *>(positioner) != nullptr);
+    static_cast<RowPositioner *>(positioner)->SetSpacing(spacing);
+    positioner->Apply();
 }
 
 // ***************** SimpleVerticalMenu ****************

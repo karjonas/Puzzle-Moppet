@@ -3,12 +3,12 @@
 
 // ****************** Positioner ****************
 
-void Positioner::SetTopLeft(gui::IGUIElement *element, u16 x, u16 y)
+void Positioner::SetTopLeft(gui::IGUIElement *element, s32 x, s32 y)
 {
     element->setRelativePosition(core::position2di(x, y));
 }
 
-void Positioner::SetTopRight(gui::IGUIElement *element, u16 x, u16 y)
+void Positioner::SetTopRight(gui::IGUIElement *element, s32 x, s32 y)
 {
     core::rect<s32> rect = element->getRelativePosition();
     s32 width = rect.getWidth();
@@ -31,8 +31,6 @@ Positioner::Positioner(video::IVideoDriver *driver, s32 spacing)
 
 void Positioner::Add(gui::IGUIElement *element, s32 id)
 {
-    element->setAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER,
-                          irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
     element->setID(id);
     elements.push_back(element);
 }
@@ -106,6 +104,11 @@ RowPositioner::RowPositioner(video::IVideoDriver *driver, s32 yPos, s32 spacing,
 void RowPositioner::SetTitle(gui::IGUIElement *element)
 {
     title = element;
+}
+
+void RowPositioner::SetYPos(s32 yPos)
+{
+    this->yPos = yPos;
 }
 
 void RowPositioner::Apply()

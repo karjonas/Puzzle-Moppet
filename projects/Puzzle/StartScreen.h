@@ -36,9 +36,10 @@ class StartScreen : public IUpdatable, public IWantEvents
     // Location in main.cpp where another pointer to MainState must be stored...
     MainState **mainStatePtrLoc;
 
-    SimpleMenu *menu;
-
-    std::array<SimpleMenu *, 2> optionsMenus = {nullptr, nullptr};
+    SimpleVerticalMenu *startMenu = nullptr;
+    SimpleHorizontalMenu *newGameMenu = nullptr;
+    SimpleVerticalMenu *optionsMenuVertical = nullptr;
+    SimpleHorizontalMenu *optionsMenuHorizontal = nullptr;
 
     // for options menu
     VariantMap originalConfig;

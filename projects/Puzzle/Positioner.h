@@ -14,8 +14,8 @@ protected:
 
     s32 spacing;
 
-    void SetTopLeft(gui::IGUIElement *element, u16 x, u16 y);
-    void SetTopRight(gui::IGUIElement *element, u16 x, u16 y);
+    void SetTopLeft(gui::IGUIElement *element, s32 x, s32 y);
+    void SetTopRight(gui::IGUIElement *element, s32 x, s32 y);
 
 public:
     Positioner(video::IVideoDriver *driver, s32 spacing);
@@ -55,6 +55,7 @@ public:
 
     // a "title" element that appears above the row...
     void SetTitle(gui::IGUIElement *element);
+    void SetYPos(s32 yPos);
 
     void Apply() override;
     void Reset() override;

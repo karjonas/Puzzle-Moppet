@@ -434,6 +434,8 @@ public:
     // (presumably a move due to gravity or suchlike)
     void ClearPlayerMapObjectMove();
 
+    void RepositionTutorialTexts();
+
 private:
     void OnPause() override;
     void OnResume() override;
