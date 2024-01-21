@@ -87,24 +87,6 @@ void EndLevelScreen::OnEvent(const Event &event)
         {
             core::stringw text = L"Level Complete!";
 
-            /*
-            std::vector<core::stringc> levels = find_levels();
-            core::stringc levelShortName = level->GetShortName();
-
-            for (u32 i = 0; i < levels.size(); i ++)
-            {
-                if (levels[i] == levelShortName)
-                {
-                    text = L"Level ";
-                    text += i;
-                    text += L" of ";
-                    text += 30;
-                    text += L" Complete!";
-                    break;
-                }
-            }
-            */
-
             s32 yPos = s32(screenHeight * 0.05);
             gui::IGUIElement *element = add_static_text2(text.c_str());
             core::recti rect = element->getRelativePosition();
