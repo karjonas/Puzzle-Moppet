@@ -63,7 +63,7 @@ Open a terminal, then install vcpkg and the dependencies:
 
 If running Windows 64-bit make sure to provide the triplet like this:
 
-    ./vcpkg install irrlicht ode openal-soft --triplet=windows-x64
+    ./vcpkg install irrlicht ode openal-soft --triplet=x64-windows
 
 
 Building the Game
