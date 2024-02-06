@@ -3,16 +3,18 @@
 
 void ODESetRotation(core::matrix4 source, dMatrix3 dest)
 {
+    // dMatrix3 = dReal[3*4]
+    // A 3x3 matrix with the elements laid out in row-major order. The last
+    // column is ignored and, as dVector3, is used only for better alignment.
     source = source.getTransposed();
-
     for (int i = 0; i < 3; i++)
     {
-        int j = 0;
-        for (; j < 3; j++)
+        for (int j = 0; j < 3; j++)
         {
-            dest[i * 4 + j] = source[i * 4 + j];
+            const int idx = i * 4 + j;
+            dest[idx] = source[idx];
         }
-        dest[i * 4 + j + 1] = 0;
+        dest[i * 4 + 3] = 0;
     }
 }
 
