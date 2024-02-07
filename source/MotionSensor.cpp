@@ -1,28 +1,7 @@
 
 #include "MotionSensor.h"
 
-MotionSensor::MotionSensor()
-{
-    translateCallback = nullptr;
-    rotateCallback = nullptr;
-    anyCallback = nullptr;
-
-    updateCount = 0;
-    skipCounter = 0;
-
-    // Defaults
-    SetRelative(false);
-    EnableInitialEvents(true);
-    SetMinTranslateSpeed(0.0001);
-    SetMinRotateSpeed(0.001);
-    SetAveragingCount(0);
-    SetAveragingSkip(0);
-    EnableTranslateAxes(AXIS_X | AXIS_Y | AXIS_Z);
-
-    // Init
-    // (though not really needed as may be called by Set* function calls above)
-    ResetAveraging();
-}
+MotionSensor::MotionSensor() = default;
 
 MotionSensor::~MotionSensor()
 {

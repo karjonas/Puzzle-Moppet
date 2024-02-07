@@ -6,33 +6,33 @@
 // Note: This implementation has not really been tested.
 class MotionSensor : public IMotionSensor
 {
-    IMotionCallback *translateCallback;
-    IMotionCallback *rotateCallback;
-    IMotionCallback *anyCallback;
+    IMotionCallback *translateCallback = nullptr;
+    IMotionCallback *rotateCallback = nullptr;
+    IMotionCallback *anyCallback = nullptr;
 
-    bool relative;
-    bool initialEvents;
+    bool relative = false;
+    bool initialEvents = true;
 
-    f32 minTranslateSpeed;
-    f32 minRotateSpeed;
+    f32 minTranslateSpeed = 0.0001f;
+    f32 minRotateSpeed = 0.001f;
 
-    u32 averagingCount;
-    u32 averagingSkip;
+    u32 averagingCount = 0;
+    u32 averagingSkip = 0;
 
     // for counting skips...
-    u32 skipCounter;
+    u32 skipCounter = 0;
 
     // Counts the first two updates.
     // (cannot find a change in motion until after that)
-    u8 updateCount;
+    u8 updateCount = 0;
 
     // maybe we don't consider all axes
-    s32 translateAxesEnabled;
+    s32 translateAxesEnabled = AXIS_X | AXIS_Y | AXIS_Z;
 
     // Cached values from previous update.
 
-    core::vector3df lastPos;
-    core::vector3df lastRot;
+    irr::core::vector3df lastPos;
+    irr::core::vector3df lastRot;
 
     std::vector<f32> posDeltaHistory;
     std::vector<f32> rotDeltaHistory;
@@ -40,8 +40,8 @@ class MotionSensor : public IMotionSensor
     InfiniteRunningAverage posDeltaAverage;
     InfiniteRunningAverage rotDeltaAverage;
 
-    bool wasTranslating;
-    bool wasRotating;
+    bool wasTranslating = false;
+    bool wasRotating = false;
 
     void ResetAveraging();
 

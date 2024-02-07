@@ -8,34 +8,34 @@ class ICollisionGeometry;
 class ThirdPersonCameraController : public IThirdPersonCameraController,
                                     public IWantInput
 {
-    IWorld *world;
-    ITransformable *following;
+    IWorld *world = nullptr;
+    ITransformable *following = nullptr;
 
-    f32 heightOffset;
-    f32 minPitch;
-    f32 maxPitch;
-    f32 turnSpeed;
-    f32 turnSmooth;
+    f32 heightOffset = 0.f;
+    f32 minPitch = 0.f;
+    f32 maxPitch = 0.f;
+    f32 turnSpeed = 0.f;
+    f32 turnSmooth = 0.f;
 
-    f32 minZoom;
-    f32 maxZoom;
-    f32 zoomSpeed;
-    f32 zoomSmooth;
+    f32 minZoom = 0.0f;
+    f32 maxZoom = 0.0f;
+    f32 zoomSpeed = 1.0f;
+    f32 zoomSmooth = 0.0f;
 
     // Distance of camera from target
-    f32 nextDistance;
-    f32 currentDistance;
+    f32 nextDistance = 0.f;
+    f32 currentDistance = 0.f;
 
     // Angles from target to camera
     core::vector2df nextAngle;
     core::vector2df currentAngle;
 
-    s32 idAxisYaw;
-    s32 idAxisPitch;
-    s32 idAxisZoom;
+    s32 idAxisYaw = -1;
+    s32 idAxisPitch = -1;
+    s32 idAxisZoom = -1;
 
     // Camera collider?
-    ICameraCollider *collider;
+    ICameraCollider *collider = nullptr;
 
 public:
     ThirdPersonCameraController(IWorld *world, scene::ISceneManager *smgr,

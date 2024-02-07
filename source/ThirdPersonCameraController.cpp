@@ -63,23 +63,15 @@ ThirdPersonCameraController::ThirdPersonCameraController(
     f32 minPitch, f32 maxPitch, f32 turnSpeed)
 {
     this->world = world;
-
     this->heightOffset = heightOffset;
     this->minPitch = minPitch;
     this->maxPitch = maxPitch;
-
-    following = nullptr;
+    this->turnSpeed = turnSpeed;
 
     world->SubscribeToInput(this);
-    SetInputAxes(-1, -1, -1);
-
-    SetTurnSpeed(turnSpeed);
-    SetTurnSmoothing(0.0);
 
     // zoom is disabled by default
     SetZoomLimits(distance, distance);
-    SetZoomSpeed(1.0);
-    SetZoomSmoothness(0.0);
 
     // Initial distance (aka zoom...)
     nextDistance = distance;
@@ -87,9 +79,6 @@ ThirdPersonCameraController::ThirdPersonCameraController(
 
     // Default camera angle
     SetAngles(core::vector2df(0, 0));
-
-    // Collisions?
-    collider = nullptr;
 }
 
 ThirdPersonCameraController::~ThirdPersonCameraController()
