@@ -191,6 +191,7 @@ Engine::Engine(int argc, const char **argv, const VariantMap *settings)
     deviceParams.WindowSize = core::dimension2du(initSettings["screenWidth"],
                                                  initSettings["screenHeight"]);
     deviceParams.Bits = 32;
+    deviceParams.ZBufferBits = 24;
     deviceParams.Fullscreen = initSettings["fullScreen"];
     deviceParams.Stencilbuffer = false;
     deviceParams.Vsync = initSettings["vsync"];
