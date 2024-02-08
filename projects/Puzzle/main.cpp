@@ -441,3 +441,12 @@ int main(int argc, const char **argv)
 
     return 0;
 }
+
+#if _MSC_VER
+#include <windows.h>
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char *,
+                     int nShowCmd)
+{
+    return main(__argc, const_cast<const char **>(__argv));
+}
+#endif

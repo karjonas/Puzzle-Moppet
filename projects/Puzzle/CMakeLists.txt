@@ -1,6 +1,14 @@
 set(PROJECT_NAME puzzlemoppet)
 
-add_executable(${PROJECT_NAME}
+# Add flag to make console not appear on windows.
+# Also makes WinMain() entry point instead of main().
+if(WIN32)
+    set(WIN32_APPLICATION_FLAG "WIN32")
+else()
+    set(WIN32_APPLICATION_FLAG "")
+endif()
+
+add_executable(${PROJECT_NAME} ${WIN32_APPLICATION_FLAG}
     CameraCollider.h
     Editor.cpp
     Editor.h
