@@ -49,7 +49,7 @@ Ubuntu:
 
 Arch Linux:
 
-    sudo pacman -S openal cmake make gcc git
+    sudo pacman -Syu openal base-devel git curl zip unzip tar cmake ninja
 
 Dependencies
 ------------
