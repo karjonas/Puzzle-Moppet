@@ -4,4 +4,3 @@ NOTE << "FOO";
 * code layout:
 source: Litha Engine
 projects/Puzzle: game
-projects/ConfigApp" Configuration utility

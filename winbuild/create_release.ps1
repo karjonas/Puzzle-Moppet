@@ -15,7 +15,6 @@ devenv PuzzleMoppet.sln /Build Release
 cd ..
 rmdir -r $out_dir
 mkdir $out_dir
-cp -r "build/projects/ConfigApp/bin/Release/*" "$out_dir/"
 cp -r "build/projects/Puzzle/bin/Release/*" "$out_dir/"
 cp -r "../data" "$out_dir/"
 cp -r "../licenses" "$out_dir/"
