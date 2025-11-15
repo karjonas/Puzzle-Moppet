@@ -345,6 +345,13 @@ namespace gui
 			void setOutlineColor(video::SColor color) { OutlineColor = color; }
 			video::SColor getOutlineColor() const { return OutlineColor; }
 
+			void setShadow(bool enable, video::SColor col, core::vector2d<u32> offs)
+			{
+				ShadowEnabled = enable;
+				ShadowColor = col;
+				ShadowOffset = offs;
+			}
+
 			//! This function is for debugging mostly. If the page doesn't exist it returns zero.
 			//! \param page_index Simply return the texture handle of a given page index.
 			video::ITexture* getPageTextureByIndex(u32 page_index) const;
@@ -399,6 +406,9 @@ namespace gui
 			bool UseAutoHinting;
 			float Outline;
 			video::SColor OutlineColor;
+			bool ShadowEnabled = true;
+			video::SColor ShadowColor = video::SColor(125, 0, 0, 0);
+			core::vector2d<u32> ShadowOffset = core::vector2d<u32>(2, 2);
 			u32 Size;
 			u32 MaxFontHeight; // in pixels from sampling a few characters
 			u32 LineHeight;	// in pixels and different from Size and MaxFontHeight

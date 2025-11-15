@@ -765,10 +765,14 @@ void CGUITTFont::setOutline(float outline)
 	}
 }
 
-void CGUITTFont::draw(const core::stringw& text, const core::rect<s32>& position, video::SColor color, bool hcenter, bool vcenter, const core::rect<s32>* clip)
+void CGUITTFont::draw(const core::stringw& text, const core::rect<s32>& position, video::SColor color, bool hcenter, bool vcenter, const core::rect<s32>* clipIn)
 {
 	if (!Driver)
 		return;
+
+	core::rect<s32> clip = *clipIn;
+	if (ShadowEnabled)
+		clip = core::rect<s32>(clip.UpperLeftCorner, clip.LowerRightCorner + core::position2di(ShadowOffset.X, ShadowOffset.Y));
 
 	// Clear the glyph pages of their render information.
 	for (u32 i = 0; i < GlyphPages.size(); ++i)
@@ -873,6 +877,40 @@ void CGUITTFont::draw(const core::stringw& text, const core::rect<s32>& position
 	if (!UseTransparency)
 		color.color |= 0xff000000;
 
+	// draw shadow first
+	if (ShadowEnabled)
+	{
+		for (u32 i = 0; i < GlyphPages.size(); ++i)
+		{
+			CGUITTGlyphPage* page = GlyphPages[i];
+
+			if (!page->RenderPositions.empty())
+			{
+				// build shadow positions (offset)
+				core::array<core::position2di> shadowPositions;
+				shadowPositions.set_used(page->RenderPositions.size());
+
+				for (u32 k = 0; k < page->RenderPositions.size(); ++k)
+				{
+					shadowPositions[k] =
+						page->RenderPositions[k] + core::vector2d<s32>(ShadowOffset.X, ShadowOffset.Y);
+				}
+
+				auto shadowColorAlpha = ShadowColor;
+				shadowColorAlpha.setAlpha(ShadowColor.getAlpha() * (color.getAlpha() / 255.f));
+
+				Driver->draw2DImageBatch(
+					page->Texture,
+					shadowPositions,
+					page->RenderSourceRects,
+					&clip,
+					shadowColorAlpha,
+					true
+					);
+			}
+		}
+	}
+
 	// draw outline if we have some
 	if ( Outline != 0.f )
 	{
@@ -882,7 +920,7 @@ void CGUITTFont::draw(const core::stringw& text, const core::rect<s32>& position
 
 			if ( !page->OutlineRenderPositions.empty() )
 			{
-				Driver->draw2DImageBatch(page->Texture, page->OutlineRenderPositions, page->OutlineRenderSourceRects, clip, OutlineColor, true);
+				Driver->draw2DImageBatch(page->Texture, page->OutlineRenderPositions, page->OutlineRenderSourceRects, &clip, OutlineColor, true);
 			}
 		}
 	}
@@ -894,7 +932,7 @@ void CGUITTFont::draw(const core::stringw& text, const core::rect<s32>& position
 
 		if ( !page->RenderPositions.empty() )
 		{
-			Driver->draw2DImageBatch(page->Texture, page->RenderPositions, page->RenderSourceRects, clip, color, true);
+			Driver->draw2DImageBatch(page->Texture, page->RenderPositions, page->RenderSourceRects, &clip, color, true);
 		}
 	}
 }
