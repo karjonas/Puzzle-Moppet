@@ -14,6 +14,8 @@ add_library(Litha STATIC
     Engine.h
     EventQueue.cpp
     EventQueue.h
+    FontCache.cpp
+    FontCache.h
     InfiniteRunningAverage.h
     InputProfile.cpp
     InputProfile.h
