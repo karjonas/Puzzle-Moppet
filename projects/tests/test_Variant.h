@@ -2,7 +2,7 @@
 {
     // Could probably do with some more variant tests, but this will do for now.
 
-    NOTE("Testing Variant");
+    NOTE << "Testing Variant";
 
     // Test variant copying
 

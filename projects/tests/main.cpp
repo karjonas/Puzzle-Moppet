@@ -1,4 +1,3 @@
-
 #include "Litha.h"
 
 // A very basic test system, simply using ASSERT.
@@ -8,12 +7,12 @@
 int main(int argc, const char **argv)
 {
     utils::log::setfile("tests.log");
-    NOTE("RUNNING TESTS...");
+    NOTE << "RUNNING TESTS...";
 
 #include "test_str.h"
 #include "test_Variant.h"
 
-    NOTE("All tests passed!");
+    NOTE << "All tests passed!";
 
     return 0;
 }

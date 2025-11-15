@@ -1,6 +1,6 @@
 
 {
-    NOTE("Testing utils::str");
+    NOTE << "Testing utils::str";
 
     // Trim functions
 

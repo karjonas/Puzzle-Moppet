@@ -1,2 +1,7 @@
+option(BUILD_TESTS "Build the test suite" OFF)
+
 add_subdirectory(Puzzle)
-#add_subdirectory(tests)
+
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
