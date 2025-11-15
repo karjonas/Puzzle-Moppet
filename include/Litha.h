@@ -50,4 +50,6 @@
 #include "Buttons.h"
 #include "CollisionMaterialInteraction.h"
 
+#include "CGUITTFont.h"
+
 #endif

@@ -4,6 +4,7 @@
 #include "utils/paths.h"
 #include "volume.h"
 #include "Colors.h"
+#include "FontCache.h"
 
 // oh no another global
 ISound *bgAmbientSound = nullptr;
@@ -436,6 +437,8 @@ int main(int argc, const char **argv)
 
     if (bgMusic)
         bgMusic->drop();
+
+    FontCache::shutdown();
 
     engine->drop();
 
