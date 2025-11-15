@@ -39,6 +39,7 @@ Requirements
     - [Irrlicht](http://irrlicht.sourceforge.net/)
     - [ODE](http://www.ode.org/)
     - [OpenAL Soft](https://openal-soft.org/)
+    - [FreeType] (https://freetype.org/)
 
 Distribution specific instructions
 ----------------------------------
@@ -59,11 +60,11 @@ Open a terminal, then install vcpkg and the dependencies:
     git clone https://github.com/microsoft/vcpkg.git
     cd vcpkg
     ./bootstrap-vcpkg.sh
-    ./vcpkg install irrlicht ode openal-soft
+    ./vcpkg install irrlicht ode openal-soft freetype
 
 If running Windows 64-bit make sure to provide the triplet like this:
 
-    ./vcpkg install irrlicht ode openal-soft --triplet=x64-windows
+    ./vcpkg install irrlicht ode openal-soft freetype --triplet=x64-windows
 
 
 Building the Game

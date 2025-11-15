@@ -5,6 +5,8 @@ add_library(Litha STATIC
     Animators/RotationAnimator.h
     Camera.cpp
     Camera.h
+    CGUITTFont.cpp
+    CGUITTFont.h
     Character.cpp
     Character.h
     Colors.cpp
@@ -124,6 +126,9 @@ if(BUILD_FOR_PKGBUILD)
 else()
     list(APPEND LINK_LIBRARIES ODE::ODE)
 endif()
+
+find_package(Freetype REQUIRED)
+list(APPEND LINK_LIBRARIES Freetype::Freetype)
 
 target_link_libraries(Litha ${LINK_LIBRARIES})
 
