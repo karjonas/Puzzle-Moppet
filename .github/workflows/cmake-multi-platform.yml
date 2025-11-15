@@ -1,0 +1,103 @@
+name: CMake on multiple platforms
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+            vcpkg_triplet: x64-linux
+          - os: ubuntu-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+            vcpkg_triplet: x64-linux
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+            vcpkg_triplet: x64-windows
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # --- Install system dependencies ---
+    - name: Install system dependencies (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake git curl unzip tar libxxf86vm-dev libopenal-dev libgl1-mesa-dev
+
+    # --- Clone and bootstrap vcpkg ---
+    - name: Clone vcpkg
+      run: git clone https://github.com/microsoft/vcpkg.git ./vcpkg
+
+    - name: Bootstrap vcpkg on Windows
+      if: matrix.os == 'windows-latest'
+      run: .\vcpkg\bootstrap-vcpkg.bat
+
+    - name: Bootstrap vcpkg on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: ./vcpkg/bootstrap-vcpkg.sh
+
+    # --- Install vcpkg packages ---
+    - name: Install dependencies via vcpkg on Windows
+      if: matrix.os == 'windows-latest'
+      run: .\vcpkg\vcpkg.exe install irrlicht ode openal-soft --triplet ${{ matrix.vcpkg_triplet }}
+
+    - name: Install dependencies via vcpkg on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: ./vcpkg/vcpkg install irrlicht ode openal-soft --triplet ${{ matrix.vcpkg_triplet }}
+
+    # Configure CMake on Linux
+    - name: Configure CMake on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        mkdir -p build
+        cmake -B build -S . \
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+    # Configure CMake on Windows
+    - name: Configure CMake on Windows
+      if: matrix.os == 'windows-latest'
+      shell: powershell
+      run: |
+        # Create build directory if it doesn't exist
+        New-Item -ItemType Directory -Force build | Out-Null
+
+        # Run CMake configuration
+        cmake -B build -S . `
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} `
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} `
+          -DCMAKE_BUILD_TYPE=Release `
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake
+
+    # Build Application
+    - name: Build Application
+      run: |
+        cmake --build build --config Release
+
+    # Install Application
+    - name: Install Application
+      run: |
+        cmake --install build --prefix install_dir --config Release
+
+    #- name: Test
+    #  working-directory: ${{ steps.strings.outputs.build-output-dir }}
+    #  # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+    #  # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+    #  run: ctest --build-config ${{ matrix.build_type }}
