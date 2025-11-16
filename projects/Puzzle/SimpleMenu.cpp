@@ -260,10 +260,10 @@ void SimpleHorizontalMenu::SetSpacing(s32 spacing)
 
 // ***************** SimpleVerticalMenu ****************
 
-SimpleVerticalMenu::SimpleVerticalMenu(s32 uniqueId, f32 marginBottom)
+SimpleVerticalMenu::SimpleVerticalMenu(s32 uniqueId, s32 spacing, f32 marginBottom)
     : SimpleMenu(uniqueId)
 {
     // positioner = new ColumnPositioner(device->getVideoDriver(), 20);
     positioner =
-        new ColumnPositionerCentred(device->getVideoDriver(), 10, marginBottom);
+        new ColumnPositionerCentred(device->getVideoDriver(), spacing, marginBottom);
 }

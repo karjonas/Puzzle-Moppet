@@ -204,7 +204,9 @@ void StartScreen::CreateFirstMenu()
     CreateLevelPreviewView();
     UpdatePlayablePuzzles();
 
-    startMenu = new SimpleVerticalMenu(START_MENU_ID);
+    video::IVideoDriver *driver = engine->GetIrrlichtDevice()->getVideoDriver();
+    s32 screenHeight = driver->getScreenSize().Height;
+    startMenu = new SimpleVerticalMenu(START_MENU_ID, s32(0.01f * screenHeight), 0.1f);
 
     if (os::path::exists(get_full_save_path()))
     {
@@ -532,7 +534,10 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     delete optionsMenuVertical;
     optionsMenuVertical = nullptr;
 
-    auto *vertMenu = new SimpleVerticalMenu(OPTIONS_MENU_ID, MARGIN_BOTTOM);
+    video::IVideoDriver *driver = engine->GetIrrlichtDevice()->getVideoDriver();
+    u32 screenHeight = driver->getScreenSize().Height;
+
+    auto *vertMenu = new SimpleVerticalMenu(OPTIONS_MENU_ID, s32(0.01f * screenHeight), MARGIN_BOTTOM);
 
 #ifndef __APPLE__
     // temp disabled on Mac since problems with mouse control in windowed mode.
@@ -605,10 +610,6 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
     optionsMenuVertical = vertMenu;
 
     {
-        gui::IGUIEnvironment *guienv =
-            GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
-        gui::IGUIFont *font = guienv->getFont("sansation20.xml");
-
         const std::vector<gui::IGUIElement *> &elements =
             vertMenu->GetElements();
 
@@ -625,7 +626,8 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
             for (u32 j = 0; s[j] && s[j] != ':'; j++)
                 upToColon += s[j];
 
-            u32 upToColonDist = font->getDimension(upToColon.c_str()).Width;
+            u32 upToColonDist =
+                get_static_text_dimensions(upToColon.c_str()).Width;
 
             // offset left by that amount
             element->setRelativePosition(
@@ -635,9 +637,6 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
                 core::vector2di(upToColonDist, 0) + core::vector2di(20, 0));
         }
     }
-
-    video::IVideoDriver *driver = device->getVideoDriver();
-    u32 screenHeight = driver->getScreenSize().Height;
 
     auto *horizMenu = new SimpleHorizontalMenu(
         OPTIONS_MENU_ID, s32(screenHeight - screenHeight * MARGIN_BOTTOM) + 20,
@@ -687,8 +686,11 @@ void StartScreen::OnEvent(const Event &event)
 {
     if (event.IsType("ScreenResize"))
     {
-        if (startMenu != nullptr)
-            startMenu->Relayout();
+        if (startMenu != nullptr) {
+            delete startMenu;
+            startMenu = nullptr;
+            CreateFirstMenu();
+        }
 
         if (newGameMenu != nullptr)
         {

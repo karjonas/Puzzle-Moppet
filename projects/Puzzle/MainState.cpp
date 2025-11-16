@@ -9,6 +9,7 @@
 #include "level_stats.h"
 #include "utils/paths.h"
 #include "Colors.h"
+#include "FontCache.h"
 
 #include <iostream>
 #include <fstream>
@@ -215,24 +216,42 @@ core::stringc find_next_level(bool fromFurthest)
     return nextLevel;
 }
 
+static irr::gui::CGUITTFont *get_static_text_font(u32 fontSize)
+{
+    core::stringc fontName = paths::get_font("Sansation_Bold.ttf");
+    irr::f32 outline = 0.f;
+    IrrlichtDevice *device = GetEngine()->GetIrrlichtDevice();
+    irr::gui::CGUITTFont *font =
+        FontCache::getFont(device, fontName.c_str(), fontSize, outline);
+    return font;
+}
+
+core::dimension2du get_static_text_dimensions(const wchar_t *str)
+{
+    const auto screenSize =
+        GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize();
+    unsigned int fontSize = 0.03f * screenSize.Height;
+    irr::gui::CGUITTFont *font = get_static_text_font(fontSize);
+    core::dimension2du dim = font->getDimension(str);
+    font->drop();
+    return dim;
+}
+
 gui::IGUIStaticText *add_static_text(const wchar_t *str)
 {
     gui::IGUIEnvironment *guienv =
         GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
-    u32 screenWidth = GetEngine()
-                          ->GetIrrlichtDevice()
-                          ->getVideoDriver()
-                          ->getScreenSize()
-                          .Width;
+    const auto screenSize =
+        GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize();
 
-    gui::IGUIFont *font = guienv->getFont(paths::get_font("sansation20.xml"));
-
+    unsigned int fontSize = 0.03f * screenSize.Height;
+    irr::gui::CGUITTFont *font = get_static_text_font(fontSize);
     core::dimension2du dim = font->getDimension(str);
 
-    u32 nbLines = 1 + dim.Width / screenWidth;
-    if (dim.Width > screenWidth)
+    u32 nbLines = 1 + dim.Width / screenSize.Width;
+    if (dim.Width > screenSize.Width)
     {
-        dim.Width = screenWidth;
+        dim.Width = screenSize.Width;
     }
 
     gui::IGUIStaticText *textElement =
@@ -240,7 +259,8 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
                               core::recti((nbLines > 1 ? 10 : 0), 0, dim.Width,
                                           dim.Height * nbLines),
                               false, true);
-    textElement->setOverrideFont(guienv->getFont(paths::get_font("sansation20.xml")));
+    textElement->setOverrideFont(font);
+    font->drop();
     textElement->setOverrideColor(Colors::text_col());
     return textElement;
 }
@@ -249,16 +269,18 @@ gui::IGUIStaticText *add_static_text2(const wchar_t *str)
 {
     gui::IGUIEnvironment *guienv =
         GetEngine()->GetIrrlichtDevice()->getGUIEnvironment();
+    const auto screenSize =
+        GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize();
 
-    gui::IGUIFont *font = guienv->getFont(paths::get_font("sansation32.xml"));
-
+    unsigned int fontSize = 0.048f * screenSize.Height;
+    irr::gui::CGUITTFont *font = get_static_text_font(fontSize);
     core::dimension2du dim = font->getDimension(str);
 
     gui::IGUIStaticText *textElement =
         guienv->addStaticText(str, core::recti(0, 0, dim.Width, dim.Height),
                               false, false);
-    textElement->setOverrideFont(
-        guienv->getFont(paths::get_font("sansation32.xml")));
+    textElement->setOverrideFont(font);
+    font->drop();
     textElement->setOverrideColor(Colors::text_col());
     return textElement;
 }

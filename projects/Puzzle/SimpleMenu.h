@@ -88,7 +88,7 @@ public:
 class SimpleVerticalMenu : public SimpleMenu
 {
 public:
-    SimpleVerticalMenu(s32 uniqueId, f32 marginBottom = 0.1);
+    SimpleVerticalMenu(s32 uniqueId, s32 spacing, f32 marginBottom);
 };
 
 #endif

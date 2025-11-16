@@ -6,7 +6,7 @@ using SColor = irr::video::SColor;
 
 SColor text_col()
 {
-    return SColor(200, 255, 255, 255);
+    return SColor(255, 255, 255, 255);
 }
 SColor text_col_mouseover()
 {
@@ -19,15 +19,15 @@ SColor text_col_disabled()
 
 SColor text_level_title()
 {
-    return SColor(200, 255, 255, 255);
+    return SColor(255, 255, 255, 255);
 }
 SColor text_level_default_rating()
 {
-    return SColor(200, 255, 255, 255);
+    return SColor(255, 255, 255, 255);
 }
 SColor text_level_fraction()
 {
-    return SColor(200, 255, 255, 255);
+    return SColor(255, 255, 255, 255);
 }
 
 SColor black()
