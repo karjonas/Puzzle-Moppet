@@ -39,17 +39,17 @@ video::SColor get_rating_col(E_SCORE_RESULT scoreResult)
     switch (scoreResult)
     {
     case ESR_AWFUL:
-        return video::SColor(150, 255, 99, 99);
+        return video::SColor(255, 255, 99, 99);
     case ESR_FAIR:
-        return video::SColor(100, 255, 255, 255);
+        return video::SColor(255, 255, 255, 255);
     case ESR_GOOD:
-        return video::SColor(100, 111, 255, 111);
+        return video::SColor(255, 111, 255, 111);
     case ESR_EXCELLENT:
-        return video::SColor(150, 255, 255, 100);
+        return video::SColor(255, 255, 255, 100);
     case ESR_PERFECT:
-        return video::SColor(150, 255, 255, 0);
+        return video::SColor(255, 255, 255, 0);
     default: // ESR_EXTRAORDINARY or anything else...
-        return video::SColor(150, 255, 255, 0);
+        return video::SColor(255, 255, 255, 0);
     }
 }
 

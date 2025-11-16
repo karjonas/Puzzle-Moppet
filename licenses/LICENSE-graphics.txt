@@ -18,13 +18,10 @@ All files in puzzlemoppet/projects/Puzzle/media.
   license: WTFPL
   source: http://garnetgames.com/puzzlemoppet/
 
-./font/sansation20_irr.png
-./font/sansation32_irr.png
+./font/Sansation_Bold.ttf
   author: Bernd Montag
-  license: Freeware
-
-This Font Software is licensed under the SIL Open Font License, Version 1.1.
-This license is available with a FAQ at: http://scripts.sil.org/OFL
+  license: SIL OPEN FONT LICENSE Version 1.1
+  source: https://fonts.google.com/specimen/Sansation/license
 
 ./finalscene/rock_color.jpg
   author: p0ss

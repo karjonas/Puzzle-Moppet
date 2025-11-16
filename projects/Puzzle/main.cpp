@@ -302,14 +302,6 @@ int main(int argc, const char **argv)
         }
     }
 
-    // Fonts
-    {
-        gui::IGUIEnvironment *guienv =
-            engine->GetIrrlichtDevice()->getGUIEnvironment();
-        guienv->getFont(paths::get_font("sansation20.xml"));
-        guienv->getFont(paths::get_font("sansation32.xml"));
-    }
-
     // Sounds
     {
         ISoundSystem *soundSystem = engine->GetSoundSystem();

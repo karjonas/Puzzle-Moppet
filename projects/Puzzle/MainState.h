@@ -16,6 +16,7 @@ core::stringc find_next_level(bool fromFurthest = false);
 
 gui::IGUIStaticText *add_static_text2(const wchar_t *str);
 gui::IGUIStaticText *add_static_text(const wchar_t *str);
+core::dimension2du get_static_text_dimensions(const wchar_t *str);
 
 class Level;
 class Editor;
