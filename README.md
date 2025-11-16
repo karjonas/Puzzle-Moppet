@@ -39,7 +39,7 @@ Requirements
     - [Irrlicht](http://irrlicht.sourceforge.net/)
     - [ODE](http://www.ode.org/)
     - [OpenAL Soft](https://openal-soft.org/)
-    - [FreeType] (https://freetype.org/)
+    - [FreeType](https://freetype.org/)
 
 Distribution specific instructions
 ----------------------------------
