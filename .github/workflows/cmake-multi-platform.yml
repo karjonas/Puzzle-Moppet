@@ -32,6 +32,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # Compute short git hash
+    - name: Compute hash
+      id: gitinfo
+      shell: bash
+      run: |
+        full_sha="${{ github.sha }}"
+        short_sha="${full_sha:0:7}"
+        echo "hash=$short_sha" >> $GITHUB_OUTPUT
+
     # --- Install system dependencies ---
     - name: Install system dependencies (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
@@ -69,6 +78,9 @@ jobs:
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
           -DCMAKE_BUILD_TYPE=Release \
+          -DDATA_DIR=/usr/share/puzzlemoppet \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DBUILD_FOR_APPIMAGE=ON \
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
     # Configure CMake on Windows
@@ -84,6 +96,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} `
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} `
           -DCMAKE_BUILD_TYPE=Release `
+          -DDATA_DIR="./share/puzzlemoppet" `
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     # Build Application
@@ -95,6 +108,115 @@ jobs:
     - name: Install Application
       run: |
         cmake --install build --prefix install_dir --config Release
+
+    - name: Finalize Windows build layout
+      if: matrix.os == 'windows-latest'
+      id: finalize
+      shell: powershell
+      run: |
+        $triplet = "${{ matrix.vcpkg_triplet }}"
+        $vcpkgBin = "vcpkg\installed\$triplet\bin"
+        $installDir = "install_dir"
+
+        # Ensure install_dir exists
+        if (-not (Test-Path $installDir)) {
+          New-Item -ItemType Directory -Path $installDir | Out-Null
+        }
+
+        Write-Host "Copying DLLs from $vcpkgBin to $installDir..."
+        if (Test-Path $vcpkgBin) {
+          Get-ChildItem (Join-Path $vcpkgBin "*.dll") | ForEach-Object {
+            Copy-Item $_.FullName -Destination $installDir -Force
+          }
+        } else {
+          Write-Host "No vcpkg bin directory found (maybe static build?)"
+        }
+
+        # Source exe in build/bin
+        $exeSource = Join-Path $installDir "bin/puzzlemoppet.exe"
+        $exeDest = Join-Path $installDir "PuzzleMoppet.exe"
+
+        if (Test-Path $exeSource) {
+          Write-Host "Moving PuzzleMoppet.exe to install_dir..."
+          Move-Item -Path $exeSource -Destination $exeDest -Force
+        } else {
+          Write-Host "ERROR: Could not find PuzzleMoppet.exe at $exeSource"
+          exit 1
+        }
+
+        # Remove the old bin folder if it exists
+        $binDir = Join-Path $installDir "bin"
+
+        if (Test-Path $binDir) {
+          Write-Host "Deleting old bin directory..."
+          Remove-Item -Path $binDir -Recurse -Force
+        }
+
+        # Export name
+        $hash = "${{ steps.gitinfo.outputs.hash }}"
+        $finalName = "PuzzleMoppet-Win64-$hash"
+        echo "final_name=$finalName" >> $Env:GITHUB_OUTPUT
+
+    - name: Upload Windows ZIP
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.finalize.outputs.final_name }}
+        path: install_dir
+
+    - name: Build AppImage (Linux)
+      id: appimage
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        set -e
+
+        # Dependencies for linuxdeploy
+        sudo apt-get update
+        sudo apt-get install -y fuse libfuse2
+
+        # Download linuxdeploy
+        wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+        chmod +x linuxdeploy-x86_64.AppImage
+
+        # Prepare AppDir
+        APPDIR=AppDir
+        rm -rf $APPDIR
+        mkdir -p $APPDIR/usr
+
+        # Install the app into AppDir/usr
+        cmake --install build --prefix $APPDIR/usr --config Release
+
+        # Copy desktop entry + icon (paths assumed; adjust if needed)
+        cp appimage/puzzlemoppet.desktop $APPDIR/puzzlemoppet.desktop
+        mkdir -p $APPDIR/usr/share/icons/hicolor/256x256/apps
+        cp icons/main.png $APPDIR/usr/share/icons/hicolor/256x256/apps/puzzlemoppet.png
+
+        # Build AppImage
+        ./linuxdeploy-x86_64.AppImage \
+          --appdir "$APPDIR" \
+          -d "$APPDIR/puzzlemoppet.desktop" \
+          -i "$APPDIR/usr/share/icons/hicolor/256x256/apps/puzzlemoppet.png" \
+          --output appimage
+
+        # Compute final name
+        hash="${{ steps.gitinfo.outputs.hash }}"
+        finalName="PuzzleMoppet-$hash.AppImage"
+
+        # Find generated AppImage
+        generated=$(ls PuzzleMoppet-*.AppImage | head -n 1)
+
+        # Rename it
+        mv "$generated" "$finalName"
+
+        # Export variable to GitHub Actions
+        echo "final_name=$finalName" >> "$GITHUB_OUTPUT"
+
+    - name: Upload Linux AppImage
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ steps.appimage.outputs.final_name }}
+        name: ${{ steps.appimage.outputs.final_name }}
 
     #- name: Test
     #  working-directory: ${{ steps.strings.outputs.build-output-dir }}

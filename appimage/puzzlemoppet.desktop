@@ -5,5 +5,5 @@ Type=Application
 Terminal=false
 Exec=puzzlemoppet
 Name=PuzzleMoppet
-Icon=main
+Icon=puzzlemoppet
 Categories=Game;

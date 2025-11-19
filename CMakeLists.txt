@@ -13,12 +13,18 @@ set(BUILD_FOR_INSTALL "OFF" CACHE BOOL "Should the game search for its datas in 
 set(DATA_DIR ${PROJECT_SOURCE_DIR}/data CACHE STRING "Directory for game data")
 set(BUILD_FOR_APPIMAGE "OFF" CACHE BOOL "Building for AppImage")
 
+# Only set DATA_DIR default if not provided by the user
+if(NOT DEFINED DATA_DIR)
+    set(DATA_DIR "${PROJECT_SOURCE_DIR}/data" CACHE STRING "Directory for game data")
+endif()
 
 if (BUILD_FOR_INSTALL)
 	set(DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/puzzlemoppet")
 endif (BUILD_FOR_INSTALL)
 
-add_definitions(-DDATA_DIR="${DATA_DIR}")
+message(STATUS "Using DATA_DIR = ${DATA_DIR}")
+
+add_compile_definitions(DATA_DIR="${DATA_DIR}")
 
 # find the absolute litha engine root directory
 set(rootDir ${CMAKE_HOME_DIRECTORY})
