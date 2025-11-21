@@ -345,12 +345,14 @@ namespace gui
 			void setOutlineColor(video::SColor color) { OutlineColor = color; }
 			video::SColor getOutlineColor() const { return OutlineColor; }
 
-			void setShadow(bool enable, video::SColor col, core::vector2d<u32> offs)
-			{
-				ShadowEnabled = enable;
-				ShadowColor = col;
-				ShadowOffset = offs;
-			}
+			void setShadowEnabled(bool enable) { ShadowEnabled = enable; }
+			bool getShadowEnabled() { return ShadowEnabled; }
+
+			void setShadowColor(video::SColor color) { ShadowColor = color; }
+			video::SColor getShadowColor() { return ShadowColor; }
+
+			void setShadowOffset(core::vector2d<u32> offset) { ShadowOffset = offset; }
+			core::vector2d<u32> getShadowOffset() { return ShadowOffset; }
 
 			//! This function is for debugging mostly. If the page doesn't exist it returns zero.
 			//! \param page_index Simply return the texture handle of a given page index.
@@ -407,7 +409,7 @@ namespace gui
 			float Outline;
 			video::SColor OutlineColor;
 			bool ShadowEnabled = true;
-			video::SColor ShadowColor = video::SColor(125, 0, 0, 0);
+			video::SColor ShadowColor = video::SColor(255, 0, 0, 0);
 			core::vector2d<u32> ShadowOffset = core::vector2d<u32>(2, 2);
 			u32 Size;
 			u32 MaxFontHeight; // in pixels from sampling a few characters

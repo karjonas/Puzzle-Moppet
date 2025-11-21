@@ -245,7 +245,10 @@ gui::IGUIStaticText *add_static_text(const wchar_t *str)
         GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize();
 
     unsigned int fontSize = 0.03f * screenSize.Height;
+    unsigned int shadowOffset = std::max(1, std::min(3, int(screenSize.Height * 0.002f)));
+
     irr::gui::CGUITTFont *font = get_static_text_font(fontSize);
+    font->setShadowOffset(core::vector2d<u32>(shadowOffset, shadowOffset));
     core::dimension2du dim = font->getDimension(str);
 
     u32 nbLines = 1 + dim.Width / screenSize.Width;
@@ -273,7 +276,10 @@ gui::IGUIStaticText *add_static_text2(const wchar_t *str)
         GetEngine()->GetIrrlichtDevice()->getVideoDriver()->getScreenSize();
 
     unsigned int fontSize = 0.048f * screenSize.Height;
+    unsigned int shadowOffset = std::max(1, std::min(3, int(screenSize.Height * 0.002f)));
+
     irr::gui::CGUITTFont *font = get_static_text_font(fontSize);
+    font->setShadowOffset(core::vector2d<u32>(shadowOffset, shadowOffset));
     core::dimension2du dim = font->getDimension(str);
 
     gui::IGUIStaticText *textElement =
