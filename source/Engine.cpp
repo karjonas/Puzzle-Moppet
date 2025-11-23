@@ -192,7 +192,6 @@ Engine::Engine(int argc, const char **argv, const VariantMap *settings)
                                                  initSettings["screenHeight"]);
     deviceParams.Bits = 32;
     deviceParams.ZBufferBits = 24;
-    deviceParams.Fullscreen = initSettings["fullScreen"];
     deviceParams.Stencilbuffer = false;
     deviceParams.Vsync = initSettings["vsync"];
     deviceParams.EventReceiver = this;
@@ -205,7 +204,52 @@ Engine::Engine(int argc, const char **argv, const VariantMap *settings)
     // EIDT_SDL;
 #endif
 
+    // If fullscreen, try to use the desktop resolution
+    bool useFullscreen = false;
+    if (initSettings["fullScreen"])
+    {
+        u32 desktopW = cachedDesktopResolution.Width;
+        u32 desktopH = cachedDesktopResolution.Height;
+
+        // Check if resolution is supported:
+        IrrlichtDevice* tmp = createDevice(video::EDT_NULL);
+        if (tmp)
+        {
+            auto* modes = tmp->getVideoModeList();
+            bool supported = false;
+
+            for (int i = 0; i < modes->getVideoModeCount(); i++)
+            {
+                auto res = modes->getVideoModeResolution(i);
+                if (res.Width == desktopW && res.Height == desktopH)
+                {
+                    supported = true;
+                    break;
+                }
+            }
+
+            tmp->drop();
+
+            if (supported)
+            {
+                NOTE << "Using desktop resolution for fullscreen: "
+                     << desktopW << "x" << desktopH;
+                deviceParams.WindowSize = cachedDesktopResolution;
+                useFullscreen = true;
+            }
+            else
+            {
+                NOTE << "Full screen resolution not supported, falling back to windowed.";
+                useFullscreen = false;
+            }
+        }
+    }
+
+    deviceParams.Fullscreen = useFullscreen;
+
     device = createDeviceEx(deviceParams);
+
+    device->setResizable(!useFullscreen);
 
     // Set working directory to the one the application resides in.
     // (since depending on how the application is launched the working directory

@@ -35,7 +35,6 @@ enum E_MENU_ITEM
 
     // Options menu
     EMI_OPTIONS_FULLSCREEN,
-    EMI_OPTIONS_SCREEN_RES,
     EMI_OPTIONS_SHADERS,
     EMI_OPTIONS_SKY_EFFECTS,
     EMI_OPTIONS_BLOOM,
@@ -547,23 +546,6 @@ void StartScreen::ShowOptionsMenu(VariantMap settings)
                       EMI_OPTIONS_FULLSCREEN);
 #endif
 
-    core::dimension2du screenSize(settings["screenWidth"],
-                                  settings["screenHeight"]);
-    core::dimension2du desktopSize = engine->GetDesktopResolution();
-    core::stringw sizeString = L"Other"; // current size matches neither
-
-    if (screenSize == core::dimension2du(1024, 768))
-        sizeString = L"Default";
-    else if (screenSize == desktopSize)
-    {
-        sizeString = L"Desktop";
-    }
-
-    // but don't show if desktop res is the same as default res...
-    if (desktopSize != core::dimension2du(1024, 768))
-        vertMenu->AddItem(core::stringw("Screen size: ") + sizeString,
-                          EMI_OPTIONS_SCREEN_RES);
-
     vertMenu->AddItem(core::stringw("Nice graphics: ") +
                           (settings["shadersEnabled"] ? "Yes" : "No"),
                       EMI_OPTIONS_SHADERS);
@@ -907,36 +889,6 @@ void StartScreen::OnEvent(const Event &event)
             {
                 newConfig["fullScreen"] =
                     newConfig["fullScreen"].To<bool>() ^ 1;
-                ShowOptionsMenu(newConfig);
-            }
-            else if (event["button"] == EMI_OPTIONS_SCREEN_RES)
-            {
-                core::dimension2du currentSize(newConfig["screenWidth"],
-                                               newConfig["screenHeight"]);
-                core::dimension2du desktopSize = engine->GetDesktopResolution();
-
-                if (currentSize ==
-                    core::dimension2du(1024, 768)) // if currently on default
-                {
-                    NOTE << "Options: changing from default to desktop "
-                            "resolution ("
-                         << desktopSize.Width << "x" << desktopSize.Height
-                         << ")";
-                    // change to desktop res
-                    newConfig["screenWidth"] = desktopSize.Width;
-                    newConfig["screenHeight"] = desktopSize.Height;
-                }
-                else // we are either currently on desktop res, or are on
-                     // "other".
-                {
-                    NOTE << "Options: on desktop or other res ("
-                         << currentSize.Width << "x" << currentSize.Height
-                         << "), changing to default.";
-                    // In both cases, go to default res.
-                    newConfig["screenWidth"] = 1024;
-                    newConfig["screenHeight"] = 768;
-                }
-
                 ShowOptionsMenu(newConfig);
             }
             else if (event["button"] == EMI_OPTIONS_SHADERS)
