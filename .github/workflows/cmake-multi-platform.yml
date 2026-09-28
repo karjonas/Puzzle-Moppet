@@ -14,17 +14,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-22.04, windows-2022]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             c_compiler: gcc
             cpp_compiler: g++
             vcpkg_triplet: x64-linux
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             c_compiler: clang
             cpp_compiler: clang++
             vcpkg_triplet: x64-linux
-          - os: windows-latest
+          - os: windows-2022
             c_compiler: cl
             cpp_compiler: cl
             vcpkg_triplet: x64-windows
@@ -43,35 +43,39 @@ jobs:
 
     # --- Install system dependencies ---
     - name: Install system dependencies (Ubuntu)
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake git curl unzip tar libxxf86vm-dev libopenal-dev libgl1-mesa-dev
+        sudo apt-get install -y \
+          build-essential \
+          cmake git curl unzip tar \
+          libxxf86vm-dev libopenal-dev libgl1-mesa-dev \
+          autoconf autoconf-archive automake libtool pkg-config
 
     # --- Clone and bootstrap vcpkg ---
     - name: Clone vcpkg
-      run: git clone https://github.com/microsoft/vcpkg.git ./vcpkg
+      run: git clone --branch 2025.12.12 https://github.com/microsoft/vcpkg.git ./vcpkg
 
     - name: Bootstrap vcpkg on Windows
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2022'
       run: .\vcpkg\bootstrap-vcpkg.bat
 
     - name: Bootstrap vcpkg on Linux
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       run: ./vcpkg/bootstrap-vcpkg.sh
 
     # --- Install vcpkg packages ---
     - name: Install dependencies via vcpkg on Windows
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2022'
       run: .\vcpkg\vcpkg.exe install irrlicht ode openal-soft freetype --triplet ${{ matrix.vcpkg_triplet }}
 
     - name: Install dependencies via vcpkg on Linux
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       run: ./vcpkg/vcpkg install irrlicht ode openal-soft freetype --triplet ${{ matrix.vcpkg_triplet }}
 
     # Configure CMake on Linux
     - name: Configure CMake on Linux
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       run: |
         mkdir -p build
         cmake -B build -S . \
@@ -85,7 +89,7 @@ jobs:
 
     # Configure CMake on Windows
     - name: Configure CMake on Windows
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2022'
       shell: powershell
       run: |
         # Create build directory if it doesn't exist
@@ -110,7 +114,7 @@ jobs:
         cmake --install build --prefix install_dir --config Release
 
     - name: Finalize Windows build layout
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2022'
       id: finalize
       shell: powershell
       run: |
@@ -158,7 +162,7 @@ jobs:
         echo "final_name=$finalName" >> $Env:GITHUB_OUTPUT
 
     - name: Upload Windows ZIP
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2022'
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.finalize.outputs.final_name }}
@@ -166,7 +170,7 @@ jobs:
 
     - name: Build AppImage (Linux)
       id: appimage
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       run: |
         set -e
 
@@ -212,7 +216,7 @@ jobs:
         echo "final_name=$finalName" >> "$GITHUB_OUTPUT"
 
     - name: Upload Linux AppImage
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       uses: actions/upload-artifact@v4
       with:
         path: ${{ steps.appimage.outputs.final_name }}
