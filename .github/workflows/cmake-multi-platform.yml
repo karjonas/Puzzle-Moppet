@@ -2,9 +2,9 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "ci", "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "ci", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -174,9 +174,9 @@ jobs:
       run: |
         set -e
 
-        # Dependencies for linuxdeploy
+        # Dependencies for linuxdeploy and validation tools
         sudo apt-get update
-        sudo apt-get install -y fuse libfuse2
+        sudo apt-get install -y fuse libfuse2 desktop-file-utils appstream
 
         # Download linuxdeploy
         wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -190,27 +190,59 @@ jobs:
         # Install the app into AppDir/usr
         cmake --install build --prefix $APPDIR/usr --config Release
 
-        # Copy desktop entry + icon (paths assumed; adjust if needed)
+        # Copy desktop entry + icon
         cp appimage/puzzlemoppet.desktop $APPDIR/puzzlemoppet.desktop
         mkdir -p $APPDIR/usr/share/icons/hicolor/256x256/apps
         cp icons/main.png $APPDIR/usr/share/icons/hicolor/256x256/apps/puzzlemoppet.png
 
-        # Build AppImage
+        # Validate desktop file
+        echo "Validating desktop file..."
+        desktop-file-validate $APPDIR/puzzlemoppet.desktop || {
+          echo "ERROR: Desktop file validation failed"
+          exit 1
+        }
+
+        # Copy AppStream metainfo (read by appimage.github.io for the catalog
+        # page). It is named after its reverse-DNS id rather than the desktop
+        # file, so appimagetool does not pick it up; validate it here instead.
+        mkdir -p $APPDIR/usr/share/metainfo
+        cp appimage/io.github.karjonas.PuzzleMoppet.appdata.xml $APPDIR/usr/share/metainfo/
+        echo "Validating AppStream metainfo..."
+        appstreamcli validate --no-net $APPDIR/usr/share/metainfo/io.github.karjonas.PuzzleMoppet.appdata.xml || {
+          echo "ERROR: AppStream validation failed"
+          exit 1
+        }
+
+        # Build AppImage (type 2 with SquashFS)
         ./linuxdeploy-x86_64.AppImage \
           --appdir "$APPDIR" \
           -d "$APPDIR/puzzlemoppet.desktop" \
           -i "$APPDIR/usr/share/icons/hicolor/256x256/apps/puzzlemoppet.png" \
           --output appimage
 
-        # Compute final name
+        # Compute final name following AppImage naming convention
         hash="${{ steps.gitinfo.outputs.hash }}"
-        finalName="PuzzleMoppet-$hash.AppImage"
+        finalName="PuzzleMoppet-$hash-x86_64.AppImage"
 
         # Find generated AppImage
         generated=$(ls PuzzleMoppet-*.AppImage | head -n 1)
 
         # Rename it
         mv "$generated" "$finalName"
+
+        # Verify it's a type 2 AppImage
+        echo "Verifying AppImage type..."
+        # Type 2 AppImages carry the magic bytes "AI\x02" at offset 8 of the ELF
+        # runtime, and the SquashFS image (magic "hsqs") follows the runtime.
+        magic=$(dd if="$finalName" bs=1 skip=8 count=3 2>/dev/null | od -An -tx1 | tr -d ' \n')
+        offset=$(./"$finalName" --appimage-offset)
+        sqfs=$(dd if="$finalName" bs=1 skip="$offset" count=4 2>/dev/null)
+        if [ "$magic" = "414902" ] && [ "$sqfs" = "hsqs" ]; then
+          echo "✓ AppImage is type 2 with SquashFS"
+        else
+          echo "ERROR: AppImage is not type 2 with SquashFS (magic=$magic, payload=$sqfs)"
+          exit 1
+        fi
 
         # Export variable to GitHub Actions
         echo "final_name=$finalName" >> "$GITHUB_OUTPUT"
