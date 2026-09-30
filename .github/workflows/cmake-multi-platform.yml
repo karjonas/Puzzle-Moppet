@@ -3,6 +3,8 @@ name: CMake on multiple platforms
 on:
   push:
     branches: [ "ci", "master" ]
+    # Release tags: YYYY.MM.DD, or YYYY.MM.DD.N for more releases that day
+    tags: [ "[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]*" ]
   pull_request:
     branches: [ "ci", "master" ]
   workflow_dispatch:
@@ -259,3 +261,46 @@ jobs:
     #  # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
     #  # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
     #  run: ctest --build-config ${{ matrix.build_type }}
+
+  # Publish a GitHub release when a release tag is pushed (see the tags filter
+  # above), named after the tag.
+  release:
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    concurrency:
+      group: release
+      cancel-in-progress: false
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
+    - name: Create release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        set -e
+        hash="${GITHUB_SHA:0:7}"
+        tag="$GITHUB_REF_NAME"
+
+        # Name the release files after the tag
+        appimage="PuzzleMoppet-$tag-x86_64.AppImage"
+        mv "artifacts/PuzzleMoppet-$hash-x86_64.AppImage/PuzzleMoppet-$hash-x86_64.AppImage" "$appimage"
+        chmod +x "$appimage"
+
+        winName="PuzzleMoppet-Win64-$tag"
+        mv "artifacts/PuzzleMoppet-Win64-$hash" "$winName"
+        zip -qr "$winName.zip" "$winName"
+
+        gh release create "$tag" \
+          --target "$GITHUB_SHA" \
+          --title "$tag" \
+          --generate-notes \
+          --latest \
+          "$appimage" "$winName.zip"
