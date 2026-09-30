@@ -101,6 +101,8 @@ add_library(Litha STATIC
     utils/VariantMap.cpp
     World.cpp
     World.h
+    X11Utils.cpp
+    X11Utils.h
 )
 
 if(NOT BUILD_FOR_APPIMAGE AND NOT BUILD_FOR_PKGBUILD)
@@ -131,6 +133,16 @@ endif()
 
 find_package(Freetype REQUIRED)
 list(APPEND LINK_LIBRARIES Freetype::Freetype)
+
+# X11Utils.cpp calls GLX and Xlib directly
+if(UNIX AND NOT APPLE)
+    find_package(OpenGL REQUIRED)
+    find_package(X11 REQUIRED)
+    list(APPEND LINK_LIBRARIES OpenGL::GL X11::X11)
+    if(TARGET OpenGL::GLX)
+        list(APPEND LINK_LIBRARIES OpenGL::GLX)
+    endif()
+endif()
 
 target_link_libraries(Litha ${LINK_LIBRARIES})
 

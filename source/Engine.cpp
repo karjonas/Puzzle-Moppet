@@ -10,6 +10,7 @@
 #include "Event.h"
 #include "IWantEvents.h"
 #include "IInputProfile.h"
+#include "X11Utils.h"
 
 //#if defined(_IRR_COMPILE_WITH_X11_DEVICE_)
 //#include <X11/Xlib.h> // for XMoveWindow
@@ -196,6 +197,12 @@ Engine::Engine(int argc, const char **argv, const VariantMap *settings)
     deviceParams.Vsync = initSettings["vsync"];
     deviceParams.EventReceiver = this;
 
+#if defined(_IRR_COMPILE_WITH_X11_DEVICE_)
+    // Irrlicht's vsync can crash on X11 (see X11Utils.h), so it is set
+    // after the device has been created instead.
+    deviceParams.Vsync = false;
+#endif
+
 #ifdef _IRR_LINUX_PLATFORM_
     // test SDL to see if it will fix screen mode / focus bug.
     // we don't use SDL with software mode so config app works properly... (SDL
@@ -268,6 +275,20 @@ Engine::Engine(int argc, const char **argv, const VariantMap *settings)
 
     if (!device)
         FAIL << "Could not create Irrlicht Device.";
+
+#if defined(_IRR_COMPILE_WITH_X11_DEVICE_)
+    if (device->getVideoDriver()->getDriverType() == video::EDT_OPENGL &&
+        !SetGlxSwapInterval(initSettings["vsync"] ? 1 : 0))
+        WARN << "Could not set VSync.";
+
+    {
+        const video::SExposedVideoData &videoData =
+            device->getVideoDriver()->getExposedVideoData();
+        SetX11WindowClass(videoData.OpenGLLinux.X11Display,
+                          videoData.OpenGLLinux.X11Window, "puzzlemoppet",
+                          "PuzzleMoppet");
+    }
+#endif
 
     // Centre the app window, if not fullscreen.
 
