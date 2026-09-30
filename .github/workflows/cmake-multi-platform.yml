@@ -294,7 +294,7 @@ jobs:
         mv "artifacts/PuzzleMoppet-$hash-x86_64.AppImage/PuzzleMoppet-$hash-x86_64.AppImage" "$appimage"
         chmod +x "$appimage"
 
-        winName="PuzzleMoppet-Win64-$tag"
+        winName="PuzzleMoppet-$tag-windows-x64"
         mv "artifacts/PuzzleMoppet-Win64-$hash" "$winName"
         zip -qr "$winName.zip" "$winName"
 
